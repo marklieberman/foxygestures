@@ -1,0 +1,57 @@
+{
+
+  "manifest_version": 2,
+  "name": "Foxy Gestures",
+  "version": "1.0.0",
+
+  "description": "Mouse gestures for Firefox",
+
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+
+  "permissions": [
+    "downloads",
+    "sessions",
+    "storage",
+    "tabs"
+  ],
+
+  "options_ui": {
+    "page": "options/options.html"
+  },
+
+  "background": {
+    "scripts": [
+      "background/commands.js"
+    ]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "match_about_blank": true,
+      "all_frames": true,
+      "run_at": "document_end",
+      "js": [
+        "content/helpers.js",
+        "content/mouseEvents.js",
+        "content/commands.js"
+      ]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "match_about_blank": true,
+      "all_frames": false,
+      "run_at": "document_end",
+      "js": [
+        "content/classes/MouseDeltaAccumulator.js",
+        "content/classes/UDLRGestureDetector.js",
+        "content/gesture.js",
+        "content/trails.js"
+      ]
+    }
+  ]
+
+}

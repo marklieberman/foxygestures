@@ -1,0 +1,47 @@
+body {
+  background-color: transparent;
+  padding: 0 10px;
+}
+
+.mapping-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.section-help-block {
+  width: 100%;
+  text-align: center;
+}
+
+.tile .mapping-item {
+  flex: 0 0 auto;
+  max-width: 150px;
+  margin: 4px;
+  text-align: center;
+}
+
+.mapping-item canvas {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: auto 0;
+}
+
+.command-label {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 24px;
+  line-height: 12px;
+}
+
+.command-label i {
+  margin-left: 4px;
+}
+
+.mapped-gesture {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 4px;
+}
