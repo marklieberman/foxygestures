@@ -19,7 +19,7 @@ modules.trails = (function () {
   var settings = {
     trailFidelity: 10,
     trailWidth: 2,
-    trailColor: '#6666cc'
+    trailColor: 'purple'
   };
 
   var deltaAccumulator = new MouseDeltaAccumulator();
