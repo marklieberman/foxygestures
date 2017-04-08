@@ -47,5 +47,8 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
+Version 1.0.1 released on _2017-04-08_
+ - Scripts injected at document_start for slightly faster loading in some cases.
+
 Version 1.0.0 released on _2017-04-07_
  - Initial release
