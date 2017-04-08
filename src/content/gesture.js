@@ -24,9 +24,9 @@ modules.gesture = (function () {
   var gestureAccumulator = new UDLRGestureDetector();
 
   // Load settings from storage.
-  browser.storage.local.get(settings).then(results => {
-    settings = results;
-  });
+  browser.storage.local.get(settings).then(results => settings = results);
+
+  // Event listeners -----------------------------------------------------------
 
   // Listen for changes to settings.
   browser.storage.onChanged.addListener((changes, area) => {

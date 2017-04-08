@@ -22,23 +22,11 @@ modules.mouseEvents = (function () {
     // A unique identifier for this frame.
     // Used by commands to target a specific nested frame.
     scriptFrameId: modules.helpers.makeScriptFrameId(),
-
-    // Gesture state machine state.
-    gestureState: PROGRESS_NONE,
-
-    // Context menu is enabled.
-    contextMenu: true,
-
-    // Is this frame nested?
-    isNested: (window !== window.top),
-
-    // Is this body a frameset?
-    isFrameset: (document.body && document.body.tagName === 'FRAMESET'),
-
-    // Array of all loaded frames.
-    nestedFrames: [],
-
-    isUnloading: false
+    gestureState: PROGRESS_NONE,       // Gesture state machine state.
+    contextMenu: true,                 // Context menu is enabled?
+    isNested: (window !== window.top), // Is this frame nested?
+    nestedFrames: [],                  // Array of all nested frames.
+    isUnloading: false                 // Is the page is unloading?
   };
 
   // Settings for this module.
@@ -47,9 +35,7 @@ modules.mouseEvents = (function () {
   };
 
   // Load settings from storage.
-  browser.storage.local.get(settings).then(results => {
-    settings = results;
-  });
+  browser.storage.local.get(settings).then(results => settings = results);
 
   if (state.isNested) {
     // Notify the parent script instance that a nested frame has loaded.
@@ -175,11 +161,6 @@ modules.mouseEvents = (function () {
 
   // Functions -----------------------------------------------------------------
 
-  // Get the ID assigned to this frame by the script.
-  function getScriptFrameId() {
-    return state.scriptFrameId;
-  }
-
   // Post a message to the given window with the given topic.
   // Typically used to send messages up the frame/window hierarchy.
   function postTo (targetWindow, topic, data) {
@@ -192,12 +173,10 @@ modules.mouseEvents = (function () {
   // Post a mesage to all nested frames known to the script.
   // Typically used to send messages down the frame/window hierarchy.
   function broadcast (topic, data) {
-    state.nestedFrames.forEach(function (tuple) {
-      tuple.source.postMessage({
-        topic: 'mg-' + topic,
-        data: data || {}
-      }, '*');
-    });
+    state.nestedFrames.forEach(tuple => tuple.source.postMessage({
+      topic: 'mg-' + topic,
+      data: data || {}
+    }, '*'));
   }
 
   // Modify the state and replicate the changes to nested frames.
@@ -214,15 +193,13 @@ modules.mouseEvents = (function () {
     // Compile a list of frames on the page.
     var iframes = document.getElementsByTagName('iframe');
     var allFrames = Array.from(iframes);
-    if (state.isFrameset) {
+    if (document.body.tagName === 'FRAMESET') {
       var framesetFrames = document.getElementsByTagName('frame');
       allFrames = allFrames.concat(Array.from(framesetFrames));
     }
 
     // Find the element containing the source window.
-    var frame = allFrames.find(function (frame) {
-      return frame.contentWindow === source;
-    });
+    var frame = allFrames.find(frame => frame.contentWindow === source);
     if (!!frame) {
       state.nestedFrames.push({
         source: source,
@@ -235,9 +212,7 @@ modules.mouseEvents = (function () {
   // Invoked when the nested frame posts an event on DOM unload event.
   function onUnloadFrame (data, source) {
     // Remove the frame tuple if we know about it.
-    var index = state.nestedFrames.findIndex(function (tuple) {
-      return tuple.source === source;
-    });
+    var index = state.nestedFrames.findIndex(tuple => tuple.source === source);
     if (index >= 0) {
       state.nestedFrames.splice(index, 1);
     }
@@ -277,9 +252,7 @@ modules.mouseEvents = (function () {
   // Offset the x,y-coordinates of a mouse event by the x,y position of the
   // frame element containing the source window.
   function applyFrameOffset (data, source) {
-    var tuple = state.nestedFrames.find(function (tuple) {
-      return tuple.source === source;
-    });
+    var tuple = state.nestedFrames.find(tuple => tuple.source === source);
     if (!!tuple) {
       var bounds = tuple.element.getBoundingClientRect();
       data.x += bounds.x;
@@ -357,7 +330,7 @@ modules.mouseEvents = (function () {
   }
 
   return {
-    getScriptFrameId: getScriptFrameId,
+    scriptFrameId: state.scriptFrameId,
     broadcast: broadcast,
     cancelGesture: cancelGesture
   };

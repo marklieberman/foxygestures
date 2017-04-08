@@ -76,7 +76,7 @@
   function onDelegateCommand (data) {
     // Check if the command should be handled by this frame.
     if (data.context.scriptFrameId) {
-      if (modules.mouseEvents.getScriptFrameId() !== data.context.scriptFrameId) {
+      if (modules.mouseEvents.scriptFrameId !== data.context.scriptFrameId) {
         // This is not the correct frame.
         modules.mouseEvents.broadcast('delegateCommand', data);
         return;
