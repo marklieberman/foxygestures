@@ -9,9 +9,10 @@
     "console": true,
     "browser": true,
     "chrome": true,
-    
+
     "modules": true,
     "MouseDeltaAccumulator": true,
+    "Optional": true,
     "UDLRGestureDetector": true
   }
 }

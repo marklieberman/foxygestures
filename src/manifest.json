@@ -24,7 +24,11 @@
 
   "background": {
     "scripts": [
-      "background/commands.js"
+      "common/Optional.js",
+      "common/settings.js",
+      "background/helpers.js",
+      "background/commands.js",
+      "background/handler.js"
     ]
   },
 
@@ -36,8 +40,8 @@
       "run_at": "document_start",
       "js": [
         "content/helpers.js",
-        "content/mouseEvents.js",
-        "content/commands.js"
+        "content/commands.js",
+        "content/mouseEvents.js"
       ]
     },
     {
@@ -46,10 +50,11 @@
       "all_frames": false,
       "run_at": "document_start",
       "js": [
-        "content/classes/MouseDeltaAccumulator.js",
-        "content/classes/UDLRGestureDetector.js",
-        "content/gesture.js",
-        "content/trails.js"
+        "common/MouseDeltaAccumulator.js",
+        "common/UDLRGestureDetector.js",
+        "common/settings.js",
+        "content/interface.js",
+        "content/handler.js"
       ]
     }
   ]

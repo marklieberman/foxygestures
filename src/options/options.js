@@ -6,20 +6,36 @@ var app = angular.module('mgOptionsApp', [
 ]);
 
 // -----------------------------------------------------------------------------
-app.factory('commands', [
+app.factory('moduleLoader', [
+  '$q',
   '$interval',
-  function ($interval) {
+  function ($q, $interval) {
+    // Get a function that returns a promise that is resolved when
+    // modules[module] is defined.
+    return function (module) {
+      if (modules[module]) {
+        return $q.resolve(modules[module]);
+      } else {
+        var deferred = $q.defer();
+        var promise = $interval(() => {
+          if (modules[module]) {
+            $interval.cancel(promise);
+            deferred.resolve(modules[module]);
+          }
+        }, 100);
+        return deferred.promise;
+      }
+    };
+  }]);
+
+// -----------------------------------------------------------------------------
+app.factory('commands', [
+  'moduleLoader',
+  function (moduleLoader) {
     var service = [];
 
-    // background/commands.js seems to be loaded asynchronously.
-    var promise = $interval(() => {
-      if (modules.commands) {
-        $interval.cancel(promise);
-        angular.copy(modules.commands, service);
-      }
-    }, 100);
-
-    promise.then(() => {}, () => {
+    moduleLoader('commands').then(commands => {
+      angular.copy(commands, service);
       service.loaded = true;
     });
 
@@ -34,49 +50,52 @@ app.factory('commands', [
   }]);
 
 // -----------------------------------------------------------------------------
+// A wrapper around the settings module that presents itself as a hash of
+// settings similar to the underlying module.
 app.factory('settings', [
-  '$rootScope',
   '$q',
-  'commands',
-  function ($rootScope, $q, commands) {
-    var service = {
-      gestureButton: 2,
-      gestureFidelity: 10,
-      gestureTimeout: 400,
-      drawTrails: true,
-      trailColor: 'purple',
-      trailWidth: 2,
-      mappings: []
-    };
+  'moduleLoader',
+  function ($q, moduleLoader) {
+    var templates = {};
+    var service = {};
 
-    var settingsKeys = Object.keys(service);
+    // Get a promise chain that is resolved when the settings module is
+    // available and settings have been loaded from storage.
+    var promise = moduleLoader('settings').then(module => {
+      // Copy default templates from the settings module.
+      angular.copy(module.$templates, templates);
 
-    // Load settings from browser storage.
-    service.load = () => {
-      var deferred = $q.defer();
-      browser.storage.local.get(service).then(
-        results => {
-          $rootScope.$apply(() => {
-            settingsKeys.forEach(key => {
-              if (results[key]) {
-                service[key] = results[key];
-              }
-            });
-            deferred.resolve();
-          });
-        },
-        err => deferred.reject(err));
-      return deferred.promise;
-    };
+      // Copy loaded settings from the settings module.
+      return module.loaded.then(() => angular.copy(module, service));
+    });
 
-    // Save settings to browser storage.
-    service.save = () => {
-      var deferred = $q.defer();
-      browser.storage.local.set(service).then(
-        () => deferred.resolve(),
-        err => deferred.reject(err));
-      return deferred.promise;
-    };
+    // Expose the default templates as a non-enumerable property.
+    Object.defineProperty(service, '$templates', {
+      enumerable: false,
+      value: templates
+    });
+
+    // Expose a method to load settings from browser storage as a
+    // non-enumerable property. Returns a promise that is resolved when
+    // settings are loaded.
+    Object.defineProperty(service, 'load', {
+      enumerable: false,
+      value: () => promise.then(() => service)
+    });
+
+    // Expose a method to save settings to browser storage as a
+    // non-enumerable property. Returns a promise that is resolved when
+    // settings are saved.
+    Object.defineProperty(service, 'save', {
+      enumerable: false,
+      value: () => {
+        var deferred = $q.defer();
+        browser.storage.local.set(service).then(
+          () => deferred.resolve(),
+          err => deferred.reject(err));
+        return deferred.promise;
+      }
+    });
 
     return service;
   }]);
@@ -90,26 +109,36 @@ app.controller('OptionsCtrl', [
     // Scope variables.
     $scope.commands = commands;
     $scope.settings = settings;
+    $scope.settingsLoaded = false;
     $scope.controls = {
-      gestureTimeout: 0.4
+      fewerTrailOptions: true,
+      fewerStatusOptions: true,
+      gestureTimeout: 0.4,
+      statusTimeout: 2.0
     };
+
+    $scope.defaultStatusTemplate = settings.statusTemplate;
 
     // Initialize settings on load.
     settings.load().then(() => {
-      settings.loaded = true;
-      var inSeconds = Math.floor(settings.gestureTimeout / 100) / 10;
+      var inSeconds;
+      inSeconds = Math.floor(settings.gestureTimeout / 100) / 10;
       $scope.controls.gestureTimeout = inSeconds;
+      inSeconds = Math.floor(settings.statusTimeout / 100) / 10;
+      $scope.controls.statusTimeout = inSeconds;
+      $scope.settingsLoaded = true;
       $scope.$broadcast('redraw');
+      startWatchingSettings();
     });
 
-    // Persist settings on change.
-    $scope.$watch('settings', (newValue) => {
-      if (newValue) {
-        settings.save().then(() => {
-          $scope.$broadcast('redraw');
-        });
-      }
-    }, true);
+    // Watch the settings object and persist it on changes.
+    function startWatchingSettings() {
+      $scope.$watch('settings', (newValue) => {
+        if (newValue) {
+          settings.save().then(() => $scope.$broadcast('redraw'));
+        }
+      }, true);
+    }
 
     // Convert gesture timeout to milliseconds.
     $scope.$watch('controls.gestureTimeout', (newValue, oldValue) => {
@@ -117,32 +146,40 @@ app.controller('OptionsCtrl', [
       settings.gestureTimeout = inMillis;
     });
 
+    // Convert status timeout to milliseconds.
+    $scope.$watch('controls.statusTimeout', (newValue, oldValue) => {
+      var inMillis = Math.floor(newValue * 10) * 100;
+      settings.statusTimeout = inMillis;
+    });
+
     // Get the mapping for a command.
     $scope.getMappingForCommand = (command) => {
       var commandId = command.id || command;
-      return settings.mappings.find(mapping =>
+      return settings.mouseMappings.find(mapping =>
         mapping.command === commandId);
     };
 
     // Get the mapping for a gesture.
     $scope.getMappingForGesture = (gesture) => {
-      return settings.mappings.find(mapping =>
+      return settings.mouseMappings.find(mapping =>
         mapping.gesture === gesture);
     };
 
     // Remove the mapping for a gesture.
     $scope.removeMappingForGesture = (gesture) => {
-      var index = settings.mappings.findIndex(mapping => mapping.gesture === gesture);
+      var index = settings.mouseMappings.findIndex(
+        mapping => mapping.gesture === gesture);
       if (index >= 0) {
-        settings.mappings.splice(index, 1);
+        settings.mouseMappings.splice(index, 1);
       }
     };
 
     // Remove the mapping for a command.
     $scope.removeMappingForCommand = (command) => {
-      var index = settings.mappings.findIndex(mapping => mapping.command === command.id);
+      var index = settings.mouseMappings.findIndex(
+        mapping => mapping.command === command.id);
       if (index >= 0) {
-        settings.mappings.splice(index, 1);
+        settings.mouseMappings.splice(index, 1);
       }
     };
 
@@ -173,7 +210,7 @@ app.controller('OptionsCtrl', [
       $scope.removeMappingForCommand(command);
 
       // Insert the new mapping for this gesture.
-      settings.mappings.push({
+      settings.mouseMappings.push({
         command: command.id,
         gesture: gesture
       });

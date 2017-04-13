@@ -1,10 +1,11 @@
 'use strict';
 
 /**
- * This module is responsible for tracking the mouse gesture.
+ * This module is responsible for coordinating gesture state between the
+ * background and content scripts.
  */
- var modules = modules || {};
-modules.gesture = (function () {
+var modules = modules || {};
+modules.handler = (function (settings) {
 
   // State for this module.
   var state = {
@@ -13,28 +14,19 @@ modules.gesture = (function () {
     mouseDown: null      // Mouse event at the start of gesture.
   };
 
-  // Settings for this module.
-  var settings = {
-    gestureTimeout: 400,
-    gestureFidelity: 10,
-    drawTrails: true
-  };
-
   var deltaAccumulator = new MouseDeltaAccumulator();
-  var gestureAccumulator = new UDLRGestureDetector();
-
-  // Load settings from storage.
-  browser.storage.local.get(settings).then(results => settings = results);
+  var gestureDetector = new UDLRGestureDetector();
 
   // Event listeners -----------------------------------------------------------
 
-  // Listen for changes to settings.
-  browser.storage.onChanged.addListener((changes, area) => {
-    Object.keys(settings).forEach(key => {
-      if (changes[key]) {
-        settings[key] = changes[key].newValue;
-      }
-    });
+  // Handle messages from the background script.
+  browser.runtime.onMessage.addListener((message, sender) => {
+    switch (message.topic) {
+      case 'mg-status':
+        modules.interface.status(message.data);
+        break;
+    }
+    return false;
   });
 
   // ---------------------------------------------------------------------------
@@ -43,7 +35,7 @@ modules.gesture = (function () {
   function begin (mouseDown) {
     // Start tracking the gesture.
     deltaAccumulator.reset();
-    gestureAccumulator.reset(mouseDown);
+    gestureDetector.reset(mouseDown);
     state.mouseDown = mouseDown;
 
     // Start the gesture timeout interval.
@@ -58,7 +50,7 @@ modules.gesture = (function () {
 
     // Paint the gesture trail.
     if (settings.drawTrails) {
-      modules.trails.begin(mouseDown);
+      modules.interface.beginTrail(mouseDown);
     }
   }
 
@@ -70,14 +62,21 @@ modules.gesture = (function () {
       deltaAccumulator.reset();
 
       // Update the gesture.
-      gestureAccumulator.addPoint(mouseMove);
+      if (gestureDetector.addPoint(mouseMove)) {
+        browser.runtime.sendMessage({
+          topic: 'mg-gestureProgress',
+          data: {
+            gesture: gestureDetector.gesture
+          }
+        });
+      }
 
       // Reset the number of ticks without movement.
       state.noMovementTicks = 0;
 
       // Paint the gesture trail.
       if (settings.drawTrails) {
-        modules.trails.update(mouseMove);
+        modules.interface.updateTrail(mouseMove);
       }
     }
   }
@@ -89,14 +88,14 @@ modules.gesture = (function () {
 
     // Hide the gesture trail.
     if (settings.drawTrails) {
-      modules.trails.finish();
+      modules.interface.finishTrail();
     }
 
     // Handle the gesture.
-    var gesture = gestureAccumulator.gesture;
+    var gesture = gestureDetector.gesture;
     if (gesture) {
       browser.runtime.sendMessage({
-        topic: 'mg-gesture',
+        topic: 'mg-mouseGesture',
         data: {
           context: state.mouseDown.context,
           element: state.mouseDown.element,
@@ -116,7 +115,12 @@ modules.gesture = (function () {
 
     // Hide the gesture trail.
     if (settings.drawTrails) {
-      modules.trails.finish();
+      modules.interface.finishTrail();
+    }
+
+    // Hide the status text.
+    if (settings.showStatusText) {
+      modules.interface.status(null);
     }
   }
 
@@ -126,4 +130,4 @@ modules.gesture = (function () {
     finish: finish
   };
 
-}());
+}(modules.settings));

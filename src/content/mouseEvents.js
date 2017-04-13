@@ -279,7 +279,7 @@ modules.mouseEvents = (function () {
       });
 
       // Start a gesture.
-      modules.gesture.begin(data);
+      modules.handler.begin(data);
     }
   }
 
@@ -293,7 +293,7 @@ modules.mouseEvents = (function () {
       });
 
       // Finish a gesture.
-      modules.gesture.finish(data);
+      modules.handler.finish(data);
     }
   }
 
@@ -310,7 +310,7 @@ modules.mouseEvents = (function () {
         /* falls through*/
       case PROGRESS_MOUSE_MOVE:
         // Update a gesture.
-        modules.gesture.update(data);
+        modules.handler.update(data);
         break;
     }
   }

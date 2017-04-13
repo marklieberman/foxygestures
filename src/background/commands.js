@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * This module is reponsible for executing the mapped command for a gesture.
+ * This module is reponsible for defining and executing commands.
  */
 var modules = modules || {};
-modules.commands = (function () {
+modules.commands = (function (settings) {
 
   // An array of supported commands.
   var commands = [
@@ -176,47 +176,9 @@ modules.commands = (function () {
 
   // ---------------------------------------------------------------------------
 
-  if (browser) {
-    // Store the default mappings on first load.
-    browser.storage.local.get('mappings').then(results => {
-      if (!results.mappings || !results.mappings.length) {
-        browser.storage.local.set({
-          'mappings': commands.filter(command => !!command.defaults.gesture).map(command => ({
-            command: command.id,
-            gesture: command.defaults.gesture
-          }))
-        });
-      }
-    });
-
-    // Do not listen for messages when included by options.html.
-    if (!window.location.href.endsWith('/options/options.html')) {
-      browser.runtime.onMessage.addListener(onMessage);
-    }
-  }
-
-  // Handle messages from the content script.
-  function onMessage (message, sender) {
-    switch (message.topic) {
-      case 'mg-gesture':
-        onMouseGesture(Object.assign(message.data, {
-          sender: sender
-        }));
-        break;
-    }
-    return false;
-  }
-
-  // Execute the mapped command for a gesture.
-  function onMouseGesture (data) {
-    browser.storage.local.get('mappings').then(results => {
-      var mapping = results.mappings.find(mapping => mapping.gesture === data.gesture);
-      if (mapping) {
-        var command = commands.find(command => command.id === mapping.command);
-        command.handler(data);
-      }
-    });
-  }
+  // Find a command by ID.
+  commands.findById = (id) => new Optional(
+    commands.find(command => command.id === id));
 
   // Get the current window.
   function getCurrentWindow () {
@@ -230,7 +192,7 @@ modules.commands = (function () {
 
   // Receive a callback with the active tab.
   function callOnActiveTab (callback) {
-    getCurrentWindowTabs().then((tabs) => {
+    return getCurrentWindowTabs().then((tabs) => {
       for (var tab of tabs) {
         if (tab.active) {
           callback(tab, tabs);
@@ -369,4 +331,4 @@ modules.commands = (function () {
 
   return commands;
 
-}());
+}(modules.settings));

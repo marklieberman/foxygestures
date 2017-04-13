@@ -32,7 +32,9 @@ class UDLRGestureDetector {
     if (move !== this.prevMove) {
       this._gesture += move;
       this.prevMove = move;
+      return true;
     }
+    return false;
   }
 
   // Get the gesture.

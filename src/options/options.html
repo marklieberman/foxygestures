@@ -3,19 +3,22 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="lib/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/ui-bootstrap-custom-2.5.0-csp.css">
     <link rel="stylesheet" href="lib/font-awesome.min.css">
     <link rel="stylesheet" href="options.css">
 
     <!-- WebExtension shared components -->
-    <script src="../background/commands.js"></script>
+    <script src="../common/MouseDeltaAccumulator.js"></script>
+    <script src="../common/UDLRGestureDetector.js"></script>
+    <script src="../common/settings.js"></script>
     <script src="../content/helpers.js"></script>
-    <script src="../content/classes/MouseDeltaAccumulator.js"></script>
-    <script src="../content/classes/UDLRGestureDetector.js"></script>
+    <script src="../background/helpers.js"></script>
+    <script src="../background/commands.js"></script>
   </head>
 
   <body ng-controller="OptionsCtrl">
     <!-- Do not show until settings are loaded -->
-    <div ng-if="commands.loaded && settings.loaded">
+    <div ng-if="commands.loaded && settingsLoaded">
 
       <form class="form">
         <!-- Gesture button -->
@@ -35,9 +38,12 @@
         <!-- Gesture timeout -->
         <div class="form-group">
           <label class="control-label">Gesture Timeout</label>
-          <input class="form-control" type="number"
-                 step="0.1" min="0" max="30"
-                 ng-model="controls.gestureTimeout"></input>
+          <div class="input-group">
+            <input class="form-control" type="number"
+                   step="0.1" min="0" max="30"
+                   ng-model="controls.gestureTimeout"></input>
+            <span class="input-group-addon">seconds</span>
+          </div>
           <p class="help-block">
             Cancel a gesture if there is no movement for this many seconds. Use zero to disable.
           </p>
@@ -53,10 +59,20 @@
                      ng-model="settings.drawTrails"></input>
               Draw gesture trails
             </label>
+            <a class="pull-right"
+               ng-click="controls.fewerTrailOptions = !controls.fewerTrailOptions">
+              <span ng-show="controls.fewerTrailOptions">
+                More options <i class="fa fa-caret-down"></i>
+              </span>
+              <span ng-hide="controls.fewerTrailOptions">
+                Fewer options <i class="fa fa-caret-up"></i>
+              </span>
+            </a>
           </div>
         </div>
 
-        <fieldset ng-disabled="!settings.drawTrails">
+        <fieldset uib-collapse="controls.fewerTrailOptions"
+                  ng-disabled="!settings.drawTrails">
           <!-- Trail width -->
           <div class="form-group">
             <label class="control-label">Trail Width</label>
@@ -75,6 +91,57 @@
               Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
             </p>
           </div>
+        </fieldset>
+
+        <hr>
+
+        <!-- Draw status -->
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"
+                     ng-model="settings.showStatusText"></input>
+              Show status text
+            </label>
+            <a class="pull-right"
+               ng-click="controls.fewerStatusOptions = !controls.fewerStatusOptions">
+              <span ng-show="controls.fewerStatusOptions">
+                More options <i class="fa fa-caret-down"></i>
+              </span>
+              <span ng-hide="controls.fewerStatusOptions">
+                Fewer options <i class="fa fa-caret-up"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <fieldset uib-collapse="controls.fewerStatusOptions"
+                  ng-disabled="!settings.showStatusText">
+
+          <!-- Status timeout -->
+          <div class="form-group">
+            <label class="control-label">Status Timeout</label>
+            <div class="input-group">
+              <input class="form-control" type="number"
+                     step="0.1" min="0.1" max="30"
+                     ng-model="controls.statusTimeout"></input>
+              <span class="input-group-addon">seconds</span>
+            </div>
+            <p class="help-block">
+              Amount of time to display the status text after a gesture.
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label">Status Template</label>
+            <a class="pull-right" ng-click="settings.statusTemplate = settings.$templates.statusTemplate">Reset</a>
+            <textarea class="form-control"
+                      ng-model="settings.statusTemplate"></textarea>
+            <p class="help-block">
+              Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text.
+            </p>
+          </div>
+
         </fieldset>
       </form>
 
@@ -120,7 +187,7 @@
 
     <!-- Library components -->
     <script src="lib/angular.min.js"></script>
-    <script src="lib/ui-bootstrap-custom-tpls.min.js"></script>
+    <script src="lib/ui-bootstrap-custom-tpls-2.5.0.min.js"></script>
     <script src="options.js"></script>
 
   </body>
