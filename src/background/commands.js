@@ -174,11 +174,10 @@ modules.commands = (function (settings) {
     }
   ];
 
-  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
 
   // Find a command by ID.
-  commands.findById = (id) => new Optional(
-    commands.find(command => command.id === id));
+  commands.findById = (id) => Optional.of(commands.find(command => command.id === id));
 
   // Get the current window.
   function getCurrentWindow () {
@@ -218,7 +217,9 @@ modules.commands = (function (settings) {
     });
   }
 
-  // Command implementations ---------------------------------------------------
+  commands.executeInContent = executeInContent;
+
+  // Command implementations -------------------------------------------------------------------------------------------
 
   // Close the active tab.
   function commandCloseTab (data) {

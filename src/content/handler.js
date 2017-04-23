@@ -17,7 +17,7 @@ modules.handler = (function (settings) {
   var deltaAccumulator = new MouseDeltaAccumulator();
   var gestureDetector = new UDLRGestureDetector();
 
-  // Event listeners -----------------------------------------------------------
+  // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Handle messages from the background script.
   browser.runtime.onMessage.addListener((message, sender) => {
@@ -29,7 +29,18 @@ modules.handler = (function (settings) {
     return false;
   });
 
-  // ---------------------------------------------------------------------------
+  window.addEventListener('message', function (event) {
+    if (event.data) {
+      switch (event.data.topic) {
+        case 'mg-status':
+          console.log('status update');
+          modules.interface.status(event.data.data);
+          break;
+      }
+    }
+  });
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   // Invoked when a gesture begins by mouse down.
   function begin (mouseDown) {

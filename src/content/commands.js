@@ -15,9 +15,10 @@
     'reloadFrame'    : commandReloadFrame,
     'scrollTop'      : commandScrollTop,
     'scrollBottom'   : commandScrollBottom,
+    'userScript'     : commandUserScript
   };
 
-  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
 
   browser.runtime.onMessage.addListener(onMessage);
 
@@ -40,6 +41,15 @@
       }
     }
   });
+
+  // Post a message to the given window with the given topic.
+  // Typically used to send messages up the frame/window hierarchy.
+  function postTo (targetWindow, topic, data) {
+    targetWindow.postMessage({
+      topic: 'mg-' + topic,
+      data: data || {}
+    }, '*');
+  }
 
   // Modify the page number parameter in a URL.
   // Tries each replacer stategy in turn until one is successful.
@@ -70,10 +80,10 @@
     }
   }
 
-  // Command implementations ---------------------------------------------------
+  // Command implementations -------------------------------------------------------------------------------------------
 
   // Execute the delegated command or pass it down the frame hierachy.
-  function onDelegateCommand (data) {
+  function onDelegateCommand (data, sender) {
     // Check if the command should be handled by this frame.
     if (data.context.scriptFrameId) {
       if (modules.mouseEvents.scriptFrameId !== data.context.scriptFrameId) {
@@ -121,6 +131,40 @@
   // Scroll to the bottom of the frame or page.
   function commandScrollBottom (data) {
     window.scrollTo(0,document.body.scrollHeight);
+  }
+
+  // Execute a user script.
+  function commandUserScript (data) {
+    /* jshint evil:true */
+    try {
+      var mouseDown = modules.mouseEvents.getMouseDown();
+      eval(data.userScript.script);
+    } catch (err) {
+      // Report any error with the user script.
+      let label =  data.userScript.label || 'User Script';
+      setStatus(label + ' error: ' + err.message);
+      console.log(label, 'error', err);
+    }
+  }
+
+  // User script API functions -----------------------------------------------------------------------------------------
+  // These are functions that primarily exist for use with user scripts.
+
+  // Serialize a function and send it to the background script for execution.
+  // This is a mechanism for user scripts to execute code in the priviledged background context.
+  function background (args, func) {
+    return browser.runtime.sendMessage({
+      topic: 'mg-backgroundExec',
+      data: {
+        args: args,
+        func: func.toString()
+      }
+    });
+  }
+
+  // Set the status text.
+  function setStatus (status) {
+    postTo(window.top, 'status', status);
   }
 
 }());

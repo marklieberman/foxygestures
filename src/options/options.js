@@ -154,21 +154,25 @@ app.controller('OptionsCtrl', [
 
     // Get the mapping for a command.
     $scope.getMappingForCommand = (command) => {
-      var commandId = command.id || command;
-      return settings.mouseMappings.find(mapping =>
-        mapping.command === commandId);
+      var id = command.id || command;
+      return settings.mouseMappings.find(mapping => mapping.command === id);
     };
 
     // Get the mapping for a gesture.
     $scope.getMappingForGesture = (gesture) => {
-      return settings.mouseMappings.find(mapping =>
-        mapping.gesture === gesture);
+      return settings.mouseMappings.find(mapping => mapping.gesture === gesture);
+    };
+
+    // Get the mapping for a gesture.
+    $scope.getMappingForUserScript = (userScript) => {
+      return settings.mouseMappings
+        .filter(mapping => mapping.command === 'userScript')
+        .find(mapping => mapping.userScript === userScript.id);
     };
 
     // Remove the mapping for a gesture.
     $scope.removeMappingForGesture = (gesture) => {
-      var index = settings.mouseMappings.findIndex(
-        mapping => mapping.gesture === gesture);
+      var index = settings.mouseMappings.findIndex(mapping => mapping.gesture === gesture);
       if (index >= 0) {
         settings.mouseMappings.splice(index, 1);
       }
@@ -176,33 +180,53 @@ app.controller('OptionsCtrl', [
 
     // Remove the mapping for a command.
     $scope.removeMappingForCommand = (command) => {
-      var index = settings.mouseMappings.findIndex(
-        mapping => mapping.command === command.id);
+      var index = settings.mouseMappings.findIndex(mapping => mapping.command === command.id);
       if (index >= 0) {
         settings.mouseMappings.splice(index, 1);
       }
     };
 
+    // Prompt if the gesture is assigned to another command.
+    $scope.promptIfGestureInUse = (gesture, label, selfAssignmentTest) => {
+      // Do not prompt if gesture is mapped to itself.
+      var mapping = $scope.getMappingForGesture(gesture);
+      if (!mapping || selfAssignmentTest(mapping)) {
+        return true;
+      }
+
+      // Find the item that is currently assigned via the mapping.
+      var assigned = null;
+      if (mapping.command === 'userScript') {
+        // Find the currently mapped user script.
+        assigned = settings.userScripts.find(userScript => userScript.id === mapping.userScript);
+      } else {
+        // Find the currently mapped command.
+        assigned = commands.findById(mapping.command);
+      }
+
+      // Prompt if the assignment is valid.
+      if (assigned && !window.confirm(modules.helpers.format(
+        '{} is already mapped to {}. Re-assign to {}?',
+        gesture, assigned.label, label))
+      ) {
+        // Cancel assignment.
+        return false;
+      }
+
+      return true;
+    };
+
     // Re-assign a gesture.
-    $scope.assignGesture = (gesture, command) => {
+    $scope.assignGestureToCommand = (gesture, command) => {
       if (!gesture) {
         $scope.removeMappingForCommand(command);
         return;
       }
 
-      // Prompt when re-assigning a command.
-      var assigned = $scope.getMappingForGesture(gesture);
-      if (assigned && (assigned.command !== command.id)) {
-        var oldCommand = commands.findById(assigned.command);
-        if (oldCommand) {
-          var prompt = modules.helpers.format(
-            '{} is already mapped to {}. Re-assign to {}?',
-            gesture, oldCommand.label, command.label);
-          if (!window.confirm(prompt)) {
-            // Cancel assignment.
-            return;
-          }
-        }
+      // Prompt when re-assigning a gesture.
+      if (!$scope.promptIfGestureInUse(gesture, command.label, mapping => mapping.command === command.id)) {
+        // Assignment cancelled.
+        return;
       }
 
       // Remove the old mappings for this command.
@@ -214,6 +238,54 @@ app.controller('OptionsCtrl', [
         command: command.id,
         gesture: gesture
       });
+    };
+
+    $scope.assignGestureToUserScript = (gesture, userScript) => {
+      if (!gesture) {
+        $scope.removeMappingForGesture(gesture);
+        return;
+      }
+
+      // Prompt when re-assigning a gesture.
+      if (!$scope.promptIfGestureInUse(gesture, userScript.label, mapping => mapping.userScript === userScript.id)) {
+        // Assignment cancelled.
+        return;
+      }
+
+      // Remove the old mappings for this command.
+      $scope.removeMappingForGesture(gesture);
+
+      // Assign the gesture to this user script.
+      // Insert the new mapping for this gesture.
+      settings.mouseMappings.push({
+        command: 'userScript',
+        gesture: gesture,
+        userScript: userScript.id
+      });
+    };
+
+    // Add a user script.
+    $scope.addUserScript = () => {
+      settings.userScripts.push({
+        id: 'userScript:' + new Date().getTime(),
+        label: 'User Script',
+        script: 'testing'
+      });
+    };
+
+    // Remove a user script.
+    $scope.removeUserScript = (removing) => {
+      var index = settings.userScripts.findIndex(userScript => userScript === removing);
+      if (index >= 0) {
+        // Remove the mapping for this user script.
+        var mapping = $scope.getMappingForUserScript(removing);
+        if (mapping) {
+          $scope.removeMappingForGesture(mapping.gesture);
+        }
+
+        // Remove the user script.
+        settings.userScripts.splice(index, 1);
+      }
     };
   }]);
 

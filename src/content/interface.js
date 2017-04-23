@@ -103,8 +103,9 @@ modules.interface = (function (settings) {
     }
   }
 
-  // Status --------------------------------------------------------------------
+  // Status ------------------------------------------------------------------------------------------------------------
 
+  // Insert the HTML fragment for a status message.
   function insertStatusMarkup () {
     var template = document.createElement('template');
     template.innerHTML = settings.statusTemplate;
@@ -115,9 +116,9 @@ modules.interface = (function (settings) {
     state.body.appendChild(state.status.outerElement);
   }
 
-  //
+  // Set the status text.
   function status (content) {
-    if (!findBody()) {
+    if (!findBody() || !settings.showStatusText) {
       return;
     }
 

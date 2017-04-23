@@ -3,15 +3,15 @@ body {
   padding: 0 10px;
 }
 
+.section-help-block {
+  width: 100%;
+  text-align: center;
+}
+
 .mapping-list {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-}
-
-.section-help-block {
-  width: 100%;
-  text-align: center;
 }
 
 .tile .mapping-item {
@@ -21,7 +21,7 @@ body {
   text-align: center;
 }
 
-.mapping-item canvas {
+canvas.gesture-input {
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -44,4 +44,34 @@ body {
   width: 100%;
   text-align: center;
   margin-bottom: 4px;
+}
+
+.user-script-list {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+.user-script-item {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+}
+
+.user-script-mapping {
+  flex: 0 1 auto;
+  max-width: 150px;
+  text-align: center;
+}
+
+.user-script-settings {
+  flex: 1 1 auto;
+  margin-left: 10px;
+}
+
+.user-script-settings textarea {
+  margin-top: 4px;
+  min-height: 200px;
+  font-family: monospace;  
 }

@@ -42,7 +42,7 @@ modules.mouseEvents = (function () {
     postTo(window.parent, 'loadFrame', { id: state.scriptFrameId });
   }
 
-  // Event listeners -----------------------------------------------------------
+  // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Listen for changes to settings.
   browser.storage.onChanged.addListener((changes, area) => {
@@ -114,6 +114,7 @@ modules.mouseEvents = (function () {
 
   window.addEventListener('mousedown', function (event) {
     var data = getMouseData(event, true);
+    state.mouseDown = event;
     if (state.isNested) {
       // Post to parent - must apply frame offsets.
       postTo(window.parent, 'mousedown', data);
@@ -159,7 +160,7 @@ modules.mouseEvents = (function () {
     }
   }, true);
 
-  // Functions -----------------------------------------------------------------
+  // Functions ---------------------------------------------------------------------------------------------------------
 
   // Post a message to the given window with the given topic.
   // Typically used to send messages up the frame/window hierarchy.
@@ -270,7 +271,7 @@ modules.mouseEvents = (function () {
 
   // Invoked by the mousedown event.
   // The event may have bubbled up from nested frames.
-  function onMouseDown (data) {
+  function onMouseDown (data, event) {
     if (data.button === settings.gestureButton && !state.isUnloading) {
       // Replicate state to nested frames.
       replicateState({
@@ -331,6 +332,7 @@ modules.mouseEvents = (function () {
 
   return {
     scriptFrameId: state.scriptFrameId,
+    getMouseDown: () => state.mouseDown,
     broadcast: broadcast,
     cancelGesture: cancelGesture
   };

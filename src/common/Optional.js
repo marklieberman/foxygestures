@@ -4,8 +4,8 @@
  * Simple Optional implementation for JavaScript.
  */
 class Optional {
-  constructor (nullable) {
-    this.value = (nullable !== undefined) ? nullable : null;
+  constructor (value) {
+    this.value = (value !== undefined) ? value : null;
   }
 
   isPresent () {
@@ -13,7 +13,11 @@ class Optional {
   }
 
   get () {
-    return this.value;
+    if (this.isPresent()) {
+      return this.value;
+    } else {
+      throw 'optional is empty';
+    }
   }
 
   map (mapper) {
@@ -30,6 +34,23 @@ class Optional {
     }
   }
 
+  or (optional) {
+    if (this.isPresent()) {
+      return this;
+    }
+
+    // Accept a function so that the OR condition may be evaluated lazily.
+    if (typeof optional === 'function') {
+      optional = optional();
+    }
+
+    if (optional instanceof Optional) {
+      return optional;
+    }
+
+    throw 'argument not an optional';
+  }
+
   orElse (orElse) {
     if (typeof orElse === 'function') {
       return orElse();
@@ -38,7 +59,9 @@ class Optional {
     }
   }
 
-  static empty() {
-    return new Optional();
+  static of (value) {
+    return (value === undefined || value === null) ? Optional.EMPTY : new Optional(value);
   }
 }
+
+Optional.EMPTY = new Optional();

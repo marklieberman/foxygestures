@@ -17,28 +17,27 @@
   // Get the mapping for a mouse gesture.
   function withMouseMappingForGesture (gesture) {
     return browser.storage.local.get('mouseMappings').then(results =>
-      new Optional(results.mouseMappings.find(mapping =>
-        mapping.gesture === gesture)));
+      new Optional(results.mouseMappings.find(mapping => mapping.gesture === gesture)));
   }
 
-  // Event listeners -----------------------------------------------------------
+  // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Handle messages from the content script.
   browser.runtime.onMessage.addListener((message, sender) => {
-    var data;
+    let data = Object.assign({}, message.data, { sender: sender });
     switch (message.topic) {
       case 'mg-gestureProgress':
-        data = Object.assign(message.data, { sender: sender });
         onGestureProgress(data);
         break;
       case 'mg-mouseGesture':
-        data = Object.assign(message.data, { sender: sender });
         onMouseGesture(data);
         break;
       case 'mg-wheelGesture':
-        data = Object.assign(message.data, { sender: sender });
         onWheelGesture(data);
         break;
+      case 'mg-backgroundExec':
+        // This function will reply via a promise.
+        return onBackgroundExec(data);
     }
     return false;
   });
@@ -47,13 +46,18 @@
   function onGestureProgress (data) {
     if (settings.showStatusText) {
       withMouseMappingForGesture(data.gesture).then(mapping => {
-        // Find the associated command if the mapping is valid.
-        var command = mapping.map(value => commands.findById(value.command));
+        let assigned = Optional.EMPTY;
+        if (mapping.isPresent()) {
+          assigned = assigned
+            // Check user scripts for a matching user script ID.
+            .or(() => settings.findUserScriptById(mapping.get().userScript))
+            // Check commands for a matching command ID.
+            .or(() => mapping.map(value => commands.findById(value.command)));
+        }
 
-        // Generate a progress status message for the gesture.
-        if (mapping.isPresent() && command.isPresent()) {
+        if (assigned.isPresent()) {
           replyTo(data.sender, 'mg-status', helpers.format(
-            'Gesture: {} ({})', data.gesture, command.get().label
+            'Gesture: {} ({})', data.gesture, assigned.get().label || 'User Script'
           ));
         } else {
           replyTo(data.sender, 'mg-status', helpers.format(
@@ -67,13 +71,20 @@
   // Execute the mapped command for a mouse gesture.
   function onMouseGesture (data) {
     withMouseMappingForGesture(data.gesture).then(mapping => {
-      // Find the associated command if the mapping is valid.
-      var command = mapping.map(value => commands.findById(value.command));
+      let assigned = Optional.EMPTY;
+      if (mapping.isPresent()) {
+        if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
+          data.userScript = assigned.get();
+          commands.executeInContent('userScript', data, true);
+          return;
+        }
 
-      if (mapping.isPresent() && command.isPresent()) {
-        // Execute the command handler.
-        command.get().handler(data);
-      } else
+        if ((assigned = mapping.map(value => commands.findById(value.command))).isPresent()) {
+          assigned.get().handler(data);
+          return;
+        }
+      }
+
       if (settings.showStatusText) {
         // Mapping for this gesture not found.
         replyTo(data.sender, 'mg-status', helpers.format(
@@ -86,6 +97,20 @@
   // Execute the mapped command for a wheel gesture.
   function onWheelGesture (data) {
     replyTo(data.sender, 'mg-status', null);
+  }
+
+  // User script API functions -----------------------------------------------------------------------------------------
+  // These are functions that primarily exist for use with user scripts.
+
+  // Execute a JavaScript function and return the result in a promise.
+  // This supports the backgroundExec() method in user scripts.
+  function onBackgroundExec (data) {
+    /* jshint evil:true */
+    try {
+      return Promise.resolve(eval(data.func).apply(null, data.args));
+    } catch (err) {
+      return Promise.reject(err);
+    }
   }
 
 }(modules.settings, modules.helpers, modules.commands));

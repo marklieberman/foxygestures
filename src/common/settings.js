@@ -26,6 +26,7 @@ modules.settings = (function () {
     showStatusText: true, // Show status text when enabled.
     statusTimeout: 2000,  // Timeout to hide the status text.
     mouseMappings: [],    // Array of gesture mappings.
+    userScripts: [],      // Array of user scripts.
 
     // Templates
     statusTemplate: STATUS_TEMPLATE
@@ -62,7 +63,7 @@ modules.settings = (function () {
     }
   });
 
-  // Event listeners -----------------------------------------------------------
+  // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Listen for changes to settings.
   browser.storage.onChanged.addListener((changes, area) => {
@@ -73,7 +74,18 @@ modules.settings = (function () {
     });
   });
 
-  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
+
+  Object.defineProperty(settings, 'findUserScriptById', {
+    enumerable: false,
+    value: (id) => {
+      console.log('finding', id);
+      return Optional.of(id ? settings.userScripts.find(userScript => userScript.id === id) : null);
+    }
+  });
+
+  // Find a user script by ID.
+  //settings.findUserScriptById = ;
 
   // Initialize the mouse mappings from the commands array.
   function initializeMouseMappings () {
