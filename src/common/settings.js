@@ -1,9 +1,8 @@
 'use strict';
 
 /**
- * This module is responsible for centralized access to settings. It presents
- * itself as a hash of settings. However, the values are automatically updated
- * when storage is modified.
+ * This module is responsible for centralized access to settings. It presents itself as a hash of settings. However,
+ * the values are automatically updated when storage is modified.
  */
 var modules = modules || {};
 modules.settings = (function () {
@@ -33,59 +32,38 @@ modules.settings = (function () {
   };
 
   // Load settings from storage.
-  var loadingPromise = browser.storage.local.get(settings).then(results => {
-    // Assign values from storage into the module reference.
-    Object.assign(settings, results);
-
-    var promise = Promise.resolve();
-
-    // Initialize the mouse mappings if empty. This can only be done if the
-    // commands module is available, such as in background page context.
-    if (modules.commands && !settings.mouseMappings.length) {
-      promise = promise.then(() => initializeMouseMappings());
-    }
-
-    return promise.then(() => settings);
-  });
-
-  // Add a non-enumerable property that is a promise which is resolved when
-  // settings have been loaded from storage.
+  // This is exposed as the non-enumerable loaded property.
   Object.defineProperty(settings, 'loaded', {
     enumerable: false,
-    value: loadingPromise
-  });
+    value: browser.storage.local.get(settings).then(results => {
+      // Assign values from storage into the module reference.
+      Object.keys(results)
+        .filter(key => typeof settings[key] !== 'function')
+        .forEach(key => settings[key] = results[key]);
 
-  // Add a non-enumerable property to expose default values for templates.
-  Object.defineProperty(settings, '$templates', {
-    enumerable: false,
-    value: {
-      statusTemplate: STATUS_TEMPLATE
-    }
+      var promise = Promise.resolve();
+
+      // Initialize the mouse mappings if empty. This can only be done if the
+      // commands module is available, such as in background page context.
+      if (modules.commands && !settings.mouseMappings.length) {
+        promise = promise.then(() => initializeMouseMappings());
+      }
+
+      return promise.then(() => settings);
+    })
   });
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Listen for changes to settings.
   browser.storage.onChanged.addListener((changes, area) => {
-    Object.keys(settings).forEach(key => {
-      if (changes[key]) {
-        settings[key] = changes[key].newValue;
-      }
-    });
+    Object.keys(settings)
+      .filter(key => changes[key] !== undefined)
+      .filter(key => typeof settings[key] !== 'function')
+      .forEach(key => settings[key] = changes[key].newValue);
   });
 
   // -------------------------------------------------------------------------------------------------------------------
-
-  Object.defineProperty(settings, 'findUserScriptById', {
-    enumerable: false,
-    value: (id) => {
-      console.log('finding', id);
-      return Optional.of(id ? settings.userScripts.find(userScript => userScript.id === id) : null);
-    }
-  });
-
-  // Find a user script by ID.
-  //settings.findUserScriptById = ;
 
   // Initialize the mouse mappings from the commands array.
   function initializeMouseMappings () {
@@ -102,6 +80,14 @@ modules.settings = (function () {
       'mouseMappings': mappings
     });
   }
+
+  // Get the default value for template settings.
+  settings.getDefaultTemplates = () => ({
+    statusTemplate: STATUS_TEMPLATE
+  });
+
+  // Find a user script by ID.
+  settings.findUserScriptById = (id) => Optional.of(settings.userScripts.find(userScript => userScript.id === id));
 
   return settings;
 

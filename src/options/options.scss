@@ -1,0 +1,94 @@
+$nav-tabs-border-color: #ccc;
+$nav-tabs-active-link-hover-border-color: #ccc;
+
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+
+body {
+  background-color: transparent;
+}
+
+.tab-content {
+  background: #fff;
+  padding: 40px 20px;
+  border-left: 1px solid $nav-tabs-border-color;
+  border-right: 1px solid $nav-tabs-border-color;
+  border-bottom: 1px solid $nav-tabs-border-color;
+  border-bottom-left-radius: $border-radius-base;
+  border-bottom-right-radius: $border-radius-base;
+}
+
+.section-help-block {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+// ----- Gesture input -----
+
+.command-label {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 24px;
+  line-height: 12px;
+
+  i {
+    margin-left: 5px;
+  }
+}
+
+canvas.gesture-input {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: auto 0;
+}
+
+.mapped-gesture {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+// ----- Built-in mappings list -----
+
+.mapping-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
+  .mapping-item {
+    flex: 0 0 auto;
+    max-width: 150px;
+    margin: 2.5px;
+    text-align: center;
+  }
+
+  .user-script-item {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+  }
+}
+
+// ----- User script items -----
+
+.user-script-mapping {
+  flex: 0 1 auto;
+  max-width: 150px;
+  text-align: center;
+}
+
+.user-script-settings {
+  flex: 1 1 auto;
+  margin-left: 5px;
+
+  .ace-editor {
+    margin-top: 5px;
+    min-height: 300px;
+    height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+}

@@ -2,7 +2,6 @@
 <html ng-app="mgOptionsApp" ng-strict-di>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="lib/bootstrap.min.css">
     <link rel="stylesheet" href="lib/ui-bootstrap-custom-2.5.0-csp.css">
     <link rel="stylesheet" href="lib/font-awesome.min.css">
     <link rel="stylesheet" href="options.css">
@@ -10,6 +9,7 @@
     <!-- WebExtension shared components -->
     <script src="../common/MouseDeltaAccumulator.js"></script>
     <script src="../common/UDLRGestureDetector.js"></script>
+    <script src="../common/Optional.js"></script>
     <script src="../common/settings.js"></script>
     <script src="../content/helpers.js"></script>
     <script src="../background/helpers.js"></script>
@@ -18,237 +18,252 @@
 
   <body ng-controller="OptionsCtrl">
     <!-- Do not show until settings are loaded -->
-    <div ng-if="commands.loaded && settingsLoaded">
+    <form class="form" ng-if="commands.loaded && settings.loaded">
 
-      <form class="form">
-        <!-- Gesture button -->
-        <div class="form-group">
-          <label class="control-label">Gesture Button</label>
-          <select class="form-control"
-                  ng-model="settings.gestureButton">
-            <option ng-value="0">Left</option>
-            <option ng-value="1">Middle</option>
-            <option ng-value="2">Right</option>
-          </select>
-          <p class="help-block">
-            The mouse button used to start a gesture.
-          </p>
-        </div>
+      <uib-tabset active="0">
 
-        <!-- Gesture timeout -->
-        <div class="form-group">
-          <label class="control-label">Gesture Timeout</label>
-          <div class="input-group">
-            <input class="form-control" type="number"
-                   step="0.1" min="0" max="30"
-                   ng-model="controls.gestureTimeout"></input>
-            <span class="input-group-addon">seconds</span>
-          </div>
-          <p class="help-block">
-            Cancel a gesture if there is no movement for this many seconds. Use zero to disable.
-          </p>
-        </div>
+        <uib-tab index="0" heading="General Settings">
 
-        <hr>
-
-        <!-- Draw trails -->
-        <div class="form-group">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"
-                     ng-model="settings.drawTrails"></input>
-              Draw gesture trails
-            </label>
-            <a class="pull-right"
-               ng-click="controls.fewerTrailOptions = !controls.fewerTrailOptions">
-              <span ng-show="controls.fewerTrailOptions">
-                More options <i class="fa fa-caret-down"></i>
-              </span>
-              <span ng-hide="controls.fewerTrailOptions">
-                Fewer options <i class="fa fa-caret-up"></i>
-              </span>
-            </a>
-          </div>
-        </div>
-
-        <fieldset uib-collapse="controls.fewerTrailOptions"
-                  ng-disabled="!settings.drawTrails">
-          <!-- Trail width -->
+          <!-- Gesture button -->
           <div class="form-group">
-            <label class="control-label">Trail Width</label>
-            <input class="form-control" type="number"
-                   step="0.5" min="0" max="5"
-                   ng-model="settings.trailWidth"></input>
-          </div>
-
-          <!-- Trail color -->
-          <div class="form-group">
-            <label class="control-label">Trail Color</label>
-            <input class="form-control" type="text"
-                   ng-model="settings.trailColor"
-                   ng-model-options="{ updateOn: 'blur' }"></input>
+            <label class="control-label">Gesture Button</label>
+            <select class="form-control"
+                    ng-model="settings.gestureButton">
+              <option ng-value="0">Left</option>
+              <option ng-value="1">Middle</option>
+              <option ng-value="2">Right</option>
+            </select>
             <p class="help-block">
-              Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
+              The mouse button used to start a gesture.
             </p>
           </div>
-        </fieldset>
 
-        <hr>
-
-        <!-- Draw status -->
-        <div class="form-group">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"
-                     ng-model="settings.showStatusText"></input>
-              Show status text
-            </label>
-            <a class="pull-right"
-               ng-click="controls.fewerStatusOptions = !controls.fewerStatusOptions">
-              <span ng-show="controls.fewerStatusOptions">
-                More options <i class="fa fa-caret-down"></i>
-              </span>
-              <span ng-hide="controls.fewerStatusOptions">
-                Fewer options <i class="fa fa-caret-up"></i>
-              </span>
-            </a>
-          </div>
-        </div>
-
-        <fieldset uib-collapse="controls.fewerStatusOptions"
-                  ng-disabled="!settings.showStatusText">
-
-          <!-- Status timeout -->
+          <!-- Gesture timeout -->
           <div class="form-group">
-            <label class="control-label">Status Timeout</label>
+            <label class="control-label">Gesture Timeout</label>
             <div class="input-group">
               <input class="form-control" type="number"
-                     step="0.1" min="0.1" max="30"
-                     ng-model="controls.statusTimeout"></input>
+                     step="0.1" min="0" max="30"
+                     ng-model="controls.gestureTimeout"></input>
               <span class="input-group-addon">seconds</span>
             </div>
             <p class="help-block">
-              Amount of time to display the status text after a gesture.
+              Cancel a gesture if there is no movement for this many seconds. Use zero to disable.
             </p>
           </div>
 
+          <hr>
+
+          <!-- Draw trails -->
           <div class="form-group">
-            <label class="control-label">Status Template</label>
-            <a class="pull-right" ng-click="settings.statusTemplate = settings.$templates.statusTemplate">Reset</a>
-            <textarea class="form-control"
-                      ng-model="settings.statusTemplate"></textarea>
-            <p class="help-block">
-              Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text.
-            </p>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox"
+                       ng-model="settings.drawTrails"></input>
+                Draw gesture trails
+              </label>
+              <a class="pull-right"
+                 ng-click="controls.fewerTrailOptions = !controls.fewerTrailOptions">
+                <span ng-show="controls.fewerTrailOptions">
+                  More options <i class="fa fa-caret-down"></i>
+                </span>
+                <span ng-hide="controls.fewerTrailOptions">
+                  Fewer options <i class="fa fa-caret-up"></i>
+                </span>
+              </a>
+            </div>
           </div>
 
-        </fieldset>
-      </form>
-
-      <hr>
-
-      <div class="section-help-block">
-        <label>Built-in Gestures</label>
-        <p class="help-block">
-          Perform a gesture in each box to assign the gesture for the command.
-          Press and release the gesture button to clear the gesture.
-        </p>
-      </div>
-
-      <hr>
-
-      <!-- List of gesture mappings -->
-      <div class="mapping-list tile">
-        <div class="mapping-item"
-             ng-repeat="command in commands">
-
-          <label class="control-label command-label">
-             {{command.label}}
-             <i class="fa fa-question-circle"
-                ng-if="command.tooltip"
-                uib-tooltip="{{command.tooltip}}"></i>
-          </label>
-
-          <input class="form-control mapped-gesture"
-                  ng-value="getMappingForCommand(command).gesture"
-                  disabled="disabled"></input>
-
-          <canvas class="gesture-input" mg-gesture-input width="148" height="100"
-                  settings="settings"
-                  gesture="getMappingForCommand(command).gesture"
-                  on-gesture="assignGestureToCommand(gesture, command)"></canvas>
-
-        </div><!-- .mapping-item -->
-      </div><!-- .mapping-list -->
-
-    </div>
-
-    <hr>
-
-    <div class="section-help-block">
-      <label>User Scripts</label>
-      <p class="help-block">
-        Test
-      </p>
-    </div>
-
-    <hr>
-
-    <div class="user-script-list">
-      <div class="user-script-item"
-           ng-repeat="userScript in settings.userScripts">
-
-        <div class="user-script-mapping">
-          <label class="control-label">
-             Gesture
-          </label>
-
-          <input class="form-control mapped-gesture"
-                 ng-value="getMappingForUserScript(userScript).gesture"
-                 disabled="disabled"></input>
-
-          <canvas class="gesture-input" mg-gesture-input width="148" height="100"
-                  settings="settings"
-                  gesture="getMappingForUserScript(userScript).gesture"
-                  on-gesture="assignGestureToUserScript(gesture, userScript)"></canvas>
-        </div>
-
-        <div class="user-script-settings">
-          <div class="form-group">
-            <label class="control-label">User Script</label>
-            <div class="input-group">
-              <input class="form-control" type="text"
-                     ng-model="userScript.label"
-                     placeholder="Name of the user script">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button"
-                        ng-click="removeUserScript(userScript)">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </span>
+          <fieldset uib-collapse="controls.fewerTrailOptions"
+                    ng-disabled="!settings.drawTrails">
+            <!-- Trail width -->
+            <div class="form-group">
+              <label class="control-label">Trail Width</label>
+              <div class="input-group">
+                <input class="form-control" type="number"
+                       step="0.5" min="0" max="5"
+                       ng-model="settings.trailWidth"></input>
+                <span class="input-group-addon">
+                  <canvas mg-trail-preview settings="settings" width="50" height="16"></canvas>
+                </span>
+              </div>
             </div>
 
-            <textarea class="form-control"
-                      ng-model="userScript.script"></textarea>
+            <!-- Trail color -->
+            <div class="form-group">
+              <label class="control-label">Trail Color</label>
+              <input class="form-control" type="text"
+                     ng-model="settings.trailColor"
+                     ng-model-options="{ updateOn: 'blur' }"></input>
+              <p class="help-block">
+                Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
+              </p>
+            </div>
+          </fieldset>
+
+          <hr>
+
+          <!-- Draw status -->
+          <div class="form-group">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox"
+                       ng-model="settings.showStatusText"></input>
+                Show status text
+              </label>
+              <a class="pull-right"
+                 ng-click="controls.fewerStatusOptions = !controls.fewerStatusOptions">
+                <span ng-show="controls.fewerStatusOptions">
+                  More options <i class="fa fa-caret-down"></i>
+                </span>
+                <span ng-hide="controls.fewerStatusOptions">
+                  Fewer options <i class="fa fa-caret-up"></i>
+                </span>
+              </a>
+            </div>
           </div>
 
-        </div>
+          <fieldset uib-collapse="controls.fewerStatusOptions"
+                    ng-disabled="!settings.showStatusText">
 
-      </div><!-- .user-script-item -->
-    </div><!-- .user-script-list -->
+            <!-- Status timeout -->
+            <div class="form-group">
+              <label class="control-label">Status Timeout</label>
+              <div class="input-group">
+                <input class="form-control" type="number"
+                       step="0.1" min="0.1" max="30"
+                       ng-model="controls.statusTimeout"></input>
+                <span class="input-group-addon">seconds</span>
+              </div>
+              <p class="help-block">
+                Amount of time to display the status text after a gesture.
+              </p>
+            </div>
 
-    <button class="btn btn-default pull-right" type="button" ng-click="addUserScript()">
-      Add User Script
-    </button>
+            <div class="form-group">
+              <label class="control-label">Status Template</label>
+              <a class="pull-right" ng-click="settings.statusTemplate = settings.getDefaultTemplates().statusTemplate">Reset</a>
+              <textarea class="form-control"
+                        ng-model="settings.statusTemplate"></textarea>
+              <p class="help-block">
+                Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text.
+              </p>
+            </div>
+
+          </fieldset>
+
+        </uib-tab>
+
+        <uib-tab index="1" heading="Built-in Gestures">
+
+          <div class="section-help-block">
+            <p class="help-block">
+              Perform a gesture in each box to assign the gesture for the command.
+              Press and release the gesture button to clear the gesture.
+            </p>
+          </div>
+
+          <!-- List of gesture mappings -->
+          <div class="mapping-list">
+            <div class="mapping-item"
+                 ng-repeat="command in commands">
+
+              <label class="control-label command-label">
+                 {{command.label}}
+                 <i class="fa fa-question-circle"
+                    ng-if="command.tooltip"
+                    uib-tooltip="{{command.tooltip}}"></i>
+              </label>
+
+              <input class="form-control mapped-gesture"
+                      ng-value="getMappingForCommand(command).gesture"
+                      disabled="disabled"></input>
+
+              <canvas class="gesture-input" mg-gesture-input width="148" height="100"
+                      settings="settings"
+                      gesture="getMappingForCommand(command).gesture"
+                      on-gesture="assignGestureToCommand(gesture, command)"></canvas>
+
+            </div><!-- .mapping-item -->
+          </div><!-- .mapping-list -->
+
+        </uib-tab>
+
+        <uib-tab index="2" heading="User Scripts">
+
+          <div class="section-help-block">
+            <p class="help-block">
+              Execute a custom script with a mouse gesture.
+              Please read the  <a href="https://github.com/marklieberman/foxygestures/wiki/User-Scripts" target="_blank">user scripts</a> article on the wiki before proceeding.
+            </p>
+          </div>
+
+          <div class="mapping-list">
+            <div class="user-script-item"
+                 ng-repeat="userScript in settings.userScripts">
+
+              <div class="user-script-mapping">
+                <label class="control-label">
+                   Gesture
+                </label>
+
+                <input class="form-control mapped-gesture"
+                       ng-value="getMappingForUserScript(userScript).gesture"
+                       disabled="disabled"></input>
+
+                <canvas class="gesture-input" mg-gesture-input width="148" height="100"
+                        settings="settings"
+                        gesture="getMappingForUserScript(userScript).gesture"
+                        on-gesture="assignGestureToUserScript(gesture, userScript)"></canvas>
+              </div>
+
+              <div class="user-script-settings">
+                <div class="form-group">
+                  <label class="control-label">User Script</label>
+                  <div class="input-group">
+                    <input class="form-control" type="text"
+                           ng-model="userScript.label"
+                           placeholder="Name of the user script">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button"
+                              ng-click="removeUserScript(userScript)">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </span>
+                  </div>
+
+                  <div class="ace-editor"
+                       ui-ace="aceOpts"
+                       ng-model="userScript.script"
+                       ng-model-options="{ debounce: 1000 }"></div>
+                </div>
+
+              </div>
+
+            </div><!-- .user-script-item -->
+          </div><!-- .user-script-list -->
+
+          <div class="clearfix">
+            <button class="btn btn-primary pull-right" type="button" ng-click="addUserScript()">
+              Add User Script
+            </button>
+          </div>
+
+        </uib-tab>
+
+      </uib-tabset>
+
+    </form><!-- ng-if loaded -->
 
     <!--
-    <pre>{{settings.userScripts | json}}</pre>
-    <pre>{{settings.mouseMappings | json}}</pre>
+    <pre>{{settings | json}}</pre>
     -->
 
     <!-- Library components -->
     <script src="lib/angular.min.js"></script>
     <script src="lib/ui-bootstrap-custom-tpls-2.5.0.min.js"></script>
+    <script src="lib/ace/ace.js"></script>
+    <script src="lib/ui-ace.min.js"></script>
     <script src="options.js"></script>
 
   </body>

@@ -2,16 +2,17 @@
 'use strict';
 
 var app = angular.module('mgOptionsApp', [
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ui.ace'
 ]);
 
-// -----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+// Helper service that resolves a promise when modules are available.
 app.factory('moduleLoader', [
   '$q',
   '$interval',
   function ($q, $interval) {
-    // Get a function that returns a promise that is resolved when
-    // modules[module] is defined.
+    // Get a function that returns a promise that is resolved when modules[module] is defined.
     return function (module) {
       if (modules[module]) {
         return $q.resolve(modules[module]);
@@ -28,30 +29,31 @@ app.factory('moduleLoader', [
     };
   }]);
 
-// -----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+// A wrapper around the commands module that presents itself as an array of commands similar to the underlying module.
 app.factory('commands', [
   'moduleLoader',
   function (moduleLoader) {
     var service = [];
 
-    moduleLoader('commands').then(commands => {
-      angular.copy(commands, service);
-      service.loaded = true;
+    // Expose a non-enumerable property that is true once settings have been loaded.
+    Object.defineProperty(service, 'loaded', {
+      enumerable: false,
+      writable: true,
+      value: false
     });
 
-    // Find a command by ID.
-    service.findById = (id) => {
-      return service.find(function (cmd) {
-        return cmd.id === id;
-      });
-    };
+    moduleLoader('commands').then(module => {
+      // Copy the commands array and function references.
+      angular.extend(service, module);
+      service.loaded = true;
+    });
 
     return service;
   }]);
 
-// -----------------------------------------------------------------------------
-// A wrapper around the settings module that presents itself as a hash of
-// settings similar to the underlying module.
+// ---------------------------------------------------------------------------------------------------------------------
+// A wrapper around the settings module that presents itself as a hash of settings similar to the underlying module.
 app.factory('settings', [
   '$q',
   'moduleLoader',
@@ -59,48 +61,39 @@ app.factory('settings', [
     var templates = {};
     var service = {};
 
-    // Get a promise chain that is resolved when the settings module is
-    // available and settings have been loaded from storage.
+    // Expose a non-enumerable property that is true once settings have been loaded.
+    Object.defineProperty(service, 'loaded', {
+      enumerable: false,
+      writable: true,
+      value: false
+    });
+
+    // Get a promise chain that is resolved when the settings module is available and settings have been loaded from
+    // storage.
     var promise = moduleLoader('settings').then(module => {
-      // Copy default templates from the settings module.
-      angular.copy(module.$templates, templates);
-
       // Copy loaded settings from the settings module.
-      return module.loaded.then(() => angular.copy(module, service));
+      return module.loaded.then(() => {
+        angular.extend(service, module);
+        service.loaded = true;
+      });
     });
 
-    // Expose the default templates as a non-enumerable property.
-    Object.defineProperty(service, '$templates', {
-      enumerable: false,
-      value: templates
-    });
+    // Load settings from browser storage. Returns a promise that is resolved when settings are loaded.
+    service.load = () => promise.then(() => service);
 
-    // Expose a method to load settings from browser storage as a
-    // non-enumerable property. Returns a promise that is resolved when
-    // settings are loaded.
-    Object.defineProperty(service, 'load', {
-      enumerable: false,
-      value: () => promise.then(() => service)
-    });
-
-    // Expose a method to save settings to browser storage as a
-    // non-enumerable property. Returns a promise that is resolved when
-    // settings are saved.
-    Object.defineProperty(service, 'save', {
-      enumerable: false,
-      value: () => {
-        var deferred = $q.defer();
-        browser.storage.local.set(service).then(
-          () => deferred.resolve(),
-          err => deferred.reject(err));
-        return deferred.promise;
-      }
-    });
+    // Save settings to browser storage. Returns a promise that is resolved when settings are saved.
+    service.save = () => {
+      var deferred = $q.defer();
+      browser.storage.local.set(service).then(
+        () => deferred.resolve(),
+        err => deferred.reject(err));
+      return deferred.promise;
+    };
 
     return service;
   }]);
 
-// -----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 app.controller('OptionsCtrl', [
   '$scope',
   'commands',
@@ -109,7 +102,8 @@ app.controller('OptionsCtrl', [
     // Scope variables.
     $scope.commands = commands;
     $scope.settings = settings;
-    $scope.settingsLoaded = false;
+
+    // Default values for controls.
     $scope.controls = {
       fewerTrailOptions: true,
       fewerStatusOptions: true,
@@ -117,28 +111,31 @@ app.controller('OptionsCtrl', [
       statusTimeout: 2.0
     };
 
-    $scope.defaultStatusTemplate = settings.statusTemplate;
+    // Options for ACE editor.
+    $scope.aceOpts = {
+      theme: 'chrome',
+      mode: 'javascript',
+      showPrintMargin: false
+    };
 
-    // Initialize settings on load.
+    // Initialize controls from settings on load.
     settings.load().then(() => {
-      var inSeconds;
+      let inSeconds;
       inSeconds = Math.floor(settings.gestureTimeout / 100) / 10;
       $scope.controls.gestureTimeout = inSeconds;
       inSeconds = Math.floor(settings.statusTimeout / 100) / 10;
       $scope.controls.statusTimeout = inSeconds;
-      $scope.settingsLoaded = true;
+
+      // Start monitoring the settings object for changes.
+      $scope.$watch('settings', (newValue) => {
+        settings.save().then(() => $scope.$broadcast('redraw'));
+      }, true);
+
+      // Redraw all of the gesture controls.
       $scope.$broadcast('redraw');
-      startWatchingSettings();
     });
 
-    // Watch the settings object and persist it on changes.
-    function startWatchingSettings() {
-      $scope.$watch('settings', (newValue) => {
-        if (newValue) {
-          settings.save().then(() => $scope.$broadcast('redraw'));
-        }
-      }, true);
-    }
+    // ----- Functions -----
 
     // Convert gesture timeout to milliseconds.
     $scope.$watch('controls.gestureTimeout', (newValue, oldValue) => {
@@ -152,15 +149,15 @@ app.controller('OptionsCtrl', [
       settings.statusTimeout = inMillis;
     });
 
+    // Get the mapping for a gesture.
+    $scope.getMappingForGesture = (gesture) => {
+      return settings.mouseMappings.find(mapping => mapping.gesture === gesture);
+    };
+
     // Get the mapping for a command.
     $scope.getMappingForCommand = (command) => {
       var id = command.id || command;
       return settings.mouseMappings.find(mapping => mapping.command === id);
-    };
-
-    // Get the mapping for a gesture.
-    $scope.getMappingForGesture = (gesture) => {
-      return settings.mouseMappings.find(mapping => mapping.gesture === gesture);
     };
 
     // Get the mapping for a gesture.
@@ -186,6 +183,14 @@ app.controller('OptionsCtrl', [
       }
     };
 
+    // Remove the mapping for a command.
+    $scope.removeMappingForUserScript = (userScript) => {
+      var index = settings.mouseMappings.findIndex(mapping => mapping.userScript === userScript.id);
+      if (index >= 0) {
+        settings.mouseMappings.splice(index, 1);
+      }
+    };
+
     // Prompt if the gesture is assigned to another command.
     $scope.promptIfGestureInUse = (gesture, label, selfAssignmentTest) => {
       // Do not prompt if gesture is mapped to itself.
@@ -201,7 +206,7 @@ app.controller('OptionsCtrl', [
         assigned = settings.userScripts.find(userScript => userScript.id === mapping.userScript);
       } else {
         // Find the currently mapped command.
-        assigned = commands.findById(mapping.command);
+        assigned = commands.findById(mapping.command).get();
       }
 
       // Prompt if the assignment is valid.
@@ -216,7 +221,7 @@ app.controller('OptionsCtrl', [
       return true;
     };
 
-    // Re-assign a gesture.
+    // Assign a gesture to a built in command.
     $scope.assignGestureToCommand = (gesture, command) => {
       if (!gesture) {
         $scope.removeMappingForCommand(command);
@@ -240,14 +245,16 @@ app.controller('OptionsCtrl', [
       });
     };
 
+    // Assign a gesture to a user script.
     $scope.assignGestureToUserScript = (gesture, userScript) => {
       if (!gesture) {
-        $scope.removeMappingForGesture(gesture);
+        $scope.removeMappingForUserScript(userScript);
         return;
       }
 
       // Prompt when re-assigning a gesture.
-      if (!$scope.promptIfGestureInUse(gesture, userScript.label, mapping => mapping.userScript === userScript.id)) {
+      let label = userScript.label || 'User Script';
+      if (!$scope.promptIfGestureInUse(gesture, label, mapping => mapping.userScript === userScript.id)) {
         // Assignment cancelled.
         return;
       }
@@ -266,33 +273,64 @@ app.controller('OptionsCtrl', [
 
     // Add a user script.
     $scope.addUserScript = () => {
-      settings.userScripts.push({
-        id: 'userScript:' + new Date().getTime(),
-        label: 'User Script',
-        script: 'testing'
-      });
+      let userScriptId = 'userScript:' + new Date().getTime();
+      settings.userScripts.push({ id: userScriptId, label: '', script: '' });
     };
 
     // Remove a user script.
     $scope.removeUserScript = (removing) => {
-      var index = settings.userScripts.findIndex(userScript => userScript === removing);
-      if (index >= 0) {
+      // Confirm before deleting.
+      let label = removing.label || 'User Script';
+      if (window.confirm(modules.helpers.format('Permanently delete {}?', label))) {
         // Remove the mapping for this user script.
-        var mapping = $scope.getMappingForUserScript(removing);
-        if (mapping) {
-          $scope.removeMappingForGesture(mapping.gesture);
-        }
+        $scope.removeMappingForUserScript(removing);
 
-        // Remove the user script.
-        settings.userScripts.splice(index, 1);
+        let index = settings.userScripts.findIndex(userScript => userScript === removing);
+        if (index >= 0) {
+          // Remove the user script.
+          settings.userScripts.splice(index, 1);
+        }
       }
     };
   }]);
 
-// -----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+app.directive('mgTrailPreview', [
+  function () {
+    return {
+      scope: {
+        settings: '='
+      },
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        var canvas = element[0];
+        var ctx = canvas.getContext('2d');
+        var width = Number.parseInt(attrs.width);
+        var height = Number.parseInt(attrs.height);
+
+        // Repaint the gesture on settings changed.
+        scope.$watch('settings', (newValue) => {
+          ctx.lineWidth = scope.settings.trailWidth || 2;
+          ctx.strokeStyle = scope.settings.trailColor || '#000';
+          scope.drawPreview();
+        }, true);
+
+        scope.drawPreview = () => {
+          ctx.clearRect(0, 0, width, height);
+          ctx.beginPath();
+          ctx.moveTo(0, height / 2);
+          ctx.lineTo(width, height / 2);
+          ctx.stroke();
+        };
+
+        scope.drawPreview();
+      }
+    };
+  }]);
+
+// ---------------------------------------------------------------------------------------------------------------------
 app.directive('mgGestureInput', [
-  '$timeout',
-  function ($timeout) {
+  function () {
     return {
       scope: {
         settings: '=',
@@ -304,11 +342,11 @@ app.directive('mgGestureInput', [
 
         var canvas = element[0];
         var ctx = canvas.getContext('2d');
-        var width = canvas.clientWidth;
-        var height = canvas.clientHeight;
+        var width = Number.parseInt(attrs.width);
+        var height = Number.parseInt(attrs.height);
 
         // Gesture mapping
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
 
         drawGesture();
 
@@ -435,7 +473,7 @@ app.directive('mgGestureInput', [
         }
 
         // Gesture input
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
 
         var state = {
           inProgress: false,
