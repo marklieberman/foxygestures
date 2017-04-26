@@ -135,8 +135,6 @@ app.controller('OptionsCtrl', [
       $scope.$broadcast('redraw');
     });
 
-    // ----- Functions -----
-
     // Convert gesture timeout to milliseconds.
     $scope.$watch('controls.gestureTimeout', (newValue, oldValue) => {
       var inMillis = Math.floor(newValue * 10) * 100;
@@ -148,6 +146,8 @@ app.controller('OptionsCtrl', [
       var inMillis = Math.floor(newValue * 10) * 100;
       settings.statusTimeout = inMillis;
     });
+
+    // ----- Functions -----
 
     // Get the mapping for a gesture.
     $scope.getMappingForGesture = (gesture) => {
@@ -166,6 +166,14 @@ app.controller('OptionsCtrl', [
         .filter(mapping => mapping.command === 'userScript')
         .find(mapping => mapping.userScript === userScript.id);
     };
+
+    // Find a command by ID.
+    $scope.findCommandById = (id) =>
+      Optional.of(commands.find(command => command.id === id));
+
+    // Find a user script by ID.
+    $scope.findUserScriptById = (id) =>
+      Optional.of(settings.userScripts.find(userScript => userScript.id === id));
 
     // Remove the mapping for a gesture.
     $scope.removeMappingForGesture = (gesture) => {
@@ -202,9 +210,9 @@ app.controller('OptionsCtrl', [
       // Find the item that is currently assigned via the mapping.
       let assigned = Optional.EMPTY
         // Check user scripts for a matching user script ID.
-        .or(() => settings.findUserScriptById(mapping.userScript))
+        .or(() => $scope.findUserScriptById(mapping.userScript))
         // Check commands for a matching command ID.
-        .or(() => commands.findById(mapping.command));
+        .or(() => $scope.findCommandById(mapping.command));
 
       // Prompt if the assignment is valid.
       if (assigned.isPresent() && !window.confirm(modules.helpers.format(
