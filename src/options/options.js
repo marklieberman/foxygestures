@@ -210,14 +210,16 @@ app.controller('OptionsCtrl', [
       // Find the item that is currently assigned via the mapping.
       let assigned = Optional.EMPTY
         // Check user scripts for a matching user script ID.
-        .or(() => $scope.findUserScriptById(mapping.userScript))
+        .or(() => $scope.findUserScriptById(mapping.userScript)
+          .map(value => value.label || 'User Script'))
         // Check commands for a matching command ID.
-        .or(() => $scope.findCommandById(mapping.command));
+        .or(() => $scope.findCommandById(mapping.command)
+          .map(value => value.label));
 
       // Prompt if the assignment is valid.
       if (assigned.isPresent() && !window.confirm(modules.helpers.format(
         '{} is already mapped to {}. Re-assign to {}?',
-        gesture, assigned.get().label, label))
+        gesture, assigned.get(), label))
       ) {
         // Cancel assignment.
         return false;
@@ -265,6 +267,7 @@ app.controller('OptionsCtrl', [
       }
 
       // Remove the old mappings for this command.
+      $scope.removeMappingForUserScript(userScript);
       $scope.removeMappingForGesture(gesture);
 
       // Assign the gesture to this user script.
