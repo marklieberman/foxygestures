@@ -28,7 +28,7 @@ modules.commands = (function (settings) {
     },
     {
       id: 'historyBack',
-      handler: data => executeInContent('historyBack', data, false),
+      handler: data => commands.executeInContent('historyBack', data, false),
       label: 'History Back',
       group: 'navigation',
       defaults: {
@@ -37,7 +37,7 @@ modules.commands = (function (settings) {
     },
     {
       id: 'historyForward',
-      handler: data => executeInContent('historyForward', data, false),
+      handler: data => commands.executeInContent('historyForward', data, false),
       label: 'History Forward',
       group: 'navigation',
       defaults: {
@@ -91,7 +91,7 @@ modules.commands = (function (settings) {
     },
     {
       id: 'pageUp',
-      handler: data => executeInContent('pageUp', data),
+      handler: data => commands.executeInContent('pageUp', data),
       label: 'Page Up',
       tooltip: 'Increment the page number in the URL using matching heuristics',
       group: 'navigation',
@@ -101,7 +101,7 @@ modules.commands = (function (settings) {
     },
     {
       id: 'pageDown',
-      handler: data => executeInContent('pageDown', data),
+      handler: data => commands.executeInContent('pageDown', data),
       label: 'Page Down',
       tooltip: 'Increment the page number in the URL using matching heuristics',
       group: 'navigation',
@@ -120,7 +120,7 @@ modules.commands = (function (settings) {
     },
     {
       id: 'reloadFrame',
-      handler: data => executeInContent('reloadFrame', data),
+      handler: data => commands.executeInContent('reloadFrame', data),
       label: 'Reload Frame',
       group: 'frames',
       defaults: {
@@ -128,18 +128,20 @@ modules.commands = (function (settings) {
       }
     },
     {
-      id: 'saveNow',
-      handler: commandSaveNow,
-      label: 'Save Now',
+      id: 'saveMediaNow',
+      handler: commandSaveMediaNow,
+      label: 'Save Media Now',
+      tooltip: 'Save an image or HTML5 audio/video to the downloads folder',
       group: 'other',
       defaults: {
         gesture: ''
       }
     },
     {
-      id: 'saveAs',
-      handler: commandSaveAs,
-      label: 'Save As',
+      id: 'saveMediaAs',
+      handler: commandSaveMediaAs,
+      label: 'Save Media As',
+      tooltip: 'Save an image or HTML5 audio/video',
       group: 'other',
       defaults: {
         gesture: ''
@@ -147,7 +149,7 @@ modules.commands = (function (settings) {
     },
     {
       id: 'scrollTop',
-      handler: data => executeInContent('scrollTop', data),
+      handler: data => commands.executeInContent('scrollTop', data),
       label: 'Scroll to Top',
       group: 'navigation',
       defaults: {
@@ -156,7 +158,7 @@ modules.commands = (function (settings) {
     },
     {
       id: 'scrollBottom',
-      handler: data => executeInContent('scrollBottom', data),
+      handler: data => commands.executeInContent('scrollBottom', data),
       label: 'Scroll to Bottom',
       group: 'navigation',
       defaults: {
@@ -179,6 +181,33 @@ modules.commands = (function (settings) {
   // Find a command by ID.
   commands.findById = (id) => Optional.of(commands.find(command => command.id === id));
 
+  // Delegate a command to the content script.
+  // The command may need access to the DOM or other window state.
+  commands.executeInContent = (command, data, delegateToFrame) => {
+    if (delegateToFrame === false) {
+      delete data.context.scriptFrameId;
+    }
+
+    data.command = command;
+    browser.tabs.sendMessage(data.sender.tab.id, {
+      topic: 'mg-delegateCommand',
+      data: data
+    }, {
+      frameId: data.sender.frameId
+    });
+  };
+
+  // Execute a JavaScript function and return the result in a promise.
+  // This supports the executeInBackground() method in user scripts.
+  commands.executeInBackground = (data) => {
+    /* jshint evil:true */
+    try {
+      return Promise.resolve(eval(data.func).apply(null, data.args));
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
+
   // Get the current window.
   function getCurrentWindow () {
     return browser.windows.getCurrent();
@@ -200,24 +229,6 @@ modules.commands = (function (settings) {
       }
     });
   }
-
-  // Delegate a command to the content script.
-  // The command may need access to the DOM or other window state.
-  function executeInContent (command, data, delegateToFrame) {
-    if (delegateToFrame === false) {
-      delete data.context.scriptFrameId;
-    }
-
-    data.command = command;
-    browser.tabs.sendMessage(data.sender.tab.id, {
-      topic: 'mg-delegateCommand',
-      data: data
-    }, {
-      frameId: data.sender.frameId
-    });
-  }
-
-  commands.executeInContent = executeInContent;
 
   // Command implementations -------------------------------------------------------------------------------------------
 
@@ -301,7 +312,7 @@ modules.commands = (function (settings) {
   }
 
   // Save the media URL of the element under the gesture.
-  function commandSaveNow (data, saveAs) {
+  function commandSaveMediaNow (data, saveAs) {
     if (data.element.mediaUrl) {
       browser.downloads.download({
         url: data.element.mediaUrl,
@@ -312,8 +323,8 @@ modules.commands = (function (settings) {
 
   // Save the media URL of the element under the gesture.
   // Prompt for the location to save the file.
-  function commandSaveAs (data, saveAs) {
-    commandSaveNow(data, true);
+  function commandSaveMediaAs (data, saveAs) {
+    commandSaveMediaNow(data, true);
   }
 
   // Restore the most recently closed tab or window.

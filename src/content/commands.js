@@ -152,9 +152,14 @@
 
   // Serialize a function and send it to the background script for execution.
   // This is a mechanism for user scripts to execute code in the priviledged background context.
-  function background (args, func) {
+  function executeInBackground (args, func) {
+    if (typeof args === 'function') {
+      func = args;
+      args = null;
+    }
+
     return browser.runtime.sendMessage({
-      topic: 'mg-backgroundExec',
+      topic: 'mg-executeInBackground',
       data: {
         args: args,
         func: func.toString()

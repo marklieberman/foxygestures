@@ -200,19 +200,16 @@ app.controller('OptionsCtrl', [
       }
 
       // Find the item that is currently assigned via the mapping.
-      var assigned = null;
-      if (mapping.command === 'userScript') {
-        // Find the currently mapped user script.
-        assigned = settings.userScripts.find(userScript => userScript.id === mapping.userScript);
-      } else {
-        // Find the currently mapped command.
-        assigned = commands.findById(mapping.command).get();
-      }
+      let assigned = Optional.EMPTY
+        // Check user scripts for a matching user script ID.
+        .or(() => settings.findUserScriptById(mapping.userScript))
+        // Check commands for a matching command ID.
+        .or(() => commands.findById(mapping.command));
 
       // Prompt if the assignment is valid.
-      if (assigned && !window.confirm(modules.helpers.format(
+      if (assigned.isPresent() && !window.confirm(modules.helpers.format(
         '{} is already mapped to {}. Re-assign to {}?',
-        gesture, assigned.label, label))
+        gesture, assigned.get().label, label))
       ) {
         // Cancel assignment.
         return false;

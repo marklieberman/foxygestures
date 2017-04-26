@@ -35,9 +35,9 @@
       case 'mg-wheelGesture':
         onWheelGesture(data);
         break;
-      case 'mg-backgroundExec':
+      case 'mg-executeInBackground':
         // This function will reply via a promise.
-        return onBackgroundExec(data);
+        return commands.executeInBackground(data);
     }
     return false;
   });
@@ -97,20 +97,6 @@
   // Execute the mapped command for a wheel gesture.
   function onWheelGesture (data) {
     replyTo(data.sender, 'mg-status', null);
-  }
-
-  // User script API functions -----------------------------------------------------------------------------------------
-  // These are functions that primarily exist for use with user scripts.
-
-  // Execute a JavaScript function and return the result in a promise.
-  // This supports the backgroundExec() method in user scripts.
-  function onBackgroundExec (data) {
-    /* jshint evil:true */
-    try {
-      return Promise.resolve(eval(data.func).apply(null, data.args));
-    } catch (err) {
-      return Promise.reject(err);
-    }
   }
 
 }(modules.settings, modules.helpers, modules.commands));
