@@ -39,6 +39,11 @@ modules.commands = (function (settings) {
       defaultGesture: 'DL'
     },
     {
+      id: 'nextTab',
+      handler: commandNextTab,
+      label: 'Next Tab'
+    },
+    {
       id: 'openFrameInNewTab',
       handler: commandOpenFrameInNewTab,
       label: 'Open Frame in New Tab'
@@ -71,6 +76,11 @@ modules.commands = (function (settings) {
       label: 'Page Down',
       tooltip: 'Increment the page number in the URL using matching heuristics',
       defaultGesture: 'DRD'
+    },
+    {
+      id: 'previousTab',
+      handler: commandPreviousTab,
+      label: 'Previous Tab'
     },
     {
       id: 'reload',
@@ -198,6 +208,17 @@ modules.commands = (function (settings) {
     });
   }
 
+  // Activate the next tab.
+  function commandNextTab (data) {
+    return getCurrentWindowTabs().then(tabs => {
+      let index = (tabs.find(tab => tab.active).index + 1) % tabs.length;
+      let next = tabs[index];
+      return browser.tabs.update(next.id, {
+        active: true
+      });
+    });
+  }
+
   // Open a frame in a new tab.
   function commandOpenFrameInNewTab (data) {
     if (data.context.frameUrl) {
@@ -241,6 +262,17 @@ modules.commands = (function (settings) {
         focused: true
       });
     }
+  }
+
+  // Activate the previous tab.
+  function commandPreviousTab (data) {
+    return getCurrentWindowTabs().then(tabs => {
+      let index = (tabs.find(tab => tab.active).index - 1) % tabs.length;
+      let previous = tabs[index < 0 ? tabs.length - 1 : index];
+      return browser.tabs.update(previous.id, {
+        active: true
+      });
+    });
   }
 
   // Reload the active tab.
