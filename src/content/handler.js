@@ -33,7 +33,6 @@ modules.handler = (function (settings) {
     if (event.data) {
       switch (event.data.topic) {
         case 'mg-status':
-          console.log('status update');
           modules.interface.status(event.data.data);
           break;
       }

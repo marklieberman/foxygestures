@@ -41,19 +41,28 @@ modules.settings = (function () {
         .filter(key => typeof settings[key] !== 'function')
         .forEach(key => settings[key] = results[key]);
 
-      var promise = Promise.resolve();
-
-      // Initialize the mouse mappings if empty. This can only be done if the
-      // commands module is available, such as in background page context.
-      if (modules.commands && !settings.mouseMappings.length) {
-        promise = promise.then(() => initializeMouseMappings());
-      }
-
-      return promise.then(() => settings);
+      return settings;
     })
   });
 
   // Event listeners ---------------------------------------------------------------------------------------------------
+
+  // Guard for cases when settings is included from content scripts.
+  if (browser.runtime.onInstalled) {
+    // Initialize settings on install but after default settings are retrieved.
+    browser.runtime.onInstalled.addListener(details => settings.loaded.then(() => {
+      switch (details.reason) {
+        case 'install':
+          // Do not initialize the mouse mappingd when reloading a temporary addon.
+          if (!settings.mouseMappings.length) {
+            initializeMouseMappings();
+          }
+          break;
+        case 'update':
+          break;
+      }
+    }));
+  }
 
   // Listen for changes to settings.
   browser.storage.onChanged.addListener((changes, area) => {
@@ -67,17 +76,16 @@ modules.settings = (function () {
 
   // Initialize the mouse mappings from the commands array.
   function initializeMouseMappings () {
-    var mappings = modules.commands
-      // Ignore commands without a default gesture.
-      .filter(command => !!command.defaults.gesture)
-      // Generate a mapping for the command.
-      .map(command => ({
-        command: command.id,
-        gesture: command.defaults.gesture
-      }));
-
+    console.log('initializing mouse mappings');
     return browser.storage.local.set({
-      'mouseMappings': mappings
+      'mouseMappings': modules.commands
+        // Ignore commands without a default gesture.
+        .filter(command => !!command.defaultGesture)
+        // Generate a mapping for the command.
+        .map(command => ({
+          command: command.id,
+          gesture: command.defaultGesture
+        }))
     });
   }
 

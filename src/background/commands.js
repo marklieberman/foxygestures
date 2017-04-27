@@ -12,167 +12,106 @@ modules.commands = (function (settings) {
       id: 'closeTab',
       handler: commandCloseTab,
       label: 'Close Tab',
-      group: 'tabs',
-      defaults: {
-        gesture: 'DR'
-      }
+      defaultGesture: 'DR'
     },
     {
       id: 'duplicateTab',
       handler: commandDuplicateTab,
       label: 'Duplicate Tab',
-      group: 'tabs',
-      defaults: {
-        gesture: 'UR'
-      }
+      defaultGesture: 'UR'
     },
     {
       id: 'historyBack',
       handler: data => commands.executeInContent('historyBack', data, false),
       label: 'History Back',
-      group: 'navigation',
-      defaults: {
-        gesture: 'L'
-      }
+      defaultGesture: 'L'
     },
     {
       id: 'historyForward',
       handler: data => commands.executeInContent('historyForward', data, false),
       label: 'History Forward',
-      group: 'navigation',
-      defaults: {
-        gesture: 'R'
-      }
+      defaultGesture: 'R'
     },
     {
       id: 'minimize',
       handler: commandMinimize,
       label: 'Minimize Window',
-      group: 'tabs',
-      defaults: {
-        gesture: 'DL'
-      }
+      defaultGesture: 'DL'
     },
     {
       id: 'openFrameInNewTab',
       handler: commandOpenFrameInNewTab,
-      label: 'Open Frame in New Tab',
-      group: 'frames',
-      defaults: {
-        gesture: ''
-      }
+      label: 'Open Frame in New Tab'
     },
     {
       id: 'openFrameInNewWindow',
       handler: commandOpenFrameInNewWindow,
-      label: 'Open Frame in New Window',
-      group: 'frames',
-      defaults: {
-        gesture: ''
-      }
+      label: 'Open Frame in New Window'
     },
     {
       id: 'openLinkInNewTab',
       handler: commandOpenLinkInNewTab,
-      label: 'Open Link in New Tab',
-      group: 'navigation',
-      defaults: {
-        gesture: ''
-      }
+      label: 'Open Link in New Tab'
     },
     {
       id: 'openLinkInNewWindow',
       handler: commandOpenLinkInNewWindow,
-      label: 'Open Link in New Window',
-      group: 'navigation',
-      defaults: {
-        gesture: ''
-      }
+      label: 'Open Link in New Window'
     },
     {
       id: 'pageUp',
       handler: data => commands.executeInContent('pageUp', data),
       label: 'Page Up',
       tooltip: 'Increment the page number in the URL using matching heuristics',
-      group: 'navigation',
-      defaults: {
-        gesture: 'URU'
-      }
+      defaultGesture: 'URU'
     },
     {
       id: 'pageDown',
       handler: data => commands.executeInContent('pageDown', data),
       label: 'Page Down',
       tooltip: 'Increment the page number in the URL using matching heuristics',
-      group: 'navigation',
-      defaults: {
-        gesture: 'DRD'
-      }
+      defaultGesture: 'DRD'
     },
     {
       id: 'reload',
       handler: commandReload,
       label: 'Reload',
-      group: 'navigation',
-      defaults: {
-        gesture: 'RDLU'
-      }
+      defaultGesture: 'RDLU'
     },
     {
       id: 'reloadFrame',
       handler: data => commands.executeInContent('reloadFrame', data),
-      label: 'Reload Frame',
-      group: 'frames',
-      defaults: {
-        gesture: ''
-      }
+      label: 'Reload Frame'
     },
     {
       id: 'saveMediaNow',
       handler: commandSaveMediaNow,
       label: 'Save Media Now',
-      tooltip: 'Save an image or HTML5 audio/video to the downloads folder',
-      group: 'other',
-      defaults: {
-        gesture: ''
-      }
+      tooltip: 'Save an image or HTML5 audio/video to the downloads folder'
     },
     {
       id: 'saveMediaAs',
       handler: commandSaveMediaAs,
       label: 'Save Media As',
-      tooltip: 'Save an image or HTML5 audio/video',
-      group: 'other',
-      defaults: {
-        gesture: ''
-      }
+      tooltip: 'Save an image or HTML5 audio/video'
     },
     {
       id: 'scrollTop',
       handler: data => commands.executeInContent('scrollTop', data),
       label: 'Scroll to Top',
-      group: 'navigation',
-      defaults: {
-        gesture: 'ULR'
-      }
+      defaultGesture: 'ULR'
     },
     {
       id: 'scrollBottom',
       handler: data => commands.executeInContent('scrollBottom', data),
       label: 'Scroll to Bottom',
-      group: 'navigation',
-      defaults: {
-        gesture: 'DLR'
-      }
+      defaultGesture: 'DLR'
     },
     {
       id: 'undoClose',
       handler: commandUndoClose,
       label: 'Undo Close',
-      group: 'tabs',
-      defaults: {
-        gesture: 'RLR'
-      }
+      defaultGesture: 'RLR'
     }
   ];
 
