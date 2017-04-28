@@ -116,7 +116,12 @@ modules.commands = (function (settings) {
       handler: data => commands.executeInContent('scrollBottom', data),
       label: 'Scroll to Bottom',
       defaultGesture: 'DLR'
-    },    
+    },
+    {
+      id: 'showOnlyThisFrame',
+      handler: commandShowOnlyThisFrame,
+      label: 'Show Only This Frame'
+    },
     {
       id: 'undoClose',
       handler: commandUndoClose,
@@ -255,6 +260,13 @@ modules.commands = (function (settings) {
   function commandSaveMediaAs (data) {
     if (data.element.mediaUrl) {
       return browser.downloads.download({ url: data.element.mediaUrl, saveAs: true });
+    }
+  }
+
+  // Navigate to the URL of the frame.
+  function commandShowOnlyThisFrame (data) {
+    if (data.context.nested && data.context.frameUrl) {     
+      return getActiveTab(tab => browser.tabs.update(tab.id, { url: data.context.frameUrl }));
     }
   }
 

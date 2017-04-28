@@ -220,7 +220,8 @@ modules.mouseEvents = (function () {
   }
 
   // Get the relevant parts of the mouse event as an object.
-  function getMouseData (event, elementInfo) {
+  // The return value must be serializeable for compatabiltiy with postMessage() and sendMessage().
+  function getMouseData (event, detailed) {
     var data = {
       button: event.button,
       x: event.clientX,
@@ -229,21 +230,21 @@ modules.mouseEvents = (function () {
       dy: event.movementY
     };
 
-    data.context = {
-      scriptFrameId: state.scriptFrameId,
-      frameUrl: String(window.location.href)
-    };
+    if (detailed) {
+      // Information about the event context: script ID, frame URL, etc.
+      data.context = {
+        nested: state.isNested,
+        scriptFrameId: state.scriptFrameId,
+        frameUrl: String(window.location.href)
+      };
 
-    var target = event.target;
-    if (elementInfo && target) {
-      // Collect information about the target element. This object must be
-      // serializeable for compatabiltiy with postMessage() and sendMessage().
+      // Information about the target element: tag, href, etc.
       data.element = {
-        tag: target.tagName,
-        href: target.href,
+        tag: event.target.tagName,
+        href: event.target.href,
 
         // Search for a media URL related to the element.
-        mediaUrl: modules.helpers.getMediaUrl(target)
+        mediaUrl: modules.helpers.getMediaUrl(event.target)
       };
     }
 
