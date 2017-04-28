@@ -1,8 +1,7 @@
 'use strict';
 
 /**
- * Executes commands that need to happen in the content script on behalf of
- * the background script.
+ * Executes commands that need to happen in the content script on behalf of the background script.
  */
 (function () {
 
@@ -18,14 +17,14 @@
     'userScript'     : commandUserScript
   };
 
-  // -------------------------------------------------------------------------------------------------------------------
+  // Event listeners ---------------------------------------------------------------------------------------------------
 
   browser.runtime.onMessage.addListener(onMessage);
 
   function onMessage (message, sender) {
     switch (message.topic) {
-      // Execute a command on behalf of the background script.
       case 'mg-delegateCommand':
+        // Execute a command on behalf of the background script.
         onDelegateCommand(message.data);
         break;
     }
@@ -36,11 +35,26 @@
     if (event.data) {
       switch (event.data.topic) {
         case 'mg-delegateCommand':
+          // Execute the delegated command or pass it down the frame hierachy.
           onDelegateCommand(event.data.data);
           break;
       }
     }
   });
+
+  // Execute the delegated command or pass it down the frame hierachy.
+  function onDelegateCommand (data, sender) {
+    // Check if the command should be handled by this frame.
+    if (data.context.scriptFrameId && (modules.mouseEvents.scriptFrameId !== data.context.scriptFrameId)) {
+      // This is not the correct frame.
+      modules.mouseEvents.broadcast('delegateCommand', data);
+    } else {
+      // Execute the delegated command in this frame.
+      commandHandlers[data.command](data);
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   // Post a message to the given window with the given topic.
   // Typically used to send messages up the frame/window hierarchy.
@@ -82,21 +96,6 @@
 
   // Command implementations -------------------------------------------------------------------------------------------
 
-  // Execute the delegated command or pass it down the frame hierachy.
-  function onDelegateCommand (data, sender) {
-    // Check if the command should be handled by this frame.
-    if (data.context.scriptFrameId) {
-      if (modules.mouseEvents.scriptFrameId !== data.context.scriptFrameId) {
-        // This is not the correct frame.
-        modules.mouseEvents.broadcast('delegateCommand', data);
-        return;
-      }
-    }
-
-    // Execute the delegated command in this frame.
-    commandHandlers[data.command](data);
-  }
-
   // Navigate back in history.
   function commandHistoryBack (data) {
     window.history.back();
@@ -125,12 +124,14 @@
 
   // Scroll to the top of the frame or page.
   function commandScrollTop (data) {
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
+    return Promise.resolve();
   }
 
   // Scroll to the bottom of the frame or page.
   function commandScrollBottom (data) {
-    window.scrollTo(0,document.body.scrollHeight);
+    window.scrollTo(0, document.body.scrollHeight);
+    return Promise.resolve();
   }
 
   // Execute a user script.
@@ -152,16 +153,11 @@
 
   // Serialize a function and send it to the background script for execution.
   // This is a mechanism for user scripts to execute code in the priviledged background context.
-  function executeInBackground (args, func) {
-    if (typeof args === 'function') {
-      func = args;
-      args = null;
-    }
-
+  function executeInBackground (func, args) {
     return browser.runtime.sendMessage({
       topic: 'mg-executeInBackground',
       data: {
-        args: args,
+        args: args || [],
         func: func.toString()
       }
     });

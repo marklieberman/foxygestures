@@ -116,7 +116,7 @@ modules.commands = (function (settings) {
       handler: data => commands.executeInContent('scrollBottom', data),
       label: 'Scroll to Bottom',
       defaultGesture: 'DLR'
-    },
+    },    
     {
       id: 'undoClose',
       handler: commandUndoClose,
@@ -168,146 +168,102 @@ modules.commands = (function (settings) {
   }
 
   // Receive a callback with the active tab.
-  function callOnActiveTab (callback) {
-    return getCurrentWindowTabs().then((tabs) => {
-      for (var tab of tabs) {
-        if (tab.active) {
-          callback(tab, tabs);
-          return;
-        }
-      }
+  function getActiveTab (callback) {
+    return getCurrentWindowTabs().then(tabs => {
+      return callback(tabs.find(tab => tab.active), tabs);
     });
   }
 
   // Command implementations -------------------------------------------------------------------------------------------
 
   // Close the active tab.
-  function commandCloseTab (data) {
-    callOnActiveTab(tab => {
-      browser.tabs.remove(tab.id);
-    });
+  function commandCloseTab () {
+    return getActiveTab(tab => browser.tabs.remove(tab.id));
   }
 
   // Duplicate the active tab.
-  function commandDuplicateTab (data) {
-    callOnActiveTab(tab => {
-      browser.tabs.create({
-        url: tab.url,
-        index: tab.index + 1,
-        active: false
-      });
-    });
+  function commandDuplicateTab () {
+    return getActiveTab(tab => browser.tabs.create({ url: tab.url, index: tab.index + 1, active: false }));
   }
 
   // Minimize the current window.
-  function commandMinimize (data) {
-    getCurrentWindow().then(win => {
-      browser.windows.update(win.id, {
-        state: "minimized"
-      });
-    });
+  function commandMinimize () {
+    return getCurrentWindow().then(win => browser.windows.update(win.id, { state: "minimized" }));
   }
 
   // Activate the next tab.
-  function commandNextTab (data) {
+  function commandNextTab () {
     return getCurrentWindowTabs().then(tabs => {
       let index = (tabs.find(tab => tab.active).index + 1) % tabs.length;
       let next = tabs[index];
-      return browser.tabs.update(next.id, {
-        active: true
-      });
+      return browser.tabs.update(next.id, { active: true });
     });
   }
 
   // Open a frame in a new tab.
-  function commandOpenFrameInNewTab (data) {
+  function commandOpenFrameInNewTab (v) {
     if (data.context.frameUrl) {
-      callOnActiveTab(tab => {
-        browser.tabs.create({
-          url: data.context.frameUrl,
-          index: tab.index + 1,
-          active: false
-        });
-      });
+      return getActiveTab(tab =>
+        browser.tabs.create({ url: data.context.frameUrl, index: tab.index + 1, active: false }));
     }
   }
 
   // Open a frame in a new window.
   function commandOpenFrameInNewWindow (data) {
     if (data.context.frameUrl) {
-      browser.windows.create({
-        url: data.context.frameUrl,
-        focused: true
-      });
+      return browser.windows.create({ url: data.context.frameUrl });
     }
   }
 
   // Open a link in a new tab.
   function commandOpenLinkInNewTab (data) {
     if (data.element.href) {
-      callOnActiveTab(tab => {
-        browser.tabs.create({
-          url: data.element.href,
-          index: tab.index + 1
-        });
-      });
+      return getActiveTab(tab => browser.tabs.create({ url: data.element.href, index: tab.index + 1 }));
     }
   }
 
   // Open a link in a new window.
   function commandOpenLinkInNewWindow (data) {
     if (data.element.href) {
-      browser.windows.create({
-        url: data.element.href,
-        focused: true
-      });
+      return browser.windows.create({ url: data.element.href });
     }
   }
 
   // Activate the previous tab.
-  function commandPreviousTab (data) {
+  function commandPreviousTab () {
     return getCurrentWindowTabs().then(tabs => {
       let index = (tabs.find(tab => tab.active).index - 1) % tabs.length;
       let previous = tabs[index < 0 ? tabs.length - 1 : index];
-      return browser.tabs.update(previous.id, {
-        active: true
-      });
+      return browser.tabs.update(previous.id, { active: true });
     });
   }
 
   // Reload the active tab.
-  function commandReload (data) {
-    callOnActiveTab(tab => {
-      browser.tabs.reload(tab.id);
-    });
+  function commandReload () {
+    return getActiveTab(tab => browser.tabs.reload(tab.id));
   }
 
   // Save the media URL of the element under the gesture.
-  function commandSaveMediaNow (data, saveAs) {
+  function commandSaveMediaNow (data) {
     if (data.element.mediaUrl) {
-      browser.downloads.download({
-        url: data.element.mediaUrl,
-        saveAs: saveAs
-      });
+      return browser.downloads.download({ url: data.element.mediaUrl });
     }
   }
 
   // Save the media URL of the element under the gesture.
   // Prompt for the location to save the file.
-  function commandSaveMediaAs (data, saveAs) {
-    commandSaveMediaNow(data, true);
+  function commandSaveMediaAs (data) {
+    if (data.element.mediaUrl) {
+      return browser.downloads.download({ url: data.element.mediaUrl, saveAs: true });
+    }
   }
 
   // Restore the most recently closed tab or window.
-  function commandUndoClose (data) {
-    browser.sessions.getRecentlyClosed({ maxResults: 1 }).then(sessions => {
+  function commandUndoClose () {
+    return browser.sessions.getRecentlyClosed({ maxResults: 1 }).then(sessions => {
       if (sessions.length) {
-        var closed = sessions[0];
-        if (closed.tab) {
-          browser.sessions.restore(closed.tab.sessionId);
-        } else {
-          browser.sessions.restore(closed.window.sessionId);
-        }
+        let sessionId = sessions[0].tab ? sessions[0].tab.sessionId : sessions[0].window.sessionId;
+        return browser.sessions.restore(sessionId);
       }
     });
   }
