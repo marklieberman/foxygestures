@@ -17,7 +17,24 @@
     'userScript'     : commandUserScript
   };
 
+  // Settings for this module.
+  var settings = {
+    scrollDuration: 1000
+  };
+
+  // Load settings from storage.
+  browser.storage.local.get(settings).then(results => settings = results);
+
   // Event listeners ---------------------------------------------------------------------------------------------------
+
+  // Listen for changes to settings.
+  browser.storage.onChanged.addListener((changes, area) => {
+    Object.keys(settings).forEach(key => {
+      if (changes[key]) {
+        settings[key] = changes[key].newValue;
+      }
+    });
+  });
 
   browser.runtime.onMessage.addListener(onMessage);
 
@@ -162,14 +179,13 @@
 
   // Scroll to the top of the frame or page.
   function commandScrollTop (data) {
-    // TODO Scroll easing duration as a preference
-    return scrollYEase(0, 1000);
+    return scrollYEase(0, settings.scrollDuration);
   }
 
   // Scroll to the bottom of the frame or page.
   function commandScrollBottom (data) {
-    // TODO Scroll easing duration as a preference
-    return scrollYEase(document.documentElement.scrollHeight - document.documentElement.clientHeight, 1000);
+    let scrollMaxY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    return scrollYEase(scrollMaxY, settings.scrollDuration);
   }
 
   // Execute a user script.

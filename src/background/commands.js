@@ -220,9 +220,13 @@ modules.commands = (function (settings) {
   function commandNextTab (data) {
     return getCurrentWindowTabs().then(tabs => {
       let active = tabs.find(tab => tab.active);
-      let index = (active.index + 1) % tabs.length;
-      let next = tabs[index];
-      return switchActiveTab(active, next, !!data.wheel);
+      if ((active.index === (tabs.length - 1)) && !modules.settings.nextTabWrap) {
+        return Promise.resolve();
+      } else {
+        let index = (active.index + 1) % tabs.length;
+        let next = tabs[index];
+        return switchActiveTab(active, next, !!data.wheel);
+      }
     });
   }
 
@@ -259,9 +263,13 @@ modules.commands = (function (settings) {
   function commandPreviousTab (data) {
     return getCurrentWindowTabs().then(tabs => {
       let active = tabs.find(tab => tab.active);
-      let index = (active.index - 1) % tabs.length;
-      let previous = tabs[index < 0 ? tabs.length - 1 : index];
-      return switchActiveTab(active, previous, !!data.wheel);
+      if ((active.index === 0) && !modules.settings.nextTabWrap) {
+        return Promise.resolve();
+      } else {
+        let index = (active.index - 1) % tabs.length;
+        let previous = tabs[index < 0 ? tabs.length - 1 : index];
+        return switchActiveTab(active, previous, !!data.wheel);
+      }
     });
   }
 

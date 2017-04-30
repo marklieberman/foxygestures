@@ -163,6 +163,8 @@
             </p>
           </div>
 
+          <hr>
+
           <!-- List of gesture mappings -->
           <div class="mapping-list">
             <div class="mapping-item"
@@ -197,6 +199,8 @@
               Please read the  <a href="https://github.com/marklieberman/foxygestures/wiki/User-Scripts" target="_blank">user scripts</a> article on the wiki before proceeding.
             </p>
           </div>
+
+          <hr>
 
           <div class="mapping-list">
             <div class="user-script-item"
@@ -300,6 +304,43 @@
                       ng-model="settings.wheelMappings.right"></select>
             </div>
           </fieldset>
+
+        </uib-tab>
+
+        <uib-tab index="4" heading="More Preferences">
+
+          <div class="section-help-block">
+            <p class="help-block">
+              Preferences to modify the behaviour of built-in commands and other tweaks.
+            </p>
+          </div>
+
+          <hr>
+
+          <!-- Next/previous tab wraps -->
+          <div class="form-group">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox"
+                       ng-model="settings.nextTabWrap"></input>
+                Next tab and previous tab commands wrap from last tab to first tab.
+              </label>
+            </div>
+          </div>
+
+          <!-- Scroll duration -->
+          <div class="form-group">
+            <label class="control-label">Duration of the animation for the scroll to top/bottom</label>
+            <div class="input-group">
+              <input class="form-control" type="number"
+                     step="250" min="0" max="10000"
+                     ng-model="settings.scrollDuration"></input>
+              <span class="input-group-addon">milliseconds</span>
+            </div>
+            <p class="help-block">
+              Use zero to disable.
+            </p>
+          </div>
 
         </uib-tab>
 

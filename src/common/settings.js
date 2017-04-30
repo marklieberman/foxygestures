@@ -33,6 +33,8 @@ modules.settings = (function () {
       left: null,
       right: null
     },
+    scrollDuration: 500,  // Animation duration from scroll commands.
+    nextTabWrap: true,    // Next tab command wraps at end?
 
     // Templates
     statusTemplate: STATUS_TEMPLATE

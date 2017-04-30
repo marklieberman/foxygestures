@@ -20,7 +20,10 @@ body {
 .section-help-block {
   width: 100%;
   text-align: center;
-  padding-bottom: 40px;
+
+  &:not(:first-child) {
+    padding-bottom: 40px;
+  }
 }
 
 // ----- Gesture input -----
