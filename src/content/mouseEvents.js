@@ -16,6 +16,9 @@ modules.mouseEvents = (function () {
   // Mouse movement has occurred.
   // Context menu will not be displayed following the gesture.
   var PROGRESS_MOUSE_MOVE = 2;
+  // The mouse wheel was scrolled during a gesture.
+  // Context menu will not be displayed following the gesture.
+  var PROGRESS_WHEEL = 3;
 
   // State for this module.
   var state = {
@@ -24,6 +27,7 @@ modules.mouseEvents = (function () {
     scriptFrameId: modules.helpers.makeScriptFrameId(),
     gestureState: PROGRESS_NONE,       // Gesture state machine state.
     contextMenu: true,                 // Context menu is enabled?
+    mouseNeverDown: true,               // No mouse down events have occurred?
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
     isUnloading: false                 // Is the page is unloading?
@@ -31,7 +35,8 @@ modules.mouseEvents = (function () {
 
   // Settings for this module.
   var settings = {
-    gestureButton: 2
+    gestureButton: 2,
+    wheelGestures: false
   };
 
   // Load settings from storage.
@@ -86,11 +91,12 @@ modules.mouseEvents = (function () {
           }
           break;
         case 'mg-mousemove':
-          // Note: As an optimization, do not call applyFrameOffset(). We only
-          // care for dx,dy which require no correction.
-          // Note: As an optimization mouse move events are posted directly to
-          // the top window, so no bubbling is required.
+          // Note: applyFrameOffset() is not required and messages are posted directly to top window.
           onMouseMove(event.data.data);
+          break;
+        case 'mg-wheel':
+          // Note: applyFrameOffset() is not required and messages are posted directly to top window.
+          onWheel(event.data.data);
           break;
         case 'mg-contextmenu':
           if (state.isNested) {
@@ -145,9 +151,27 @@ modules.mouseEvents = (function () {
     }
   }, true);
 
+  window.addEventListener('wheel', function (event) {
+    if (settings.wheelGestures && state.gestureState) {
+      // Cancel scrolling.
+      event.preventDefault();
+
+      var data = getMouseData(event);
+      if (state.isNested) {
+        // Send directly to top.
+        postTo(window.top, 'wheel', data);
+      } else {
+        onWheel(data);
+      }
+    }
+  }, true);
+
   window.addEventListener('contextmenu', function (event) {
-    // Prevent the context menu if necessary.
-    if (!state.contextMenu) {
+    // Prevent the context menu if disabled or a mouse down event has not ocurred. This prevents a context menu from
+    // appearing if after the script loads a mouse up or context menu event is enountered before a mouse down. Such
+    // a case is typical of any command that reloads the frame or opens a new frame under the mouse while the gesture
+    // button remains depressed.
+    if (!state.contextMenu || state.mouseNeverDown) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -161,6 +185,27 @@ modules.mouseEvents = (function () {
   }, true);
 
   // Functions ---------------------------------------------------------------------------------------------------------
+
+  // Reset the gesture state.
+  function resetState () {
+    // Replicate state to nested frames.
+    replicateState({
+      gestureState: PROGRESS_NONE
+    });
+  }
+
+  // Get a partial copy of the state; enough to restore this state in another tab.
+  function cloneState () {
+    return {
+      gestureState: state.gestureState,
+      contextMenu: state.contextMenu
+    };
+  }
+
+  // Restore a partial copy of the state for this module.
+  function restoreState (clone) {
+    replicateState(clone);
+  }
 
   // Post a message to the given window with the given topic.
   // Typically used to send messages up the frame/window hierarchy.
@@ -230,6 +275,15 @@ modules.mouseEvents = (function () {
       dy: event.movementY
     };
 
+    if (event instanceof window.WheelEvent) {
+      data.wheel = {
+        x: event.deltaX,
+        y: event.deltaY,
+        z: event.deltaZ,
+        mode: event.deltaMode
+      };
+    }
+
     if (detailed) {
       // Information about the event context: script ID, frame URL, etc.
       data.context = {
@@ -262,17 +316,16 @@ modules.mouseEvents = (function () {
     }
   }
 
-  // Cancel any in progress gesture.
-  function cancelGesture () {
-    // Replicate state to nested frames.
-    replicateState({
-      gestureState: PROGRESS_NONE
-    });
-  }
-
   // Invoked by the mousedown event.
   // The event may have bubbled up from nested frames.
   function onMouseDown (data, event) {
+    if (state.mouseNeverDown) {
+      // Set a flag once a mouse down is observed.
+      replicateState({
+        mouseNeverDown: false
+      });
+    }
+
     if (data.button === settings.gestureButton && !state.isUnloading) {
       // Replicate state to nested frames.
       replicateState({
@@ -280,22 +333,27 @@ modules.mouseEvents = (function () {
         contextMenu: true
       });
 
-      // Start a gesture.
-      modules.handler.begin(data);
+      // Start a mouse gesture.
+      modules.handler.mouseGestureStart(data);
     }
   }
 
   // Invoked by the mouseup event.
   // The event may have bubbled up from nested frames.
   function onMouseUp (data) {
-    if ((data.button === settings.gestureButton) && state.gestureState) {
+    if (data.button === settings.gestureButton) {
+      switch (state.gestureState) {
+        case PROGRESS_MOUSE_DOWN:
+        case PROGRESS_MOUSE_MOVE:
+          // Finish a mouse gesture.
+          modules.handler.mouseGestureFinish(data);
+          break;
+      }
+
       // Replicate state to nested frames.
       replicateState({
         gestureState: PROGRESS_NONE
       });
-
-      // Finish a gesture.
-      modules.handler.finish(data);
     }
   }
 
@@ -309,11 +367,34 @@ modules.mouseEvents = (function () {
           gestureState: PROGRESS_MOUSE_MOVE,
           contextMenu: false
         });
-        /* falls through*/
+        /* falls through */
       case PROGRESS_MOUSE_MOVE:
-        // Update a gesture.
-        modules.handler.update(data);
+        // Update a mouse gesture.
+        modules.handler.mouseGestureUpdate(data);
         break;
+    }
+  }
+
+  // Invoked by the wheel event.
+  // The event may have bubbled up from nested frames.
+  function onWheel (data) {
+    if (settings.wheelGestures) {
+      switch (state.gestureState) {
+        case PROGRESS_MOUSE_DOWN:
+        case PROGRESS_MOUSE_MOVE:
+          replicateState({
+            gestureState: PROGRESS_WHEEL,
+            contextMenu: false
+          });
+
+          // Switch handler to wheel gesture mode.
+          modules.handler.wheelGestureStart(data);
+          break;
+        case PROGRESS_WHEEL:
+          // Update a wheel gesture.
+          modules.handler.wheelGestureUpdate(data);
+          break;
+      }
     }
   }
 
@@ -331,11 +412,17 @@ modules.mouseEvents = (function () {
     }
   }
 
+
   return {
+    // Context
     scriptFrameId: state.scriptFrameId,
-    getMouseDown: () => state.mouseDown,
+    // State management
+    resetState: resetState,
+    cloneState: cloneState,
+    restoreState: restoreState,
     broadcast: broadcast,
-    cancelGesture: cancelGesture
+    //
+    getMouseDown: () => state.mouseDown
   };
 
 }());

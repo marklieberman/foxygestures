@@ -5,7 +5,7 @@
  * background and content scripts.
  */
 var modules = modules || {};
-modules.handler = (function (settings) {
+modules.handler = (function (settings, mouseEvents) {
 
   // State for this module.
   var state = {
@@ -22,7 +22,20 @@ modules.handler = (function (settings) {
   // Handle messages from the background script.
   browser.runtime.onMessage.addListener((message, sender) => {
     switch (message.topic) {
+      case 'mg-cloneState':
+        // Return a clone of the state.
+        return Promise.resolve({
+          handler: cloneState(),
+          mouseEvents: mouseEvents.cloneState()
+        });
+      case 'mg-restoreState':
+        // Restore a clone of the state.
+        let clone = message.data;
+        restoreState(clone.handler);
+        mouseEvents.restoreState(clone.mouseEvents);
+        break;
       case 'mg-status':
+        // Update the status text.
         modules.interface.status(message.data);
         break;
     }
@@ -39,10 +52,24 @@ modules.handler = (function (settings) {
     }
   });
 
-  // -------------------------------------------------------------------------------------------------------------------
+  // Functions ---------------------------------------------------------------------------------------------------------
 
-  // Invoked when a gesture begins by mouse down.
-  function begin (mouseDown) {
+  // Get a partial copy of the state; enough to restore this state in another tab.
+  function cloneState () {
+    return {
+      mouseDown: state.mouseDown
+    };
+  }
+
+  // Restore a partial copy of the state for this module.
+  function restoreState (clone) {
+    Object.assign(state, clone);
+  }
+
+  // Mouse gestures ----------------------------------------------------------------------------------------------------
+
+  // Invoked when a mouse gesture begins.
+  function mouseGestureStart (mouseDown) {
     // Start tracking the gesture.
     deltaAccumulator.reset();
     gestureDetector.reset(mouseDown);
@@ -53,7 +80,7 @@ modules.handler = (function (settings) {
       state.noMovementTicks = 0;
       state.timeoutHandle = window.setInterval(function () {
         if (++state.noMovementTicks >= (settings.gestureTimeout / 100)) {
-          timeout();
+          abortMouseGesture(true);
         }
       }, 100);
     }
@@ -64,8 +91,8 @@ modules.handler = (function (settings) {
     }
   }
 
-  // Invoked when the mouse moves during a gesture.
-  function update (mouseMove) {
+  // Invoked when the mouse moves during a mouse gesture.
+  function mouseGestureUpdate (mouseMove) {
     // Limit the fidelity of gesture updates to reduce gesture jitter.
     deltaAccumulator.accumulate(mouseMove);
     if (modules.helpers.distanceDelta(mouseMove) >= settings.gestureFidelity) {
@@ -91,8 +118,8 @@ modules.handler = (function (settings) {
     }
   }
 
-  // Invoked when a gesture ends by mouse up.
-  function finish (mouseUp) {
+  // Invoked when a mouse gesture ends.
+  function mouseGestureFinish (mouseUp) {
     // Clear the gesture timeout interval.
     window.clearInterval(state.timeoutHandle);
 
@@ -115,13 +142,11 @@ modules.handler = (function (settings) {
     }
   }
 
-  // Invoked when the gesture timeout has elapsed.
-  function timeout () {
-    // Cancel the gesture (low-level.)
-    modules.mouseEvents.cancelGesture();
-
+  // Abort a mouse gesture and reset the interface.
+  function abortMouseGesture (resetState) {
     // Clear the gesture timeout interval.
     window.clearInterval(state.timeoutHandle);
+    state.timeoutHandle = null;
 
     // Hide the gesture trail.
     if (settings.drawTrails) {
@@ -132,12 +157,73 @@ modules.handler = (function (settings) {
     if (settings.showStatusText) {
       modules.interface.status(null);
     }
+
+    // Optionally reset the low level gesture state.
+    if (resetState) {
+      mouseEvents.resetState();
+    }
+  }
+
+  // Wheel gestures ----------------------------------------------------------------------------------------------------
+
+  // Get the gesture corresponding to the scroll direction.
+  function getWheelDirection (wheel) {
+    if (wheel.y < 0) {
+      return 'up';
+    } else
+    if (wheel.y > 0) {
+      return 'down';
+    } else
+    if (wheel.x < 0) {
+      return 'left';
+    } else
+    if (wheel.x > 0) {
+      return 'right';
+    }
+  }
+
+  // Invoked when a mouse gesture transitions to a wheel gesture.
+  function wheelGestureStart (data) {
+    // Abort the mouse gesture.
+    abortMouseGesture(false);
+
+    // Handle the wheel gesture.
+    let gesture = getWheelDirection(data.wheel);
+    let handler = browser.runtime.sendMessage({
+      topic: 'mg-wheelGesture',
+      data: {
+        context: state.mouseDown.context,
+        element: state.mouseDown.element,
+        gesture: gesture
+      }
+    });
+
+    handler.then(result => {
+      if (!result) {
+        // Do nothing.
+      } else
+      if (result.cleanup) {
+        // Cleanup the gesture state.
+        mouseEvents.resetState();
+      } else
+      if (result.popup)  {
+        // TODO Not implemented yet.
+      }
+    });
+  }
+
+  // Invoked on subsequent scroll events during a wheel gesture.
+  function wheelGestureUpdate (data) {
+    // TODO This will change when popups are implemented.
+    wheelGestureStart(data);
   }
 
   return {
-    begin: begin,
-    update: update,
-    finish: finish
+    mouseGestureStart: mouseGestureStart,
+    mouseGestureUpdate: mouseGestureUpdate,
+    mouseGestureFinish: mouseGestureFinish,
+    wheelGestureStart: wheelGestureStart,
+    wheelGestureUpdate: wheelGestureUpdate
   };
 
-}(modules.settings));
+}(modules.settings, modules.mouseEvents));

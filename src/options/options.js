@@ -118,6 +118,8 @@ app.controller('OptionsCtrl', [
       showPrintMargin: false
     };
 
+    $scope.mappable = [];
+
     // Initialize controls from settings on load.
     settings.load().then(() => {
       let inSeconds;
@@ -128,12 +130,44 @@ app.controller('OptionsCtrl', [
 
       // Start monitoring the settings object for changes.
       $scope.$watch('settings', (newValue) => {
-        settings.save().then(() => $scope.$broadcast('redraw'));
+        settings.save().then(() => {
+          // Update list of mappable commands and scripts.
+          $scope.mappable = $scope.getMappable();
+
+          $scope.$broadcast('redraw');
+        });
       }, true);
 
       // Redraw all of the gesture controls.
       $scope.$broadcast('redraw');
     });
+
+    $scope.mappableId = (mapping) => {
+      if (mapping) {
+        var x = [ mapping.command, mapping.userScript ].join('');
+        console.log(x);
+        return x;
+      }
+      return null;
+    };
+
+    $scope.getMappable = () => {
+      let a = commands.map(command => ({
+        $mid: command.id,
+        $label: command.label,
+        command: command.id
+      }));
+      let b = settings.userScripts.map(userScript => ({
+        $mid: userScript.id,
+        $label: userScript.label || 'User Script',
+        command: 'userScript',
+        userScript: userScript.id
+      }));
+      return [{
+        $mid: null,
+        $label: '-- No Command --'
+      }].concat(a, b);
+    };
 
     // Convert gesture timeout to milliseconds.
     $scope.$watch('controls.gestureTimeout', (newValue, oldValue) => {

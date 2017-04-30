@@ -179,6 +179,26 @@ modules.commands = (function (settings) {
     });
   }
 
+  // Clone the gesture state from one tab to another.
+  function transitionGesture (from, to, skip) {
+    if (!!skip) {
+      return Promise.resolve();
+    } else {
+      return browser.tabs.sendMessage(from.id, { topic: 'mg-cloneState' })
+        .then(state => browser.tabs.sendMessage(to.id, { topic: 'mg-restoreState', data: state }))
+        // If the tab being activated is internal to the browser, a channel exception will be thrown.
+        .catch(t => {});
+    }
+  }
+
+  // Switch the active tab and clone the gesture state if necessary.
+  function switchActiveTab (from, to, transition) {
+    return transitionGesture(from, to, !transition)
+      .then(unused => browser.tabs.update(to.id, { active: true }))
+      // Ensure the gesture state in the de-activated tab is cleaned up.
+      .then(() => ({ cleanup: true }));
+  }
+
   // Command implementations -------------------------------------------------------------------------------------------
 
   // Close the active tab.
@@ -197,16 +217,17 @@ modules.commands = (function (settings) {
   }
 
   // Activate the next tab.
-  function commandNextTab () {
+  function commandNextTab (data) {
     return getCurrentWindowTabs().then(tabs => {
-      let index = (tabs.find(tab => tab.active).index + 1) % tabs.length;
+      let active = tabs.find(tab => tab.active);
+      let index = (active.index + 1) % tabs.length;
       let next = tabs[index];
-      return browser.tabs.update(next.id, { active: true });
+      return switchActiveTab(active, next, !!data.wheel);
     });
   }
 
   // Open a frame in a new tab.
-  function commandOpenFrameInNewTab (v) {
+  function commandOpenFrameInNewTab (data) {
     if (data.context.frameUrl) {
       return getActiveTab(tab =>
         browser.tabs.create({ url: data.context.frameUrl, index: tab.index + 1, active: false }));
@@ -235,11 +256,12 @@ modules.commands = (function (settings) {
   }
 
   // Activate the previous tab.
-  function commandPreviousTab () {
+  function commandPreviousTab (data) {
     return getCurrentWindowTabs().then(tabs => {
-      let index = (tabs.find(tab => tab.active).index - 1) % tabs.length;
+      let active = tabs.find(tab => tab.active);
+      let index = (active.index - 1) % tabs.length;
       let previous = tabs[index < 0 ? tabs.length - 1 : index];
-      return browser.tabs.update(previous.id, { active: true });
+      return switchActiveTab(active, previous, !!data.wheel);
     });
   }
 
@@ -265,7 +287,7 @@ modules.commands = (function (settings) {
 
   // Navigate to the URL of the frame.
   function commandShowOnlyThisFrame (data) {
-    if (data.context.nested && data.context.frameUrl) {     
+    if (data.context.nested && data.context.frameUrl) {
       return getActiveTab(tab => browser.tabs.update(tab.id, { url: data.context.frameUrl }));
     }
   }
