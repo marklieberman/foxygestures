@@ -94,6 +94,44 @@
     }
   }
 
+  // Function adapted from:
+  // https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
+  function easeOutQuad (time, initial, change, duration) {
+    return -change * (time /= duration) * (time - 2) + initial;
+  }
+
+  // Smoothly scroll the window to the given offset using requestAnimationFrame().
+  function scrollYEase (scrollTo, duration) {
+    let start = window.performance.now();
+    let initial = window.scrollY;
+    let change = scrollTo - initial;
+    return new Promise((resolve, reject) => {
+      // Animation function to scroll based on easing function.
+      function animate (step) {
+        let time = (step - start);
+        let value = easeOutQuad(time, initial, change, duration);
+        if (time < duration) {
+          // Schedule the next animation frame.
+          window.scrollTo(0, value);
+          window.requestAnimationFrame(animate);
+        } else {
+          // Finish by scrolling to the exact amount.
+          window.scrollTo(0, scrollTo);
+          resolve();
+        }
+      }
+
+      if (duration > 0) {
+        // Schedule the first animation frame.
+        window.requestAnimationFrame(animate);
+      } else {
+        // Animation is disabled.
+        window.scrollTo(0, scrollTo);
+        resolve();
+      }
+    });
+  }
+
   // Command implementations -------------------------------------------------------------------------------------------
 
   // Navigate back in history.
@@ -124,14 +162,14 @@
 
   // Scroll to the top of the frame or page.
   function commandScrollTop (data) {
-    window.scrollTo(0, 0);
-    return Promise.resolve();
+    // TODO Scroll easing duration as a preference
+    return scrollYEase(0, 1000);
   }
 
   // Scroll to the bottom of the frame or page.
   function commandScrollBottom (data) {
-    window.scrollTo(0, document.body.scrollHeight);
-    return Promise.resolve();
+    // TODO Scroll easing duration as a preference
+    return scrollYEase(document.documentElement.scrollHeight - document.documentElement.clientHeight, 1000);
   }
 
   // Execute a user script.
