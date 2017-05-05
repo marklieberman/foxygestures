@@ -1,10 +1,12 @@
 $nav-tabs-border-color: #ccc;
 $nav-tabs-active-link-hover-border-color: #ccc;
+$panel-heading-padding: 1px 15px 0px 15px;
 
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 
 body {
   background-color: transparent;
+  padding: 5px;
 }
 
 .tab-content {
@@ -17,12 +19,17 @@ body {
   border-bottom-right-radius: $border-radius-base;
 }
 
-.section-help-block {
-  width: 100%;
-  text-align: center;
+.panel:last-child {
+  margin-bottom: 0px;
+}
 
-  &:not(:first-child) {
-    padding-bottom: 40px;
+.well {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  i {
+    margin-right: 10px;
   }
 }
 
@@ -40,17 +47,21 @@ body {
   }
 }
 
-canvas.gesture-input {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: auto 0;
+input.mapped-gesture {
+  width: 150px;
+  text-align: center;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
-.mapped-gesture {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 5px;
+canvas.gesture-input {
+  background-color: #fff;
+  border: 1px solid $nav-tabs-border-color;
+  border-top: none;
+  border-radius: $border-radius-base;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  margin: auto 0;
 }
 
 // ----- Built-in mappings list -----

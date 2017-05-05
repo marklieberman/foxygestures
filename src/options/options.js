@@ -102,23 +102,36 @@ app.controller('OptionsCtrl', [
     // Scope variables.
     $scope.commands = commands;
     $scope.settings = settings;
+    $scope.mappables = [];
+    $scope.noCommand = {
+      id: null,
+      label: '-- No Command --',
+      mapping: null
+    };
 
     // Default values for controls.
     $scope.controls = {
       fewerTrailOptions: true,
       fewerStatusOptions: true,
       gestureTimeout: 0.4,
-      statusTimeout: 2.0
+      statusTimeout: 2.0,
+      wheelMappings: {
+        up: $scope.noCommand,
+        down: $scope.noCommand,
+        left: $scope.noCommand,
+        right: $scope.noCommand
+      }
     };
 
     // Options for ACE editor.
     $scope.aceOpts = {
       theme: 'chrome',
       mode: 'javascript',
-      showPrintMargin: false
-    };
+      showPrintMargin: false,
 
-    $scope.mappable = [];
+      // Suppress the warning in the console.
+      onLoad: editor => editor.$blockScrolling = Infinity
+    };
 
     // Initialize controls from settings on load.
     settings.load().then(() => {
@@ -128,46 +141,11 @@ app.controller('OptionsCtrl', [
       inSeconds = Math.floor(settings.statusTimeout / 100) / 10;
       $scope.controls.statusTimeout = inSeconds;
 
-      // Start monitoring the settings object for changes.
-      $scope.$watch('settings', (newValue) => {
-        settings.save().then(() => {
-          // Update list of mappable commands and scripts.
-          $scope.mappable = $scope.getMappable();
-
-          $scope.$broadcast('redraw');
-        });
-      }, true);
-
-      // Redraw all of the gesture controls.
+      $scope.updateMappables();
+      $scope.updateWheelMappings();
+      $scope.startWatchingSettings();
       $scope.$broadcast('redraw');
     });
-
-    $scope.mappableId = (mapping) => {
-      if (mapping) {
-        var x = [ mapping.command, mapping.userScript ].join('');
-        console.log(x);
-        return x;
-      }
-      return null;
-    };
-
-    $scope.getMappable = () => {
-      let a = commands.map(command => ({
-        $mid: command.id,
-        $label: command.label,
-        command: command.id
-      }));
-      let b = settings.userScripts.map(userScript => ({
-        $mid: userScript.id,
-        $label: userScript.label || 'User Script',
-        command: 'userScript',
-        userScript: userScript.id
-      }));
-      return [{
-        $mid: null,
-        $label: '-- No Command --'
-      }].concat(a, b);
-    };
 
     // Convert gesture timeout to milliseconds.
     $scope.$watch('controls.gestureTimeout', (newValue, oldValue) => {
@@ -182,6 +160,20 @@ app.controller('OptionsCtrl', [
     });
 
     // ----- Functions -----
+
+    // Start monitoring the settings for changes.
+    $scope.startWatchingSettings = () => {
+      return $scope.$watch('settings', (newValue) => {
+        settings.save().then(() => {
+          // Update list of mappable commands and scripts.
+          $scope.updateMappables();
+          $scope.updateWheelMappings();
+
+          // Redraw all of the gesture controls.
+          $scope.$broadcast('redraw');
+        });
+      }, true);
+    };
 
     // Get the mapping for a gesture.
     $scope.getMappingForGesture = (gesture) => {
@@ -334,6 +326,37 @@ app.controller('OptionsCtrl', [
         }
       }
     };
+
+    // Update the list of mappable commands.
+    $scope.updateMappables = () => {
+      $scope.mappables = [$scope.noCommand].concat(
+        // Add built-in commands.
+        commands.map(command => ({
+          id: command.id,
+          label: command.label,
+          mapping: {
+            command: command.id
+          }
+        })),
+        // Add user scripts.
+        settings.userScripts.map(userScript => ({
+          id: userScript.id,
+          label: userScript.label || 'User Script',
+          mapping: {
+            command: 'userScript',
+            userScript: userScript.id
+          }
+        })));
+    };
+
+    // Update the assigned wheel gesture mappings.
+    $scope.updateWheelMappings = () => {
+      [ 'up', 'down', 'left', 'right' ].forEach(key => {
+        $scope.controls.wheelMappings[key] = $scope.mappables.find(
+          mappable => angular.equals(mappable.mapping, settings.wheelMappings[key])) || $scope.noCommand;
+      });
+    };
+
   }]);
 
 // ---------------------------------------------------------------------------------------------------------------------

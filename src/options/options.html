@@ -52,118 +52,117 @@
             </p>
           </div>
 
-          <hr>
-
           <!-- Draw trails -->
-          <div class="form-group">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox"
-                       ng-model="settings.drawTrails"></input>
-                Draw gesture trails
-              </label>
-              <a class="pull-right"
-                 ng-click="controls.fewerTrailOptions = !controls.fewerTrailOptions">
-                <span ng-show="controls.fewerTrailOptions">
-                  More options <i class="fa fa-caret-down"></i>
-                </span>
-                <span ng-hide="controls.fewerTrailOptions">
-                  Fewer options <i class="fa fa-caret-up"></i>
-                </span>
-              </a>
-            </div>
-          </div>
-
-          <fieldset uib-collapse="controls.fewerTrailOptions"
-                    ng-disabled="!settings.drawTrails">
-            <!-- Trail width -->
-            <div class="form-group">
-              <label class="control-label">Trail Width</label>
-              <div class="input-group">
-                <input class="form-control" type="number"
-                       step="0.5" min="0" max="5"
-                       ng-model="settings.trailWidth"></input>
-                <span class="input-group-addon">
-                  <canvas mg-trail-preview settings="settings" width="50" height="16"></canvas>
-                </span>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"
+                         ng-model="settings.drawTrails"></input>
+                  Draw gesture trails
+                </label>
+                <a class="pull-right"
+                   ng-click="controls.fewerTrailOptions = !controls.fewerTrailOptions">
+                  <span ng-show="controls.fewerTrailOptions">
+                    More options <i class="fa fa-caret-down"></i>
+                  </span>
+                  <span ng-hide="controls.fewerTrailOptions">
+                    Fewer options <i class="fa fa-caret-up"></i>
+                  </span>
+                </a>
               </div>
             </div>
+            <fieldset class="panel-body"
+                      uib-collapse="controls.fewerTrailOptions"
+                      ng-disabled="!settings.drawTrails">
+              <!-- Trail width -->
+              <div class="form-group">
+                <label class="control-label">Trail Width</label>
+                <div class="input-group">
+                  <input class="form-control" type="number"
+                         step="0.5" min="0" max="5"
+                         ng-model="settings.trailWidth"></input>
+                  <span class="input-group-addon">
+                    <canvas mg-trail-preview settings="settings" width="50" height="16"></canvas>
+                  </span>
+                </div>
+              </div>
 
-            <!-- Trail color -->
-            <div class="form-group">
-              <label class="control-label">Trail Color</label>
-              <input class="form-control" type="text"
-                     ng-model="settings.trailColor"
-                     ng-model-options="{ updateOn: 'blur' }"></input>
-              <p class="help-block">
-                Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
-              </p>
-            </div>
-          </fieldset>
-
-          <hr>
+              <!-- Trail color -->
+              <div class="form-group">
+                <label class="control-label">Trail Color</label>
+                <input class="form-control" type="text"
+                       ng-model="settings.trailColor"
+                       ng-model-options="{ updateOn: 'blur' }"></input>
+                <p class="help-block">
+                  Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
+                </p>
+              </div>
+            </fieldset>
+          </div>
 
           <!-- Draw status -->
-          <div class="form-group">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox"
-                       ng-model="settings.showStatusText"></input>
-                Show status text
-              </label>
-              <a class="pull-right"
-                 ng-click="controls.fewerStatusOptions = !controls.fewerStatusOptions">
-                <span ng-show="controls.fewerStatusOptions">
-                  More options <i class="fa fa-caret-down"></i>
-                </span>
-                <span ng-hide="controls.fewerStatusOptions">
-                  Fewer options <i class="fa fa-caret-up"></i>
-                </span>
-              </a>
-            </div>
-          </div>
-
-          <fieldset uib-collapse="controls.fewerStatusOptions"
-                    ng-disabled="!settings.showStatusText">
-
-            <!-- Status timeout -->
-            <div class="form-group">
-              <label class="control-label">Status Timeout</label>
-              <div class="input-group">
-                <input class="form-control" type="number"
-                       step="0.1" min="0.1" max="30"
-                       ng-model="controls.statusTimeout"></input>
-                <span class="input-group-addon">seconds</span>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"
+                         ng-model="settings.showStatusText"></input>
+                  Show status text
+                </label>
+                <a class="pull-right"
+                   ng-click="controls.fewerStatusOptions = !controls.fewerStatusOptions">
+                  <span ng-show="controls.fewerStatusOptions">
+                    More options <i class="fa fa-caret-down"></i>
+                  </span>
+                  <span ng-hide="controls.fewerStatusOptions">
+                    Fewer options <i class="fa fa-caret-up"></i>
+                  </span>
+                </a>
               </div>
-              <p class="help-block">
-                Amount of time to display the status text after a gesture.
-              </p>
             </div>
+            <fieldset class="panel-body"
+                      uib-collapse="controls.fewerStatusOptions"
+                      ng-disabled="!settings.showStatusText">
 
-            <div class="form-group">
-              <label class="control-label">Status Template</label>
-              <a class="pull-right" ng-click="settings.statusTemplate = settings.getDefaultTemplates().statusTemplate">Reset</a>
-              <textarea class="form-control"
-                        ng-model="settings.statusTemplate"></textarea>
-              <p class="help-block">
-                Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text.
-              </p>
-            </div>
+              <!-- Status timeout -->
+              <div class="form-group">
+                <label class="control-label">Status Timeout</label>
+                <div class="input-group">
+                  <input class="form-control" type="number"
+                         step="0.1" min="0.1" max="30"
+                         ng-model="controls.statusTimeout"></input>
+                  <span class="input-group-addon">seconds</span>
+                </div>
+                <p class="help-block">
+                  Amount of time to display the status text after a gesture.
+                </p>
+              </div>
 
-          </fieldset>
+              <div class="form-group">
+                <label class="control-label">Status Template</label>
+                <a class="pull-right" ng-click="settings.statusTemplate = settings.getDefaultTemplates().statusTemplate">Reset</a>
+                <textarea class="form-control"
+                          ng-model="settings.statusTemplate"></textarea>
+                <p class="help-block">
+                  Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text.
+                </p>
+              </div>
+
+            </fieldset>
+          </div>
 
         </uib-tab>
 
         <uib-tab index="1" heading="Built-in Commands">
 
-          <div class="section-help-block">
-            <p class="help-block">
+          <div class="well">
+            <i class="fa fa-2x fa-info-circle"></i>
+            <span>
               Perform a gesture in each box to assign the gesture for the command.
               Press and release the gesture button to clear the gesture.
-            </p>
+          </span>
           </div>
-
-          <hr>
 
           <!-- List of gesture mappings -->
           <div class="mapping-list">
@@ -193,14 +192,15 @@
 
         <uib-tab index="2" heading="User Scripts">
 
-          <div class="section-help-block">
-            <p class="help-block">
+          <div class="well">
+            <i class="fa fa-2x fa-info-circle"></i>
+            <span>
               Execute a custom script with a mouse gesture.
-              Please read the  <a href="https://github.com/marklieberman/foxygestures/wiki/User-Scripts" target="_blank">user scripts</a> article on the wiki before proceeding.
-            </p>
+              Please read the
+              <a href="https://github.com/marklieberman/foxygestures/wiki/User-Scripts" target="_blank">user scripts</a>
+              article on the wiki before proceeding.
+            </span>
           </div>
-
-          <hr>
 
           <div class="mapping-list">
             <div class="user-script-item"
@@ -255,67 +255,65 @@
 
         </uib-tab>
 
-        <uib-tab index="3" heading="Other Gesture Types">
+        <uib-tab index="3" heading="Other Gestures">
 
-          <div class="section-help-block">
-            <p class="help-block">
-              Hold the gesture button and scroll up, down, left, or right to trigger a wheel gesture.
-            </p>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="checkbox clearfix">
+                <label>
+                  <input type="checkbox"
+                         ng-model="settings.wheelGestures"></input>
+                  Enable wheel gestures.
+                </label>
+                <div class="pull-right">
+                  <i class="fa fa-info-circle"></i>
+                  Hold the gesture button and scroll the mouse wheel to perform a wheel gesture.
+                </div>
+              </div>
+            </div>
+            <fieldset class="panel-body"
+                      ng-disabled="!settings.wheelGestures">
+              <div class="form-group">
+                <label class="control-label">Scroll Up</label>
+                <select class="form-control"
+                        ng-options="item as item.label for item in mappables track by item.id"
+                        ng-model="controls.wheelMappings.up"
+                        ng-change="settings.wheelMappings.up = controls.wheelMappings.up.mapping"></select>
+              </div>
+              <div class="form-group">
+                <label class="control-label">Scroll Down</label>
+                <select class="form-control"
+                        ng-options="item as item.label for item in mappables track by item.id"
+                        ng-model="controls.wheelMappings.down"
+                        ng-change="settings.wheelMappings.down = controls.wheelMappings.down.mapping"></select>
+              </div>
+              <div class="form-group">
+                <label class="control-label">Scroll Left</label>
+                <select class="form-control"
+                        ng-options="item as item.label for item in mappables track by item.id"
+                        ng-model="controls.wheelMappings.left"
+                        ng-change="settings.wheelMappings.left = controls.wheelMappings.left.mapping"></select>
+              </div>
+              <div class="form-group">
+                <label class="control-label">Scroll Right</label>
+                <select class="form-control"
+                        ng-options="item as item.label for item in mappables track by item.id"
+                        ng-model="controls.wheelMappings.right"
+                        ng-change="settings.wheelMappings.right = controls.wheelMappings.right.mapping"></select>
+              </div>
+            </fieldset>
           </div>
-
-          <hr>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox"
-                       ng-model="settings.wheelGestures"></input>
-                Enable wheel gestures.
-              </label>
-            </div>
-          </div>
-
-          <fieldset>
-            <div class="form-group">
-              <label class="control-label">Scroll Up</label>
-              <select class="form-control"
-                      ng-options="item as item.$label for item in mappable track by item.$mid"
-                      ng-model="settings.wheelMappings.up"></select>
-            </div>
-
-            <div class="form-group">
-              <label class="control-label">Scroll Down</label>
-              <select class="form-control"
-                      ng-options="item as item.$label for item in mappable track by item.$mid"
-                      ng-model="settings.wheelMappings.down"></select>
-            </div>
-
-            <div class="form-group">
-              <label class="control-label">Scroll Left</label>
-              <select class="form-control"
-                      ng-options="item as item.$label for item in mappable track by item.$mid"
-                      ng-model="settings.wheelMappings.left"></select>
-            </div>
-
-            <div class="form-group">
-              <label class="control-label">Scroll Right</label>
-              <select class="form-control"
-                      ng-options="item as item.$label for item in mappable track by item.$mid"
-                      ng-model="settings.wheelMappings.right"></select>
-            </div>
-          </fieldset>
 
         </uib-tab>
 
         <uib-tab index="4" heading="More Preferences">
 
-          <div class="section-help-block">
-            <p class="help-block">
+          <div class="well">
+            <i class="fa fa-2x fa-info-circle"></i>
+            <span>
               Preferences to modify the behaviour of built-in commands and other tweaks.
-            </p>
+            </span>
           </div>
-
-          <hr>
 
           <!-- Next/previous tab wraps -->
           <div class="form-group">
@@ -348,9 +346,11 @@
 
     </form><!-- ng-if loaded -->
 
-    <!-- <pre>{{settings | json}}</pre>
+    <!--
     <pre>{{settings | json}}</pre>
-    <pre>{{mappable | json}}</pre> -->
+    <pre>{{controls | json}}</pre>
+    <pre>{{mappable | json}}</pre>
+    -->
 
     <!-- Library components -->
     <script src="lib/angular.min.js"></script>
