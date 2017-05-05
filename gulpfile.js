@@ -36,7 +36,7 @@ gulp.task('lint', function () {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('dist', function () {
+gulp.task('dist', [ 'sass' ], function () {
   return gulp.src(sources.dist)
     .pipe(zip('foxygestures.xpi'))
     .pipe(gulp.dest('dist'));
