@@ -17,6 +17,19 @@ parsed but content does not have to be loaded. This limitation also applies to
 frames within the website. This is an inherent limitation of web extensions
 at the moment, because there is no API to get mouse events from browser chrome.
 
+##### OSX/Linux Gesture Button Limitation
+
+In OSX and Linux, the context menu is shown on mouse down. (Context menu on
+mouse up is the default for Windows.) When FireGestures is installed on OSX/Linux,
+it changes the context menu to be shown on mouse up. Web extensions cannot
+replicate this functionality. Due to the issue described in
+[#4](https://github.com/marklieberman/foxygestures/issues/4) right-button
+gestures work poorly in OSX/Linux.
+
+An option to use a modifier key to start or ignore gestures is being developed.
+If you want to see a proper solution to this issue, please support
+[this Bugzilla entry](https://bugzilla.mozilla.org/show_bug.cgi?id=1360278).
+
 #### Working Principle
 
 This extension hooks into DOM mouse events. However, each frame in a website
@@ -46,6 +59,11 @@ identifier to each frame in which it loads. Messages may be addressed to a
 specific frame using the unique frame ID.
 
 #### Changelog
+
+Version 1.0.3 released on _2017-05-09_
+ - Implement support for wheel gestures.
+ - Implement support for user scripts.
+ - Added commands: next tab, previous tab, show only this frame.
 
 Version 1.0.2 released on _2017-04-13_
  - Implement status text for gestures.
