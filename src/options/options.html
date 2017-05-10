@@ -164,10 +164,21 @@
           </span>
           </div>
 
+          <!-- Command search -->
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <i class="fa fa-search"></i>
+              </span>
+              <input class="form-control" type="text"
+                     ng-model="controls.searchCommands"></input>
+            </div>
+          </div>
+
           <!-- List of gesture mappings -->
           <div class="mapping-list">
             <div class="mapping-item"
-                 ng-repeat="command in commands">
+                 ng-repeat="command in commands | filter:controls.searchCommands | orderBy:'label'">
 
               <label class="control-label command-label">
                  {{command.label}}
@@ -324,6 +335,39 @@
                 Next tab and previous tab commands wrap from last tab to first tab.
               </label>
             </div>
+          </div>
+
+          <!-- New tab default URL -->
+          <div class="form-group">
+            <label class="control-label">Default URL for tabs opened with New Tab command</label>
+            <input class="form-control" type="text"
+                   ng-model="settings.newTabUrl"></input>
+            <p class="help-block">
+              Leave this field empty to use the default URL about:newtab.
+              Unplivileged about: pages like about:blank and about:home are also acceptable.
+            </p>
+          </div>
+
+          <!-- New window default URL -->
+          <div class="form-group">
+            <label class="control-label">Default URL for windows opened with New Window command</label>
+            <input class="form-control" type="text"
+                   ng-model="settings.newWindowUrl"></input>
+            <p class="help-block">
+              Leave this field empty to use the default URL about:newtab.
+              Unplivileged about: pages like about:blank and about:home are also acceptable.
+            </p>
+          </div>
+
+          <!-- New private window default URL -->
+          <div class="form-group">
+            <label class="control-label">Default URL for windows opened with New Private Window command</label>
+            <input class="form-control" type="text"
+                   ng-model="settings.newPrivateWindowUrl"></input>
+            <p class="help-block">
+              Leave this field empty to use the default URL about:newtab.
+              Unplivileged about: pages like about:blank and about:home are also acceptable.
+            </p>
           </div>
 
           <!-- Scroll duration -->

@@ -21,6 +21,11 @@ modules.commands = (function (settings) {
       defaultGesture: 'UR'
     },
     {
+      id: 'duplicateTabInNewPrivateWindow',
+      handler: commandDuplicateTabInNewPrivateWindow,
+      label: 'Duplicate Tab in New Private Window'
+    },
+    {
       id: 'historyBack',
       handler: data => commands.executeInContent('historyBack', data, false),
       label: 'History Back',
@@ -39,9 +44,29 @@ modules.commands = (function (settings) {
       defaultGesture: 'DL'
     },
     {
+      id: 'moveTabToNewWindow',
+      handler: commandMoveTabToNewWindow,
+      label: 'Move Tab to New Window'
+    },
+    {
       id: 'nextTab',
       handler: commandNextTab,
       label: 'Next Tab'
+    },
+    {
+      id: 'newTab',
+      handler: commandNewTab,
+      label: 'New Tab'
+    },
+    {
+      id: 'newWindow',
+      handler: commandNewWindow,
+      label: 'New Window'
+    },
+    {
+      id: 'newPrivateWindow',
+      handler: commandNewPrivateWindow,
+      label: 'New Private Window'
     },
     {
       id: 'openFrameInNewTab',
@@ -62,6 +87,11 @@ modules.commands = (function (settings) {
       id: 'openLinkInNewWindow',
       handler: commandOpenLinkInNewWindow,
       label: 'Open Link in New Window'
+    },
+    {
+      id: 'openLinkInPrivateWindow',
+      handler: commandOpenLinkInNewPrivateWindow,
+      label: 'Open Link in New Private Window'
     },
     {
       id: 'pageUp',
@@ -199,6 +229,11 @@ modules.commands = (function (settings) {
       .then(() => ({ cleanup: true }));
   }
 
+  // Convert about:newtab or empty strings to null, otherwise return the URL.
+  function notAboutNewTabUrl (url) {
+    return (url && (url = url.trim()) !== 'about:newtab') ? url : null;
+   }
+
   // Command implementations -------------------------------------------------------------------------------------------
 
   // Close the active tab.
@@ -211,9 +246,19 @@ modules.commands = (function (settings) {
     return getActiveTab(tab => browser.tabs.create({ url: tab.url, index: tab.index + 1, active: false }));
   }
 
+  // Duplicate the active tab in a new private window.
+  function commandDuplicateTabInNewPrivateWindow () {
+    return getActiveTab(tab => browser.windows.create({ url: tab.url, incognito: true }));
+  }
+
   // Minimize the current window.
   function commandMinimize () {
     return getCurrentWindow().then(win => browser.windows.update(win.id, { state: "minimized" }));
+  }
+
+  // Move the active tab to a new window.
+  function commandMoveTabToNewWindow () {
+    return getActiveTab(tab => browser.windows.create({ tabId: tab.id }));
   }
 
   // Activate the next tab.
@@ -228,6 +273,22 @@ modules.commands = (function (settings) {
         return switchActiveTab(active, next, !!data.wheel);
       }
     });
+  }
+
+  // Create a new empty tab.
+  function commandNewTab (data) {
+    return getActiveTab(tab =>
+      browser.tabs.create({ url: notAboutNewTabUrl(settings.newTabUrl), index: tab.index + 1, active: true }));
+  }
+
+  // Create a new empty window.
+  function commandNewWindow (data) {
+    return browser.windows.create({ url: notAboutNewTabUrl(settings.newWindowUrl) });
+  }
+
+  // Create a new empty private window.
+  function commandNewPrivateWindow (data) {
+    return browser.windows.create({ url: notAboutNewTabUrl(settings.newWindowUrl), incognito: true });
   }
 
   // Open a frame in a new tab.
@@ -256,6 +317,13 @@ modules.commands = (function (settings) {
   function commandOpenLinkInNewWindow (data) {
     if (data.element.href) {
       return browser.windows.create({ url: data.element.href });
+    }
+  }
+
+  // Open a link in a private window.
+  function commandOpenLinkInNewPrivateWindow (data) {
+    if (data.element.href) {
+      return browser.windows.create({ url: data.element.href, incognito: true });
     }
   }
 

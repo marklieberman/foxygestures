@@ -15,26 +15,29 @@ modules.settings = (function () {
 
   // Settings for the extension.
   var settings = {
-    gestureButton: 2,     // The button to start a gesture.
-    gestureTimeout: 400,  // Movement timeout to cancel a gesture.
-    gestureFidelity: 10,  // Fidelity of mouse events in gestures.
-    drawTrails: true,     // Draw gesture trails when enabled.
-    trailFidelity: 10,    // Minimum size of gesture trial segments.
-    trailWidth: 2,        // The width of the gesture trail.
-    trailColor: 'purple', // The color of the gesture trail.
-    showStatusText: true, // Show status text when enabled.
-    statusTimeout: 2000,  // Timeout to hide the status text.
-    mouseMappings: [],    // Array of gesture mappings.
-    userScripts: [],      // Array of user scripts.
-    wheelGestures: false, // Enable wheel gestures?
-    wheelMappings: {      // Mappings for wheel gestures.
+    gestureButton: 2,          // The button to start a gesture.
+    gestureTimeout: 400,       // Movement timeout to cancel a gesture.
+    gestureFidelity: 10,       // Fidelity of mouse events in gestures.
+    drawTrails: true,          // Draw gesture trails when enabled.
+    trailFidelity: 10,         // Minimum size of gesture trial segments.
+    trailWidth: 2,             // The width of the gesture trail.
+    trailColor: 'purple',      // The color of the gesture trail.
+    showStatusText: true,      // Show status text when enabled.
+    statusTimeout: 2000,       // Timeout to hide the status text.
+    mouseMappings: [],         // Array of gesture mappings.
+    userScripts: [],           // Array of user scripts.
+    wheelGestures: false,      // Enable wheel gestures?
+    wheelMappings: {           // Mappings for wheel gestures.
       up: null,
       down: null,
       left: null,
       right: null
     },
-    scrollDuration: 500,  // Animation duration from scroll commands.
-    nextTabWrap: true,    // Next tab command wraps at end?
+    scrollDuration: 500,       // Animation duration from scroll commands.
+    nextTabWrap: true,         // Next tab command wraps at end?
+    newTabUrl: null,           // Default URL for tabs opened with New Tab.
+    newWindowUrl: null,        // Default URL for windows opened with New Window.
+    newPrivateWindowUrl: null, // Default URL for private windows opened with New Private Window.
 
     // Templates
     statusTemplate: STATUS_TEMPLATE
