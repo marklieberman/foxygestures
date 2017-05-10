@@ -9,6 +9,21 @@ modules.commands = (function (settings) {
   // An array of supported commands.
   var commands = [
     {
+      id: 'closeLeftTabs',
+      handler: commandCloseLeftTabs,
+      label: 'Close Tabs to the Left'
+    },
+    {
+      id: 'closeOtherTabs',
+      handler: commandCloseOtherTabs,
+      label: 'Close Other Tabs'
+    },
+    {
+      id: 'closeRightTabs',
+      handler: commandCloseRightTabs,
+      label: 'Close Tabs to the Right'
+    },
+    {
       id: 'closeTab',
       handler: commandCloseTab,
       label: 'Close Tab',
@@ -235,6 +250,28 @@ modules.commands = (function (settings) {
    }
 
   // Command implementations -------------------------------------------------------------------------------------------
+
+  // Close tabs to the left of the active tab.
+  function commandCloseLeftTabs () {
+    return getCurrentWindowTabs().then(tabs => {
+      let activeTabIndex = tabs.find(tab => tab.active).index;
+      return browser.tabs.remove(tabs.filter(tab => tab.index < activeTabIndex).map(tab => tab.id));
+    });
+  }
+
+  // Close all tabs other than the active tab.
+  function commandCloseOtherTabs () {
+    return getCurrentWindowTabs().then(tabs =>
+      browser.tabs.remove(tabs.filter(tab => !tab.active).map(tab => tab.id)));
+  }
+
+  // Close tabs to the right of the active tab.
+  function commandCloseRightTabs () {
+    return getCurrentWindowTabs().then(tabs => {
+      let activeTabIndex = tabs.find(tab => tab.active).index;
+      return browser.tabs.remove(tabs.filter(tab => tab.index > activeTabIndex).map(tab => tab.id));
+    });
+  }
 
   // Close the active tab.
   function commandCloseTab () {
