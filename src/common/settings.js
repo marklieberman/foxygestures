@@ -26,6 +26,7 @@ modules.settings = (function () {
     statusTimeout: 2000,       // Timeout to hide the status text.
     mouseMappings: [],         // Array of gesture mappings.
     userScripts: [],           // Array of user scripts.
+    sawXSSWarning: false,      // Did the user read the XSS warning?
     wheelGestures: false,      // Enable wheel gestures?
     wheelMappings: {           // Mappings for wheel gestures.
       up: null,
