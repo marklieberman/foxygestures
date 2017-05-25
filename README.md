@@ -29,6 +29,8 @@ gestures work poorly in OSX/Linux.
 An option to use a modifier key to start or ignore gestures is being developed.
 If you want to see a proper solution to this issue, please support
 [this Bugzilla entry](https://bugzilla.mozilla.org/show_bug.cgi?id=1360278).
+Update: the bug was accepted and is awaiting a user contributed patch. If you
+are available to help write this patch please contact me.
 
 #### Working Principle
 
@@ -59,6 +61,11 @@ identifier to each frame in which it loads. Messages may be addressed to a
 specific frame using the unique frame ID.
 
 #### Changelog
+
+Version 1.0.5 released on _2017-05-24_
+ - Added commands: duplicate tab in new private window, move tab to new window,
+   new tab, new window, new private window, open link in new private window,
+   close tabs to the left, close tabs to the right, close other tabs.
 
 Version 1.0.3 released on _2017-05-09_
  - Implement support for wheel gestures.
