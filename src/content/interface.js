@@ -7,6 +7,8 @@
 var modules = modules || {};
 modules.interface = (function (settings) {
 
+  var MAX_SAFE_Z_INDEX = 2147483647;
+
   // State for this module.
   var state = {
     body: null,           // Element in which to append the canvas.
@@ -72,7 +74,7 @@ modules.interface = (function (settings) {
         state.canvas.style.position = 'fixed';
         state.canvas.style.top = 0;
         state.canvas.style.left = 0;
-        state.canvas.style.zIndex = 99999;
+        state.canvas.style.zIndex = MAX_SAFE_Z_INDEX;
         state.canvas.style.pointerEvents = 'none';
         state.body.appendChild(state.canvas);
 
