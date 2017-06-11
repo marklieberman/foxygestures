@@ -27,7 +27,6 @@ modules.mouseEvents = (function () {
     scriptFrameId: modules.helpers.makeScriptFrameId(),
     gestureState: PROGRESS_NONE,       // Gesture state machine state.
     contextMenu: true,                 // Context menu is enabled?
-    mouseNeverDown: true,               // No mouse down events have occurred?
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
     isUnloading: false                 // Is the page is unloading?
@@ -167,11 +166,7 @@ modules.mouseEvents = (function () {
   }, true);
 
   window.addEventListener('contextmenu', function (event) {
-    // Prevent the context menu if disabled or a mouse down event has not ocurred. This prevents a context menu from
-    // appearing if after the script loads a mouse up or context menu event is enountered before a mouse down. Such
-    // a case is typical of any command that reloads the frame or opens a new frame under the mouse while the gesture
-    // button remains depressed.
-    if (!state.contextMenu || state.mouseNeverDown) {
+    if (!state.contextMenu) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -319,13 +314,6 @@ modules.mouseEvents = (function () {
   // Invoked by the mousedown event.
   // The event may have bubbled up from nested frames.
   function onMouseDown (data, event) {
-    if (state.mouseNeverDown) {
-      // Set a flag once a mouse down is observed.
-      replicateState({
-        mouseNeverDown: false
-      });
-    }
-
     if (data.button === settings.gestureButton && !state.isUnloading) {
       // Replicate state to nested frames.
       replicateState({
