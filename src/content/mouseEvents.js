@@ -234,7 +234,7 @@ modules.mouseEvents = (function () {
     // Compile a list of frames on the page.
     var iframes = document.getElementsByTagName('iframe');
     var allFrames = Array.from(iframes);
-    if (document.body.tagName === 'FRAMESET') {
+    if (document.body && document.body.tagName === 'FRAMESET') {
       var framesetFrames = document.getElementsByTagName('frame');
       allFrames = allFrames.concat(Array.from(framesetFrames));
     }
