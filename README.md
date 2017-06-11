@@ -62,6 +62,9 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
+Version 1.0.6 released on _2017-06-11_
+ - Minor bug fixes
+
 Version 1.0.5 released on _2017-05-24_
  - Added commands: duplicate tab in new private window, move tab to new window,
    new tab, new window, new private window, open link in new private window,
