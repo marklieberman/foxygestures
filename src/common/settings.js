@@ -39,6 +39,7 @@ modules.settings = (function () {
     newTabUrl: null,           // Default URL for tabs opened with New Tab.
     newWindowUrl: null,        // Default URL for windows opened with New Window.
     newPrivateWindowUrl: null, // Default URL for private windows opened with New Private Window.
+    useRelPrevNext: true,      // Use <a rel="prev|next"> hint for page up and down.
 
     // Templates
     statusTemplate: STATUS_TEMPLATE

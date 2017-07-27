@@ -19,7 +19,8 @@
 
   // Settings for this module.
   var settings = {
-    scrollDuration: 1000
+    scrollDuration: 1000,
+    useRelPrevNext: true
   };
 
   // Load settings from storage.
@@ -106,9 +107,21 @@
       var newPart = replacers[i](noOriginPart);
       if (newPart !== noOriginPart) {
         window.location.href = origin + newPart;
-        return;
+        return true;
       }
     }
+    return false;
+  }
+
+  // Follow the last rel=next or rel=prev link in the page.
+  function goRelNextPrev (next) {
+    let list = document.querySelectorAll(next ? 'a[rel~=next]' : 'a[rel~=prev]');
+    let href = list.length && list[list.length - 1].href;
+    if (href) {
+      window.location.href = href;
+      return true;
+    }
+    return false;
   }
 
   // Function adapted from:
@@ -163,13 +176,17 @@
 
   // Increment the page/number in the URL.
   function commandPageUp (data) {
-    alterPageNumber(p => p + 1);
+    if (!(settings.useRelPrevNext && goRelNextPrev(true))) {
+      alterPageNumber(p => p + 1);
+    }
   }
 
   // Decrement the page/number in the URL.
   function commandPageDown (data) {
-    // Clamp page down at zero.
-    alterPageNumber(p => (p > 0) ? (p - 1) : 0);
+    if (!(settings.useRelPrevNext && goRelNextPrev(false))) {
+      // Clamp page down at zero.
+      alterPageNumber(p => (p > 0) ? (p - 1) : 0);
+    }
   }
 
   // Reload the frame in the active tab.
