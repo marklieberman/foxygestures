@@ -589,7 +589,7 @@ app.directive('mgGestureInput', [
         }
 
         function onMouseUp (event) {
-          if (event.button === scope.settings.gestureButton) {
+          if ((event.button === scope.settings.gestureButton) && state.inProgress) {
             state.inProgress = false;
             scope.$apply(() => {
               scope.onGesture({ gesture: gestureDetector.gesture });
