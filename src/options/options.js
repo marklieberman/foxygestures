@@ -375,7 +375,7 @@ app.directive('mgTrailPreview', [
 
         // Repaint the gesture on settings changed.
         scope.$watch('settings', (newValue) => {
-          ctx.lineWidth = scope.settings.trailWidth || 2;
+          ctx.lineWidth = Math.min(scope.settings.trailWidth || 2, 5);
           ctx.strokeStyle = scope.settings.trailColor || '#000';
           scope.drawPreview();
         }, true);
@@ -417,8 +417,9 @@ app.directive('mgGestureInput', [
 
         // Repaint the gesture on settings changed.
         scope.$watch('settings', (newValue) => {
-          ctx.lineWidth = scope.settings.trailWidth || 2;
+          ctx.lineWidth = Math.min(scope.settings.trailWidth || 2, 5);
           ctx.strokeStyle = scope.settings.trailColor || '#000';
+          ctx.lineCap = "round";
           drawGesture();
         }, true);
 
