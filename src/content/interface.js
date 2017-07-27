@@ -71,11 +71,12 @@ modules.interface = (function (settings) {
         // Use fixed positioning and match the window size.
         state.canvas.setAttribute('width', window.innerWidth);
         state.canvas.setAttribute('height', window.innerHeight);
+        state.canvas.style.display = 'block';
         state.canvas.style.position = 'fixed';
         state.canvas.style.top = 0;
         state.canvas.style.left = 0;
         state.canvas.style.zIndex = MAX_SAFE_Z_INDEX;
-        state.canvas.style.pointerEvents = 'none';
+        state.canvas.style.pointerEvents = 'none';        
         state.body.appendChild(state.canvas);
 
         // Initialize the drawing context.
