@@ -293,7 +293,7 @@ modules.mouseEvents = (function () {
         href: event.target.href,
 
         // Search for a media URL related to the element.
-        mediaUrl: modules.helpers.getMediaUrl(event.target)
+        mediaInfo: modules.helpers.getMediaInfo(event.target)
       };
     }
 

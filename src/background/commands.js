@@ -4,7 +4,7 @@
  * This module is reponsible for defining and executing commands.
  */
 var modules = modules || {};
-modules.commands = (function (settings) {
+modules.commands = (function (settings, helpers) {
 
   // An array of supported commands.
   var commands = [
@@ -385,16 +385,26 @@ modules.commands = (function (settings) {
 
   // Save the media URL of the element under the gesture.
   function commandSaveMediaNow (data) {
-    if (data.element.mediaUrl) {
-      return browser.downloads.download({ url: data.element.mediaUrl });
+    let mediaInfo = data.element.mediaInfo;
+    if (mediaInfo) {
+      return browser.downloads.download({
+        url: mediaInfo.source,
+        filename: helpers.suggestFilename(mediaInfo)
+      });
     }
   }
 
   // Save the media URL of the element under the gesture.
   // Prompt for the location to save the file.
   function commandSaveMediaAs (data) {
-    if (data.element.mediaUrl) {
-      return browser.downloads.download({ url: data.element.mediaUrl, saveAs: true });
+    let mediaInfo = data.element.mediaInfo;
+    console.log(mediaInfo, helpers.suggestFilename(mediaInfo));
+    if (mediaInfo) {
+      return browser.downloads.download({
+        url: mediaInfo.source,
+        filename: helpers.suggestFilename(mediaInfo),
+        saveAs: true
+      });
     }
   }
 
@@ -417,4 +427,4 @@ modules.commands = (function (settings) {
 
   return commands;
 
-}(modules.settings));
+}(modules.settings, modules.helpers));

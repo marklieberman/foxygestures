@@ -18,14 +18,21 @@ modules.helpers = (function (module) {
   // Find a URL for the image, video, or audio of a DOM element. The function
   // currently looks for image source, HTML5 video or audio sources, and CSS
   // nearby background images.
-  module.getMediaUrl = (element) => {
+  module.getMediaInfo = (element) => {
     if (element instanceof window.HTMLImageElement) {
-      return String(element.src);
+      return {
+        source: String(element.src),
+        type: null
+      };
     } else
     if (element instanceof window.HTMLVideoElement ||
         element instanceof window.HTMLAudioElement) {
       if (element.src) {
-        return element.src;
+        // Source is on the media element.
+        return {
+          source: String(element.src),
+          type: element.getAttribute('type')
+        };
       } else {
         // Look for embedded <source> tags.
         var sources = Array.prototype.slice.call(element.children)
@@ -33,12 +40,19 @@ modules.helpers = (function (module) {
             return child.tagName === 'SOURCE';
           });
         if (sources.length) {
-          return sources[0].src;
+          let element = sources[0];
+          return {
+            source: String(element.src),
+            type: element.getAttribute('type')
+          };
         }
       }
     } else
     if (element instanceof window.HTMLCanvasElement) {
-      return element.toDataURL();
+      return {
+        source: element.toDataURL(),
+        type: 'image/png'
+      };
     } else {
       // TODO Search up to DOM hierarchy for a CSS background image.
     }
