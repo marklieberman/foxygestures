@@ -18,7 +18,7 @@
 
   <body ng-controller="OptionsCtrl">
     <!-- Do not show until settings are loaded -->
-    <form class="form" ng-if="commands.loaded && settings.loaded">
+    <form class="form" name="optionsForm" ng-if="commands.loaded && settings.loaded">
 
       <uib-tabset active="0">
 
@@ -39,10 +39,10 @@
           </div>
 
           <!-- Gesture timeout -->
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error':optionsForm.gestureTimeout.$invalid}">
             <label class="control-label">Gesture Timeout</label>
             <div class="input-group">
-              <input class="form-control" type="number"
+              <input class="form-control" type="number" name="gestureTimeout"
                      step="0.1" min="0" max="30"
                      ng-model="controls.gestureTimeout"></input>
               <span class="input-group-addon">seconds</span>
@@ -76,10 +76,10 @@
                       uib-collapse="controls.fewerTrailOptions"
                       ng-disabled="!settings.drawTrails">
               <!-- Trail width -->
-              <div class="form-group">
+              <div class="form-group" ng-class="{'has-error':optionsForm.trailWidth.$invalid}">
                 <label class="control-label">Trail Width</label>
                 <div class="input-group">
-                  <input class="form-control" type="number"
+                  <input class="form-control" type="number" name="trailWidth"
                          step="0.5" min="0.5" max="40"
                          ng-model="settings.trailWidth"></input>
                   <span class="input-group-addon">
@@ -89,11 +89,10 @@
               </div>
 
               <!-- Trail color -->
-              <div class="form-group">
+              <div class="form-group" ng-class="{'has-error':optionsForm.trailColor.$invalid}">
                 <label class="control-label">Trail Color</label>
-                <input class="form-control" type="text"
-                       ng-model="settings.trailColor"
-                       ng-model-options="{ updateOn: 'blur' }"></input>
+                <input class="form-control" type="text" name="trailColor"
+                       ng-model="settings.trailColor" css-color></input>
                 <p class="help-block">
                   Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
                 </p>
@@ -126,10 +125,10 @@
                       ng-disabled="!settings.showStatusText">
 
               <!-- Status timeout -->
-              <div class="form-group">
+              <div class="form-group" ng-class="{'has-error':optionsForm.statusTimeout.$invalid}">
                 <label class="control-label">Status Timeout</label>
                 <div class="input-group">
-                  <input class="form-control" type="number"
+                  <input class="form-control" type="number" name="statusTimeout"
                          step="0.1" min="0.1" max="30"
                          ng-model="controls.statusTimeout"></input>
                   <span class="input-group-addon">seconds</span>
@@ -280,6 +279,10 @@
                   <div class="input-group">
                     <input class="form-control" type="text"
                            ng-model="userScript.label"
+                           ng-model-options="{
+                             updateOn: 'default blur',
+                             debounce: { 'default': 1000, 'blur': 0 }
+                           }"
                            placeholder="Name of the user script">
                     <span class="input-group-btn">
                       <button class="btn btn-default" type="button"
@@ -292,7 +295,10 @@
                   <div class="ace-editor"
                        ui-ace="aceOpts"
                        ng-model="userScript.script"
-                       ng-model-options="{ debounce: 1000 }"></div>
+                       ng-model-options="{
+                         updateOn: 'default blur',
+                         debounce: { 'default': 1000, 'blur': 0 }
+                       }"></div>
                 </div>
 
               </div>
@@ -427,11 +433,11 @@
           </div>
 
           <!-- Scroll duration -->
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error':optionsForm.scrollDuration.$invalid}">
             <label class="control-label">Duration of the animation for the scroll to top/bottom</label>
             <div class="input-group">
-              <input class="form-control" type="number"
-                     step="250" min="0" max="10000"
+              <input class="form-control" type="number" name="scrollDuration"
+                     min="0" max="10000"
                      ng-model="settings.scrollDuration"></input>
               <span class="input-group-addon">milliseconds</span>
             </div>

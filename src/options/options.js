@@ -636,3 +636,19 @@ app.directive('mgGestureInput', [
       }
     };
   }]);
+
+// ---------------------------------------------------------------------------------------------------------------------
+app.directive('cssColor', [
+  function($q, $timeout) {
+    return {
+      require: 'ngModel',
+      link: function(scope, elm, attrs, ctrl) {
+        ctrl.$validators.cssColor = (modelValue, viewValue) => {
+          let element = document.createElement("div");
+      	  element.style.color = viewValue;
+          let value = element.style.color;
+      	  return !!value.split(/\s+/).join('');
+        };
+      }
+    };
+  }]);
