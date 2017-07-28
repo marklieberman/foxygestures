@@ -26,7 +26,7 @@ modules.mouseEvents = (function () {
     // Used by commands to target a specific nested frame.
     scriptFrameId: modules.helpers.makeScriptFrameId(),
     gestureState: PROGRESS_NONE,       // Gesture state machine state.
-    contextMenu: true,                 // Context menu is enabled?
+    contextMenu: false,                // Context menu is enabled?
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
     isUnloading: false                 // Is the page is unloading?
@@ -329,7 +329,7 @@ modules.mouseEvents = (function () {
   // Invoked by the mouseup event.
   // The event may have bubbled up from nested frames.
   function onMouseUp (data) {
-    if (data.button === settings.gestureButton) {
+    if (data.button === settings.gestureButton && state.gestureState) {
       switch (state.gestureState) {
         case PROGRESS_MOUSE_DOWN:
         case PROGRESS_MOUSE_MOVE:
@@ -399,7 +399,6 @@ modules.mouseEvents = (function () {
       });
     }
   }
-
 
   return {
     // Context

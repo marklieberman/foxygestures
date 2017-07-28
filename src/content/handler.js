@@ -5,7 +5,7 @@
  * background and content scripts.
  */
 var modules = modules || {};
-modules.handler = (function (settings, mouseEvents) {
+modules.handler = (function (settings) {
 
   // State for this module.
   var state = {
@@ -26,13 +26,13 @@ modules.handler = (function (settings, mouseEvents) {
         // Return a clone of the state.
         return Promise.resolve({
           handler: cloneState(),
-          mouseEvents: mouseEvents.cloneState()
+          mouseEvents: modules.mouseEvents.cloneState()
         });
       case 'mg-restoreState':
         // Restore a clone of the state.
         let clone = message.data;
         restoreState(clone.handler);
-        mouseEvents.restoreState(clone.mouseEvents);
+        modules.mouseEvents.restoreState(clone.mouseEvents);
         break;
       case 'mg-status':
         // Update the status text.
@@ -75,16 +75,6 @@ modules.handler = (function (settings, mouseEvents) {
     gestureDetector.reset(mouseDown);
     state.mouseDown = mouseDown;
 
-    // Start the gesture timeout interval.
-    if (settings.gestureTimeout) {
-      state.noMovementTicks = 0;
-      state.timeoutHandle = window.setInterval(function () {
-        if (++state.noMovementTicks >= (settings.gestureTimeout / 100)) {
-          abortMouseGesture(true);
-        }
-      }, 100);
-    }
-
     // Paint the gesture trail.
     if (settings.drawTrails) {
       modules.interface.beginTrail(mouseDown);
@@ -98,6 +88,18 @@ modules.handler = (function (settings, mouseEvents) {
     if (modules.helpers.distanceDelta(mouseMove) >= settings.gestureFidelity) {
       deltaAccumulator.reset();
 
+      // Reset the number of ticks without movement.
+      state.noMovementTicks = 0;
+
+      // Start the gesture timeout interval.
+      if (settings.gestureTimeout && !state.timeoutHandle) {
+        state.timeoutHandle = window.setInterval(function () {
+          if (++state.noMovementTicks >= (settings.gestureTimeout / 100)) {
+            abortMouseGesture(true);
+          }
+        }, 100);
+      }
+
       // Update the gesture.
       if (gestureDetector.addPoint(mouseMove)) {
         browser.runtime.sendMessage({
@@ -107,9 +109,6 @@ modules.handler = (function (settings, mouseEvents) {
           }
         });
       }
-
-      // Reset the number of ticks without movement.
-      state.noMovementTicks = 0;
 
       // Paint the gesture trail.
       if (settings.drawTrails) {
@@ -122,6 +121,7 @@ modules.handler = (function (settings, mouseEvents) {
   function mouseGestureFinish (mouseUp) {
     // Clear the gesture timeout interval.
     window.clearInterval(state.timeoutHandle);
+    state.timeoutHandle = null;
 
     // Hide the gesture trail.
     if (settings.drawTrails) {
@@ -160,7 +160,7 @@ modules.handler = (function (settings, mouseEvents) {
 
     // Optionally reset the low level gesture state.
     if (resetState) {
-      mouseEvents.resetState();
+      modules.mouseEvents.resetState();
     }
   }
 
@@ -204,7 +204,7 @@ modules.handler = (function (settings, mouseEvents) {
       } else
       if (result.cleanup) {
         // Cleanup the gesture state.
-        mouseEvents.resetState();
+        modules.mouseEvents.resetState();
       } else
       if (result.popup)  {
         // TODO Not implemented yet.
@@ -226,4 +226,4 @@ modules.handler = (function (settings, mouseEvents) {
     wheelGestureUpdate: wheelGestureUpdate
   };
 
-}(modules.settings, modules.mouseEvents));
+}(modules.settings));
