@@ -45,20 +45,6 @@ modules.settings = (function () {
     statusTemplate: STATUS_TEMPLATE
   };
 
-  // Load settings from storage.
-  // This is exposed as the non-enumerable loaded property.
-  Object.defineProperty(settings, 'loaded', {
-    enumerable: false,
-    value: browser.storage.local.get(settings).then(results => {
-      // Assign values from storage into the module reference.
-      Object.keys(results)
-        .filter(key => typeof settings[key] !== 'function')
-        .forEach(key => settings[key] = results[key]);
-
-      return settings;
-    })
-  });
-
   // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Guard for cases when settings is included from content scripts.
@@ -103,13 +89,37 @@ modules.settings = (function () {
     });
   }
 
+  // -------------------------------------------------------------------------------------------------------------------
+  // Callable properties will throw a DataCloneError when persisting the settings object. Therefore, methods on the
+  // settings object cannot be enumerable.
+
+  // Load settings from storage.
+  // This is exposed as the non-enumerable loaded property.
+  Object.defineProperty(settings, 'loaded', {
+    enumerable: false,
+    value: browser.storage.local.get(settings).then(results => {
+      // Assign values from storage into the module reference.
+      Object.keys(results)
+        .filter(key => typeof settings[key] !== 'function')
+        .forEach(key => settings[key] = results[key]);
+
+      return settings;
+    })
+  });
+
   // Get the default value for template settings.
-  settings.getDefaultTemplates = () => ({
-    statusTemplate: STATUS_TEMPLATE
+  Object.defineProperty(settings, 'getDefaultTemplates', {
+    enumerable: false,
+    value: () => ({
+      statusTemplate: STATUS_TEMPLATE
+    })
   });
 
   // Find a user script by ID.
-  settings.findUserScriptById = (id) => Optional.of(settings.userScripts.find(userScript => userScript.id === id));
+  Object.defineProperty(settings, 'findUserScriptById', {
+    enumerable: false,
+    value: (id) => Optional.of(settings.userScripts.find(userScript => userScript.id === id))
+  });
 
   return settings;
 

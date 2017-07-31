@@ -78,17 +78,32 @@ app.factory('settings', [
       });
     });
 
+    // -----
+    // Callable properties will throw a DataCloneError when persisting the settings object. Therefore, methods on the
+    // settings object cannot be enumerable.
+    // -----
+
     // Load settings from browser storage. Returns a promise that is resolved when settings are loaded.
-    service.load = () => promise.then(() => service);
+    Object.defineProperty(service, 'load', {
+      enumerable: false,
+      value: () => promise.then(() => service)
+    });
+
 
     // Save settings to browser storage. Returns a promise that is resolved when settings are saved.
-    service.save = () => {
-      var deferred = $q.defer();
-      browser.storage.local.set(service).then(
-        () => deferred.resolve(),
-        err => deferred.reject(err));
-      return deferred.promise;
-    };
+    Object.defineProperty(service, 'save', {
+      enumerable: false,
+      value: () => {
+        var deferred = $q.defer();
+        browser.storage.local.set(service).then(
+          () => deferred.resolve(),
+          err => {
+            console.log('error saving settings', err);
+            deferred.reject(err);
+          });
+        return deferred.promise;
+      }
+    });
 
     return service;
   }]);
