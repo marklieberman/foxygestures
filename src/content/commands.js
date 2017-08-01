@@ -83,20 +83,67 @@
     }, '*');
   }
 
+  // Attempt to format the given value similarly to the original value.
+  function padSame (original, newValue) {
+    // Look for leading zeros to determine padding size.
+    // This will fail in some case, for example: 100 -> 99 or 099?
+	  return (original[0] === '0') ? newValue.padStart(original.length, '0') : newValue;
+  }
+
   // Modify the page number parameter in a URL.
   // Tries each replacer stategy in turn until one is successful.
+  // JSFiddle to debug this algorithm: https://jsfiddle.net/Lrdgcxcs/1/
   function alterPageNumber (callback) {
     var replacers = [
       // Match common pagination query parameters.
       url => url.replace(
         /\b(page|p)=(\d+)\b/i,
-        (match, p1, p2, offset) => p1 + '=' + callback(Number(p2))
+        (match, p1, p2, offset) => p1 + '=' + padSame(p2, String(callback(Number(p2))))
       ),
-      // Match a numeric directory in the path.
+      // Match pageXX or page/XX in the URL.
       url => url.replace(
-        /\/(\d+)([/?#]|$)/,
-        (match, p1, p2, offset) => ('/' + callback(Number(p1)) + p2)
-      )
+        /\b(page\/?)(\d+)\b/i,
+        (match, p1, p2, offset) => p1 + padSame(p2, String(callback(Number(p2))))
+      ),
+      // Generic find and replace numbers in the URL.
+      // - Try to scan for numbers in the path from end to start.
+      // - Try to scan for number in the query or fragment from start to end.
+      url => {
+        // Split the URL each time a number is enountered.
+        let segments = url.split(/([\d]+)/);
+
+        // Find the last segment of the path component.
+        let lastPathSegment = segments.reduce((n, segment, i) => {
+          return !!~segment.indexOf('?') || !!~segment.indexOf('#') ? Math.min(n, i) : n;
+        }, segments.length - 1);
+
+        // Look for a number in the path first.
+        // Scan from end to start and increment the last number in the path.
+        let done = false;
+        for (let i = lastPathSegment; i >= 0; i--) {
+          let value = segments[i].length ? Number(segments[i]) : Number.NaN;
+          if (value >= 0) {
+            segments[i] = padSame(segments[i], String(callback(value)));
+            done = true;
+            break;
+          }
+        }
+
+        if (!done) {
+          // Look for a number in query as fallback.
+          // Scan from start to end and increment the first number in the query or fragment.
+          for (let i = lastPathSegment; i < segments.length; i++) {
+            let value = segments[i].length ? Number(segments[i]) : Number.NaN;
+            if (value >= 0) {
+              segments[i] = padSame(segments[i], String(callback(value)));
+              break;
+            }
+          }
+        }
+
+        // Assemble the segments.
+        return segments.join('');
+      }
     ];
 
     // Ignore the origin component of the URL.
