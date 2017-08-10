@@ -280,7 +280,15 @@ modules.commands = (function (settings, helpers) {
 
   // Duplicate the active tab.
   function commandDuplicateTab () {
-    return getActiveTab(tab => browser.tabs.create({ url: tab.url, index: tab.index + 1, active: false }));
+    return getActiveTab(tab => {
+      let tabOptions = {};
+      tabOptions.url = tab.url;
+      tabOptions.active = settings.insertTabIsActive;
+      if (settings.insertRelatedTab) {
+        tabOptions.index = tab.index + 1;
+      }
+      return browser.tabs.create(tabOptions);
+    });
   }
 
   // Duplicate the active tab in a new private window.
@@ -314,8 +322,13 @@ modules.commands = (function (settings, helpers) {
 
   // Create a new empty tab.
   function commandNewTab (data) {
-    return getActiveTab(tab =>
-      browser.tabs.create({ url: notAboutNewTabUrl(settings.newTabUrl), index: tab.index + 1, active: true }));
+    return getActiveTab(tab => {
+      // Firefox default is for new tabs to be active and inserted at the end of the tab bar.
+      let tabOptions = {};
+      tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
+      tabOptions.active = true;
+      return browser.tabs.create(tabOptions);
+    });
   }
 
   // Create a new empty window.
@@ -331,8 +344,15 @@ modules.commands = (function (settings, helpers) {
   // Open a frame in a new tab.
   function commandOpenFrameInNewTab (data) {
     if (data.context.frameUrl) {
-      return getActiveTab(tab =>
-        browser.tabs.create({ url: data.context.frameUrl, index: tab.index + 1, active: false }));
+      return getActiveTab(tab => {
+        let tabOptions = {};
+        tabOptions.url = data.context.frameUrl;
+        tabOptions.active = settings.insertTabIsActive;
+        if (settings.insertRelatedTab) {
+          tabOptions.index = tab.index + 1;
+        }
+        return browser.tabs.create(tabOptions);
+      });
     }
   }
 
@@ -346,7 +366,15 @@ modules.commands = (function (settings, helpers) {
   // Open a link in a new tab.
   function commandOpenLinkInNewTab (data) {
     if (data.element.linkHref) {
-      return getActiveTab(tab => browser.tabs.create({ url: data.element.linkHref, index: tab.index + 1 }));
+      return getActiveTab(tab => {
+        let tabOptions = {};
+        tabOptions.url = data.element.linkHref;
+        tabOptions.active = settings.insertTabIsActive;
+        if (settings.insertRelatedTab) {
+          tabOptions.index = tab.index + 1;
+        }
+        return browser.tabs.create(tabOptions);
+      });
     }
   }
 

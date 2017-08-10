@@ -35,11 +35,13 @@ modules.settings = (function () {
       right: null
     },
     scrollDuration: 500,       // Animation duration from scroll commands.
-    nextTabWrap: true,         // Next tab command wraps at end?
+    nextTabWrap: true,         // Next/prev tab command wraps at end?
     newTabUrl: null,           // Default URL for tabs opened with New Tab.
     newWindowUrl: null,        // Default URL for windows opened with New Window.
     newPrivateWindowUrl: null, // Default URL for private windows opened with New Private Window.
     useRelPrevNext: true,      // Use <a rel="prev|next"> hint for page up and down.
+    insertTabIsActive: false,  // Immediately switch focus to new tabs.
+    insertRelatedTab: true,    // New tabs are inserted adjacent to the active tab.
 
     // Templates
     statusTemplate: STATUS_TEMPLATE
