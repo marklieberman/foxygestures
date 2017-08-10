@@ -288,9 +288,13 @@ modules.mouseEvents = (function () {
       };
 
       // Information about the target element: tag, href, etc.
+      // Note: not necessarily properties of the element itself.
+      // These can be properties of enclosing elements.
       data.element = {
         tag: event.target.tagName,
-        href: event.target.href,
+
+        // Search for a link href on or around the element.
+        linkHref: modules.helpers.findLinkHref(event.target),
 
         // Search for a media URL related to the element.
         mediaInfo: modules.helpers.getMediaInfo(event.target)

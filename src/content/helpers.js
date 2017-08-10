@@ -15,6 +15,27 @@ modules.helpers = (function (module) {
   module.makeScriptFrameId = () =>
     new Date().getTime() + ';' + String(window.location.href);
 
+  // Examine each node walking up the DOM until an enclosing link is found.
+  // Search up to 40 nodes before giving up.
+  module.findLinkHref = (element) => {
+    for (let i = 0; !!element && (i < 40); i++) {
+      if ((element.tagName === 'A') && element.href) {
+        // Ignore inline javascript links.
+        let href = element.href.toLowerCase();
+        if (href.startsWith('javascript')) {
+          return null;
+        }
+
+        // Found an acceptable link href.
+        return element.href;
+      } else {
+        // No link; look to the parent node.
+        element = element.parentNode;
+      }
+    }
+    return null;
+  };
+
   // Find a URL for the image, video, or audio of a DOM element. The function
   // currently looks for image source, HTML5 video or audio sources, and CSS
   // nearby background images.

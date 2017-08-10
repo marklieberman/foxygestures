@@ -345,22 +345,22 @@ modules.commands = (function (settings, helpers) {
 
   // Open a link in a new tab.
   function commandOpenLinkInNewTab (data) {
-    if (data.element.href) {
-      return getActiveTab(tab => browser.tabs.create({ url: data.element.href, index: tab.index + 1 }));
+    if (data.element.linkHref) {
+      return getActiveTab(tab => browser.tabs.create({ url: data.element.linkHref, index: tab.index + 1 }));
     }
   }
 
   // Open a link in a new window.
   function commandOpenLinkInNewWindow (data) {
-    if (data.element.href) {
-      return browser.windows.create({ url: data.element.href });
+    if (data.element.linkHref) {
+      return browser.windows.create({ url: data.element.linkHref });
     }
   }
 
   // Open a link in a private window.
   function commandOpenLinkInNewPrivateWindow (data) {
-    if (data.element.href) {
-      return browser.windows.create({ url: data.element.href, incognito: true });
+    if (data.element.linkHref) {
+      return browser.windows.create({ url: data.element.linkHref, incognito: true });
     }
   }
 
