@@ -426,7 +426,6 @@ modules.commands = (function (settings, helpers) {
   // Prompt for the location to save the file.
   function commandSaveMediaAs (data) {
     let mediaInfo = data.element.mediaInfo;
-    console.log(mediaInfo, helpers.suggestFilename(mediaInfo));
     if (mediaInfo) {
       return browser.downloads.download({
         url: mediaInfo.source,
