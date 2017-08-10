@@ -16,7 +16,7 @@ modules.settings = (function () {
   // Settings for the extension.
   var settings = {
     gestureButton: 2,          // The button to start a gesture.
-    gestureTimeout: 400,       // Movement timeout to cancel a gesture.
+    gestureTimeout: 2000,      // Movement timeout to cancel a gesture.
     gestureFidelity: 10,       // Fidelity of mouse events in gestures.
     drawTrails: true,          // Draw gesture trails when enabled.
     trailFidelity: 10,         // Minimum size of gesture trial segments.
