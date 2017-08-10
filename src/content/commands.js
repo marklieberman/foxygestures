@@ -243,13 +243,34 @@
 
   // Scroll to the top of the frame or page.
   function commandScrollTop (data) {
-    return scrollYEase(0, settings.scrollDuration);
+    let scrollHeight = document.documentElement.scrollHeight;
+    let clientHeight =  document.documentElement.clientHeight;
+
+    // Try to determine if the command occurred inside a frame that cannot be scrolled.
+    if ((scrollHeight <= clientHeight) && (window.parent !== window.self)) {
+      // Invoke this command on the parent frame.
+      delete data.context.scriptFrameId;
+      postTo(window.parent, 'delegateCommand', data);
+    } else {
+      return scrollYEase(0, settings.scrollDuration);
+    }
   }
 
   // Scroll to the bottom of the frame or page.
   function commandScrollBottom (data) {
-    let scrollMaxY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    return scrollYEase(scrollMaxY, settings.scrollDuration);
+    let scrollHeight = document.documentElement.scrollHeight;
+    let clientHeight =  document.documentElement.clientHeight;
+
+    // Try to determine if the command occurred inside a frame that cannot be scrolled.
+    if ((scrollHeight <= clientHeight) && (window.parent !== window.self)) {
+      // Invoke this command on the parent frame.
+      delete data.context.scriptFrameId;
+      postTo(window.parent, 'delegateCommand', data);
+    } else {
+      // Clamp the value so it can never be negative for whatever reason.
+      let scrollMaxY = Math.max(0, scrollHeight - clientHeight);
+      return scrollYEase(scrollMaxY, settings.scrollDuration);
+    }
   }
 
   // Execute a user script.
