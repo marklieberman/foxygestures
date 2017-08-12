@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-md-6">
+    <h4>Backup Settings</h4>
+
+    <div class="form-group">
+      <p>
+        Click to download a JSON file containing a backup of settings and user scripts.
+      </p>
+      <button type="button" class="btn btn-default" ng-click="downloadSettings()">
+        Download settings
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <h4>Restore Settings</h4>
+
+    <div class="form-group">
+      <p>
+        Select a backup file from which settings and user scripts will be restored.
+      </p>
+      <label class="btn btn-default btn-file">
+        Restore settings
+        <input type="file" accept=".json" fg-file-changed="restoreSettings(files)"></input>
+      </label>
+    </div>
+  </div>
+</div>

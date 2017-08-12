@@ -18,7 +18,7 @@
 
   <body ng-controller="OptionsCtrl">
     <!-- Do not show until settings are loaded -->
-    <form class="form" name="optionsForm" ng-if="commands.loaded && settings.loaded">
+    <form class="form" name="controls.optionsForm" ng-if="commands.loaded && settings.loaded">
 
       <uib-tabset active="0">
 
@@ -39,7 +39,7 @@
           </div>
 
           <!-- Gesture timeout -->
-          <div class="form-group" ng-class="{'has-error':optionsForm.gestureTimeout.$invalid}">
+          <div class="form-group" ng-class="{'has-error':controls.optionsForm.gestureTimeout.$invalid}">
             <label class="control-label">Gesture Timeout</label>
             <div class="input-group">
               <input class="form-control" type="number" name="gestureTimeout"
@@ -76,7 +76,7 @@
                       uib-collapse="controls.fewerTrailOptions"
                       ng-disabled="!settings.drawTrails">
               <!-- Trail width -->
-              <div class="form-group" ng-class="{'has-error':optionsForm.trailWidth.$invalid}">
+              <div class="form-group" ng-class="{'has-error':controls.optionsForm.trailWidth.$invalid}">
                 <label class="control-label">Trail Width</label>
                 <div class="input-group">
                   <input class="form-control" type="number" name="trailWidth"
@@ -89,7 +89,7 @@
               </div>
 
               <!-- Trail color -->
-              <div class="form-group" ng-class="{'has-error':optionsForm.trailColor.$invalid}">
+              <div class="form-group" ng-class="{'has-error':controls.optionsForm.trailColor.$invalid}">
                 <label class="control-label">Trail Color</label>
                 <input class="form-control" type="text" name="trailColor"
                        ng-model="settings.trailColor" css-color></input>
@@ -125,7 +125,7 @@
                       ng-disabled="!settings.showStatusText">
 
               <!-- Status timeout -->
-              <div class="form-group" ng-class="{'has-error':optionsForm.statusTimeout.$invalid}">
+              <div class="form-group" ng-class="{'has-error':controls.optionsForm.statusTimeout.$invalid}">
                 <label class="control-label">Status Timeout</label>
                 <div class="input-group">
                   <input class="form-control" type="number" name="statusTimeout"
@@ -466,7 +466,7 @@
               </div>
 
               <!-- Scroll duration -->
-              <div class="form-group" ng-class="{'has-error':optionsForm.scrollDuration.$invalid}">
+              <div class="form-group" ng-class="{'has-error':controls.optionsForm.scrollDuration.$invalid}">
                 <label class="control-label">Duration of the animation for the Scroll to Top/Bottom commands</label>
                 <div class="input-group">
                   <input class="form-control" type="number" name="scrollDuration"
@@ -482,6 +482,10 @@
             </div><!-- /.col-md-6 -->
           </div><!-- /.row -->
 
+        </uib-tab>
+
+        <uib-tab index="5" heading="Backup &amp; Restore" select="onBackupTabSelect()">
+          <div ng-include="'/options/options.tab.backup.html'"></div>
         </uib-tab>
 
       </uib-tabset>
@@ -500,6 +504,7 @@
     <script src="lib/ace/ace.js"></script>
     <script src="lib/ui-ace.min.js"></script>
     <script src="options.js"></script>
+    <script src="options.tab.backup.js"></script>
 
   </body>
 

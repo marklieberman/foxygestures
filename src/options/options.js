@@ -111,9 +111,10 @@ app.factory('settings', [
 // ---------------------------------------------------------------------------------------------------------------------
 app.controller('OptionsCtrl', [
   '$scope',
+  '$controller',
   'commands',
   'settings',
-  function ($scope, commands, settings) {
+  function ($scope, $controller, commands, settings) {
     // Scope variables.
     $scope.commands = commands;
     $scope.settings = settings;
@@ -148,19 +149,27 @@ app.controller('OptionsCtrl', [
       onLoad: editor => editor.$blockScrolling = Infinity
     };
 
+    $controller('OptionsTabBackupCtrl', {
+      $scope: $scope,
+      settings: settings
+    });
+
     // Initialize controls from settings on load.
     settings.load().then(() => {
+      $scope.resetControls();
+      $scope.startWatchingSettings();
+      $scope.$broadcast('redraw');
+    });
+
+    $scope.resetControls = () => {
       let inSeconds;
       inSeconds = Math.floor(settings.gestureTimeout / 100) / 10;
       $scope.controls.gestureTimeout = inSeconds;
       inSeconds = Math.floor(settings.statusTimeout / 100) / 10;
       $scope.controls.statusTimeout = inSeconds;
-
       $scope.updateMappables();
       $scope.updateWheelMappings();
-      $scope.startWatchingSettings();
-      $scope.$broadcast('redraw');
-    });
+    };
 
     // Convert gesture timeout to milliseconds.
     $scope.$watch('controls.gestureTimeout', (newValue, oldValue) => {

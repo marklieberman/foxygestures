@@ -13,6 +13,9 @@
     "modules": true,
     "MouseDeltaAccumulator": true,
     "Optional": true,
-    "UDLRGestureDetector": true
+    "UDLRGestureDetector": true,
+
+    "angular": true,
+    "app": true
   }
 }
