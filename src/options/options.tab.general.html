@@ -1,0 +1,133 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <!-- Gesture button -->
+    <div class="form-group">
+      <label class="control-label">Gesture Button</label>
+      <select class="form-control"
+              ng-model="settings.gestureButton">
+        <option ng-value="0">Left</option>
+        <option ng-value="1">Middle</option>
+        <option ng-value="2">Right</option>
+      </select>
+      <p class="help-block">
+        The mouse button used to start a gesture.
+      </p>
+    </div>
+
+    <!-- Gesture timeout -->
+    <div class="form-group" ng-class="{'has-error':controls.optionsForm.gestureTimeout.$invalid}">
+      <label class="control-label">Gesture Timeout</label>
+      <div class="input-group">
+        <input class="form-control" type="number" name="gestureTimeout"
+               step="0.1" min="0" max="30"
+               ng-model="controls.gestureTimeout"></input>
+        <span class="input-group-addon">seconds</span>
+      </div>
+      <p class="help-block">
+        Cancel a gesture if there is no movement for this many seconds. Use zero to disable.
+      </p>
+    </div>
+
+    <!-- Draw trails -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox"
+                   ng-model="settings.drawTrails"></input>
+            Draw gesture trails
+          </label>
+          <a class="pull-right"
+             ng-click="controls.fewerTrailOptions = !controls.fewerTrailOptions">
+            <span ng-show="controls.fewerTrailOptions">
+              More options <i class="fa fa-caret-down"></i>
+            </span>
+            <span ng-hide="controls.fewerTrailOptions">
+              Fewer options <i class="fa fa-caret-up"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+      <fieldset class="panel-body"
+                uib-collapse="controls.fewerTrailOptions"
+                ng-disabled="!settings.drawTrails">
+        <!-- Trail width -->
+        <div class="form-group" ng-class="{'has-error':controls.optionsForm.trailWidth.$invalid}">
+          <label class="control-label">Trail Width</label>
+          <div class="input-group">
+            <input class="form-control" type="number" name="trailWidth"
+                   step="0.5" min="0.5" max="40"
+                   ng-model="settings.trailWidth"></input>
+            <span class="input-group-addon">
+              <canvas fg-trail-preview="" settings="settings" width="50" height="16"></canvas>
+            </span>
+          </div>
+        </div>
+
+        <!-- Trail color -->
+        <div class="form-group" ng-class="{'has-error':controls.optionsForm.trailColor.$invalid}">
+          <label class="control-label">Trail Color</label>
+          <input class="form-control" type="text" name="trailColor"
+                 ng-model="settings.trailColor" fg-css-color=""></input>
+          <p class="help-block">
+            Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
+          </p>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Draw status -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox"
+                   ng-model="settings.showStatusText"></input>
+            Show status text
+          </label>
+          <a class="pull-right"
+             ng-click="controls.fewerStatusOptions = !controls.fewerStatusOptions">
+            <span ng-show="controls.fewerStatusOptions">
+              More options <i class="fa fa-caret-down"></i>
+            </span>
+            <span ng-hide="controls.fewerStatusOptions">
+              Fewer options <i class="fa fa-caret-up"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+      <fieldset class="panel-body"
+                uib-collapse="controls.fewerStatusOptions"
+                ng-disabled="!settings.showStatusText">
+
+        <!-- Status timeout -->
+        <div class="form-group" ng-class="{'has-error':controls.optionsForm.statusTimeout.$invalid}">
+          <label class="control-label">Status Timeout</label>
+          <div class="input-group">
+            <input class="form-control" type="number" name="statusTimeout"
+                   step="0.1" min="0.1" max="30"
+                   ng-model="controls.statusTimeout"></input>
+            <span class="input-group-addon">seconds</span>
+          </div>
+          <p class="help-block">
+            Amount of time to display the status text after a gesture.
+          </p>
+        </div>
+
+        <!-- Status template -->
+        <div class="form-group">
+          <label class="control-label">Status Template</label>
+          <a class="pull-right" ng-click="settings.statusTemplate = settings.templates.statusTemplate">Reset</a>
+          <textarea class="form-control"
+                    ng-model="settings.statusTemplate"></textarea>
+          <p class="help-block">
+            Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text.
+          </p>
+        </div>
+
+      </fieldset>
+    </div>
+
+  </div>
+</div>

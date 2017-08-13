@@ -1,0 +1,115 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="alert alert-danger self-xss-warning" ng-if="!settings.sawXSSWarning">
+      <h3>
+        <i class="fa fa-warning"></i>
+        Warning
+      </h3>
+
+      <p class="simple-explain">
+        This is a feature intended for power users. If someone told you to copy and paste something here to
+        enable a feature or "hack" something, it is a scam and will give them access to your browser.
+      </p>
+
+      <p class="detail-explain">
+        User scripts have access to all of the web extension APIs that can be used by Foxy Gestures. These
+        APIs may be used to access browser history, download malicious JavaScript, or otherwise take over your
+        browser. Never copy and paste a user script from an untrustworthy source.
+      </p>
+
+      <p class="more-information">
+        For more information see the following resources:
+        <ul>
+          <li>
+            <a href="https://en.wikipedia.org/wiki/Cross-site_scripting" target="_blank">
+            The wikipedia article on cross-site scripting.</a>
+          </li>
+          <li>
+            <a href="https://en.wikipedia.org/wiki/Self-XSS" target="_blank">
+            The wikipedia article on self-XSS attacks.</a>
+          </li>
+          <li>
+            <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=971597" target="_blank">
+            BugZilla entry regarding self-XSS attacks via dev-tools.</a>
+          </li>
+        </ul>
+      </p>
+
+      <div class="clearfix">
+        <button class="btn btn-danger pull-right" type="button" ng-click="settings.sawXSSWarning = true">
+          I understand the risks
+        </button>
+      </div>
+    </div>
+
+    <div class="well" ng-if="settings.sawXSSWarning">
+      <i class="fa fa-2x fa-info-circle"></i>
+      <span>
+        Execute a custom script with a mouse gesture.
+        Please read the
+        <a href="https://github.com/marklieberman/foxygestures/wiki/User-Scripts" target="_blank">user scripts</a>
+        article on the wiki before proceeding.
+      </span>
+    </div>
+
+    <div class="mapping-list" ng-if="settings.sawXSSWarning">
+      <div class="user-script-item"
+           ng-repeat="userScript in settings.userScripts">
+
+        <div class="user-script-mapping">
+          <label class="control-label">
+             Gesture
+          </label>
+
+          <input class="form-control mapped-gesture"
+                 ng-value="getMappingForUserScript(userScript).gesture"
+                 disabled="disabled"></input>
+
+          <canvas class="gesture-input" mg-gesture-input="" width="148" height="100"
+                  settings="settings"
+                  gesture="getMappingForUserScript(userScript).gesture"
+                  on-gesture="assignGestureToUserScript(gesture, userScript)"></canvas>
+        </div>
+
+        <div class="user-script-settings">
+          <div class="form-group">
+            <label class="control-label">User Script</label>
+            <div class="input-group">
+              <input class="form-control" type="text"
+                     ng-model="userScript.label"
+                     ng-model-options="{
+                       updateOn: 'default blur',
+                       debounce: { 'default': 1000, 'blur': 0 }
+                     }"
+                     placeholder="Name of the user script"></input>
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"
+                        ng-click="removeUserScript(userScript)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </span>
+            </div>
+
+            <div class="ace-editor"
+                 ui-ace="aceOpts"
+                 ng-model="userScript.script"
+                 ng-model-options="{
+                   updateOn: 'default blur',
+                   debounce: { 'default': 1000, 'blur': 0 }
+                 }"></div>
+          </div>
+
+        </div>
+
+      </div><!-- .user-script-item -->
+    </div><!-- .user-script-list -->
+
+    <div class="clearfix" ng-if="settings.sawXSSWarning">
+      <button class="btn btn-primary pull-right" type="button" ng-click="addUserScript()">
+        Add User Script
+      </button>
+    </div>
+
+  </div>
+</div>

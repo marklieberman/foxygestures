@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="well">
+      <i class="fa fa-2x fa-info-circle"></i>
+      <span>
+        Perform a gesture in each box to assign the gesture for the command.
+        Press and release the gesture button to clear the gesture.
+    </span>
+    </div>
+
+    <!-- Command search -->
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control" type="text"
+               ng-model="controls.searchCommands"></input>
+      </div>
+    </div>
+
+    <!-- List of gesture mappings -->
+    <div class="mapping-list">
+      <div class="mapping-item"
+           ng-repeat="command in commands | filter:controls.searchCommands | orderBy:'label'">
+
+        <label class="control-label command-label">
+           {{command.label}}
+           <i class="fa fa-question-circle"
+              ng-if="command.tooltip"
+              uib-tooltip="{{command.tooltip}}"></i>
+        </label>
+
+        <input class="form-control mapped-gesture"
+                ng-value="getMappingForCommand(command).gesture"
+                disabled="disabled"></input>
+
+        <canvas class="gesture-input" mg-gesture-input="" width="148" height="100"
+                settings="settings"
+                gesture="getMappingForCommand(command).gesture"
+                on-gesture="assignGestureToCommand(gesture, command)"></canvas>
+
+      </div><!-- .mapping-item -->
+    </div><!-- .mapping-list -->
+
+  </div>
+</div>

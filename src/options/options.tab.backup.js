@@ -7,6 +7,8 @@ app.controller('OptionsTabBackupCtrl', [
   'settings',
   function ($scope, $q, settings) {
 
+    // Functions -------------------------------------------------------------------------------------------------------
+
     // Get the addon information using an Angular promise.
     $scope.getManagementSelf = () => {
       let deferred = $q.defer();
@@ -116,7 +118,7 @@ app.controller('OptionsTabBackupCtrl', [
         $scope.overwriteSettings(result.backupData, result.selfInfo);
 
         // Reset any indirectly bound controls like numeric inputs.
-        $scope.resetControls();
+        $scope.$broadcast('reset');
 
         // Reset the settings form to display model values.
         $scope.controls.optionsForm.$rollbackViewValue();

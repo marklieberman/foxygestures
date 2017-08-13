@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="well">
+      <i class="fa fa-2x fa-info-circle"></i>
+      <span>
+        Preferences to modify the behaviour of built-in commands and other tweaks.
+      </span>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+
+        <h4>Tab and Window Commands</h4>
+
+        <!-- Insert related tab -->
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"
+                     ng-model="settings.insertRelatedTab"></input>
+              Open in New Tab family of commands insert the tab after the current tab.
+              This setting is similar browser.tabs.insertRelatedAfterCurrent.
+            </label>
+          </div>
+        </div>
+
+        <!-- New tab is active -->
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"
+                     ng-model="settings.insertTabIsActive"></input>
+              Immediately switch focus to tabs created by Open in New Tab family of commands.
+            </label>
+          </div>
+        </div>
+
+        <!-- Next/previous tab wraps -->
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"
+                     ng-model="settings.nextTabWrap"></input>
+              Next Tab and Previous Tab commands wrap from last tab to first tab.
+            </label>
+          </div>
+        </div>
+
+        <!-- New tab default URL -->
+        <div class="form-group">
+          <label class="control-label">Default URL for tabs opened with New Tab command</label>
+          <input class="form-control" type="text"
+                 ng-model="settings.newTabUrl"></input>
+          <p class="help-block">
+            Leave this field empty to use the default URL about:newtab.
+            Unplivileged about: pages like about:blank and about:home are also acceptable.
+          </p>
+        </div>
+
+        <!-- New window default URL -->
+        <div class="form-group">
+          <label class="control-label">Default URL for windows opened with New Window command</label>
+          <input class="form-control" type="text"
+                 ng-model="settings.newWindowUrl"></input>
+          <p class="help-block">
+            Leave this field empty to use the default URL about:newtab.
+            Unplivileged about: pages like about:blank and about:home are also acceptable.
+          </p>
+        </div>
+
+        <!-- New private window default URL -->
+        <div class="form-group">
+          <label class="control-label">Default URL for windows opened with New Private Window command</label>
+          <input class="form-control" type="text"
+                 ng-model="settings.newPrivateWindowUrl"></input>
+          <p class="help-block">
+            Leave this field empty to use the default URL about:newtab.
+            Unplivileged about: pages like about:blank and about:home are also acceptable.
+          </p>
+        </div>
+
+      </div><!-- /.col-md-6 -->
+      <div class="col-md-6">
+
+        <h4>Navigation and Scrolling</h4>
+
+        <!-- Use link rel next or prev -->
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"
+                     ng-model="settings.useRelPrevNext"></input>
+              Page Up and Page Down commands follow rel=next and rel=prev attributes. See:
+              <a href="https://support.google.com/webmasters/answer/1663744?hl=en">
+                Indicate paginated content
+              </a>.
+            </label>
+          </div>
+        </div>
+
+        <!-- Scroll duration -->
+        <div class="form-group" ng-class="{'has-error':controls.optionsForm.scrollDuration.$invalid}">
+          <label class="control-label">Duration of the animation for the Scroll to Top/Bottom commands</label>
+          <div class="input-group">
+            <input class="form-control" type="number" name="scrollDuration"
+                   min="0" max="10000"
+                   ng-model="settings.scrollDuration"></input>
+            <span class="input-group-addon">milliseconds</span>
+          </div>
+          <p class="help-block">
+            Use zero to disable.
+          </p>
+        </div>
+
+      </div><!-- /.col-md-6 -->
+    </div><!-- /.row -->
+
+  </div>
+</div>
