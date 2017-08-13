@@ -47,48 +47,78 @@ modules.settings = (function () {
     statusTemplate: STATUS_TEMPLATE
   };
 
-  // Event listeners ---------------------------------------------------------------------------------------------------
+  // Read settings from storage.
+  var loadPromise = browser.storage.sync.get(settings).then(results => {
+    Object.keys(results).forEach(key => settings[key] = results[key]);
+    return settings;
+  });
 
-  // Guard for cases when settings is included from content scripts.
-  if (browser.runtime.onInstalled) {
-    // Initialize settings on install but after default settings are retrieved.
-    browser.runtime.onInstalled.addListener(details => settings.loaded.then(() => {
-      switch (details.reason) {
-        case 'install':
-          // Do not initialize the mouse mappingd when reloading a temporary addon.
-          if (!settings.mouseMappings.length) {
-            initializeMouseMappings();
-          }
-          break;
-        case 'update':
-          break;
-      }
-    }));
-  }
+  // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Listen for changes to settings.
   browser.storage.onChanged.addListener((changes, area) => {
     Object.keys(settings)
       .filter(key => changes[key] !== undefined)
-      .filter(key => typeof settings[key] !== 'function')
       .forEach(key => settings[key] = changes[key].newValue);
   });
 
+  // Perform maintenance operations when installed or updated.
+  if (browser.runtime.onInstalled) {
+    browser.runtime.onInstalled.addListener(details => {
+      // Wait for the first read to complete before trying to modify settings.
+      loadPromise.then(() => {
+        switch (details.reason) {
+          case 'install':
+            onInstalled(details);
+            break;
+          case 'update':
+            onUpdated(details);
+            break;
+        }
+      });
+    });
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
 
-  // Initialize the mouse mappings from the commands array.
-  function initializeMouseMappings () {
-    console.log('initializing mouse mappings');
-    return browser.storage.local.set({
-      'mouseMappings': modules.commands
-        // Ignore commands without a default gesture.
-        .filter(command => !!command.defaultGesture)
-        // Generate a mapping for the command.
-        .map(command => ({
-          command: command.id,
-          gesture: command.defaultGesture
-        }))
-    });
+  // Initialize the addon when first installed.
+  function onInstalled (details) {
+    console.log('foxy gestures installed');
+
+    // Populate the default mouse mappings.
+    if (!settings.mouseMappings.length) {
+      browser.storage.sync.set({
+        mouseMappings: modules.commands
+          // Ignore commands without a default gesture.
+          .filter(command => !!command.defaultGesture)
+          // Generate a mapping for the command.
+          .map(command => ({
+            command: command.id,
+            gesture: command.defaultGesture
+          }))
+      });
+    }
+  }
+
+  // Update the settings when the addon is updated.
+  function onUpdated (details) {
+    let version = modules.helpers.parseAddonVersion(details.previousVersion);
+    console.log('foxy gestures update from', version);
+
+    // Starting with version 1.0.8 settings are stored in storage.sync.
+    if ((version.major === 1) && (version.minor === 0) && (version.maint <= 7)) {
+      // Move settings from storage.local to storage.sync.
+      browser.storage.local.get(null).then(results => {
+        console.log('moving settings from local to sync');
+
+        Object.keys(settings)
+          .filter(key => results[key] !== undefined)
+          .forEach(key => settings[key] = results[key]);
+
+        browser.storage.sync.set(settings);
+        browser.storage.local.clear();
+      });
+    }
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -99,14 +129,7 @@ modules.settings = (function () {
   // This is exposed as the non-enumerable loaded property.
   Object.defineProperty(settings, 'loaded', {
     enumerable: false,
-    value: browser.storage.local.get(settings).then(results => {
-      // Assign values from storage into the module reference.
-      Object.keys(results)
-        .filter(key => typeof settings[key] !== 'function')
-        .forEach(key => settings[key] = results[key]);
-
-      return settings;
-    })
+    value: loadPromise
   });
 
   // Get the default value for template settings.

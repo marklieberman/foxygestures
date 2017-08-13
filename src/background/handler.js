@@ -16,13 +16,13 @@
 
   // Get the mapping for a mouse gesture.
   function findMouseMappingForGesture (gesture) {
-    return browser.storage.local.get({ 'mouseMappings': [] }).then(results =>
+    return browser.storage.sync.get({ 'mouseMappings': [] }).then(results =>
       Optional.of(results.mouseMappings.find(mapping => mapping.gesture === gesture)));
   }
 
   // Get the mapping for a wheel gesture.
   function findWheelMappingForGesture (gesture) {
-    return browser.storage.local.get({ 'wheelMappings': {} }).then(results =>
+    return browser.storage.sync.get({ 'wheelMappings': {} }).then(results =>
       Optional.of(results.wheelMappings[gesture]));
   }
 

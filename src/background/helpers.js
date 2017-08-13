@@ -25,6 +25,21 @@ modules.helpers = (function (module) {
     'audio/webm': '.webm'
   };
 
+  // Parse the version strings used by this addon.
+  module.parseAddonVersion = (version) => {
+    let match = /(\d+)\.(\d+)\.(\d+)(beta[0-9]+)?/.exec(version);
+    if (match) {
+      return {
+        major: Number(match[1]),
+        minor: Number(match[2]),
+        maint: Number(match[3]),
+        beta: match[4]
+      };
+    } else {
+      return null;
+    }
+  };
+
   // A string substitution method that uses {} as a placeholder.
   module.format = function (/* format, [...] */) {
     if (arguments.length === 0) { return ''; }

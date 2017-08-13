@@ -95,7 +95,7 @@ app.factory('settings', [
       enumerable: false,
       value: () => {
         var deferred = $q.defer();
-        browser.storage.local.set(service).then(
+        browser.storage.sync.set(service).then(
           () => deferred.resolve(),
           err => {
             console.log('error saving settings', err);

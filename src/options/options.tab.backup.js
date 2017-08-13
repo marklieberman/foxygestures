@@ -14,12 +14,6 @@ app.controller('OptionsTabBackupCtrl', [
       return deferred.promise;
     };
 
-    // Parse the version strings used by this addon.
-    $scope.parseAddonVersion = (version) => {
-      let match = /(\d+)\.(\d+)\.(\d+)(beta[0-9]+)?/.exec(version);
-      return (match) ? { major: match[1], minor: match[2], maintenace: match[3], beta: match[4] } : null;
-    };
-
     // Present a download to save the settings backup to a file.
     $scope.downloadSettings = () => {
       return $scope.getSettingsBackup().then(backupData => {
@@ -77,14 +71,14 @@ app.controller('OptionsTabBackupCtrl', [
     // Do basic checks to validate the correctness of the backup data.
     $scope.validateBackupData = (backupData, selfInfo) => {
       // Check the addon ID to ensure this is a Foxy Gestures backup.
-      if (backupData.addonId !== selfInfo.addonId) {
+      if (backupData.addonId !== selfInfo.id) {
         console.log('invalid addon ID', backupData.addonId);
         window.alert('File not recognized; missing or wrong addon ID');
         return false;
       }
 
       // Parse the version number from the backup.
-      backupData.$version = $scope.parseAddonVersion(backupData.version);
+      backupData.$version = modules.helpers.parseAddonVersion(backupData.version);
       if (!backupData.$version) {
         console.log('invalid version', backupData.version);
         window.alert('Invalid or unknown version number');

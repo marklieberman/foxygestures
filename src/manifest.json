@@ -34,7 +34,7 @@
   "background": {
     "scripts": [
       "common/Optional.js",
-      "common/settings.js",
+      "background/settings.js",
       "background/helpers.js",
       "background/commands.js",
       "background/handler.js"
@@ -61,7 +61,7 @@
       "js": [
         "common/MouseDeltaAccumulator.js",
         "common/UDLRGestureDetector.js",
-        "common/settings.js",
+        "content/helpers.js",
         "content/interface.js",
         "content/handler.js"
       ]

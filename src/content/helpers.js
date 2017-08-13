@@ -1,11 +1,31 @@
 'use strict';
 
 /**
- * Helper methods for the content scripts. This module pattern is designed to
- * extend when other helpers are included together.
+ * Helper methods for the content scripts.
  */
 var modules = modules || {};
 modules.helpers = (function (module) {
+
+  // Keep the given settings hash up-to-date when browser storage changes.
+  module.initModuleSettings = (settings) => {
+    // Update default values from storage.
+    browser.storage.sync.get(settings).then(results => {
+      Object.keys(settings).forEach(key => {
+        settings[key] = results[key];
+      });
+    });
+
+    // Listen for changes to settings.
+    browser.storage.onChanged.addListener((changes, area) => {
+      Object.keys(settings).forEach(key => {
+        if (changes[key]) {
+          settings[key] = changes[key].newValue;
+        }
+      });
+    });
+
+    return settings;
+  };
 
   // Calculate the magnitude of the vector (dx,dy).
   module.distanceDelta = (data) =>

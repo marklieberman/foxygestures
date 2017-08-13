@@ -33,13 +33,10 @@ modules.mouseEvents = (function () {
   };
 
   // Settings for this module.
-  var settings = {
+  var settings = modules.helpers.initModuleSettings({
     gestureButton: 2,
     wheelGestures: false
-  };
-
-  // Load settings from storage.
-  browser.storage.local.get(settings).then(results => settings = results);
+  });
 
   if (state.isNested) {
     // Notify the parent script instance that a nested frame has loaded.
@@ -47,15 +44,6 @@ modules.mouseEvents = (function () {
   }
 
   // Event listeners ---------------------------------------------------------------------------------------------------
-
-  // Listen for changes to settings.
-  browser.storage.onChanged.addListener((changes, area) => {
-    Object.keys(settings).forEach(key => {
-      if (changes[key]) {
-        settings[key] = changes[key].newValue;
-      }
-    });
-  });
 
   window.addEventListener('message', function (event) {
     if (event.data) {

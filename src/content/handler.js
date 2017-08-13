@@ -5,7 +5,10 @@
  * background and content scripts.
  */
 var modules = modules || {};
-modules.handler = (function (settings) {
+modules.handler = (function () {
+
+  var deltaAccumulator = new MouseDeltaAccumulator();
+  var gestureDetector = new UDLRGestureDetector();
 
   // State for this module.
   var state = {
@@ -14,8 +17,13 @@ modules.handler = (function (settings) {
     mouseDown: null      // Mouse event at the start of gesture.
   };
 
-  var deltaAccumulator = new MouseDeltaAccumulator();
-  var gestureDetector = new UDLRGestureDetector();
+  // Settings for this module.
+  var settings = modules.helpers.initModuleSettings({
+    drawTrails: true,
+    gestureFidelity: 10,
+    gestureTimeout: 2000,
+    showStatusText: true
+  });
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
@@ -226,4 +234,4 @@ modules.handler = (function (settings) {
     wheelGestureUpdate: wheelGestureUpdate
   };
 
-}(modules.settings));
+}());

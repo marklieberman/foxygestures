@@ -5,9 +5,10 @@
  * No attempt is made to draw a trail if the document body is not loaded.
  */
 var modules = modules || {};
-modules.interface = (function (settings) {
+modules.interface = (function () {
 
   var MAX_SAFE_Z_INDEX = 2147483647;
+  var deltaAccumulator = new MouseDeltaAccumulator();
 
   // State for this module.
   var state = {
@@ -26,9 +27,17 @@ modules.interface = (function (settings) {
     }
   };
 
-  var deltaAccumulator = new MouseDeltaAccumulator();
+  // Settings for this module.
+  var settings = modules.helpers.initModuleSettings({
+    trailColor: 'purple',
+    trailFidelity: 10,
+    trailWidth: 2,
+    showStatusText: false,
+    statusTemplate: null,
+    statusTimeout: 2000
+  });
 
-  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
 
   // Locate the element to treat as the body.
   function findBody () {
@@ -76,7 +85,7 @@ modules.interface = (function (settings) {
         state.canvas.style.top = 0;
         state.canvas.style.left = 0;
         state.canvas.style.zIndex = MAX_SAFE_Z_INDEX;
-        state.canvas.style.pointerEvents = 'none';        
+        state.canvas.style.pointerEvents = 'none';
         state.body.appendChild(state.canvas);
 
         // Initialize the drawing context.
@@ -167,4 +176,4 @@ modules.interface = (function (settings) {
     status: status
   };
 
-}(modules.settings));
+}());
