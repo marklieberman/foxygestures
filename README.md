@@ -62,6 +62,19 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
+Version 1.0.7 released on _2017_08_15_
+ - Fixed context menu appearing in certain situations.
+ - Fixed breakage in frameset pages.
+ - Fixed settings not working in 56+.
+ - Improved the Page Up and Page Down commands.
+ - Improved Open Link in XX commands.
+ - Improved Scroll to Top/Bottom command in some situations.
+ - Added validation feedback to settings
+ - Added preference for new tab placement in tab bar.
+ - Added preference for new tab focus.
+ - Added backup and restore settings buttons to settings.
+ - Settings are now stored in storage.sync.
+
 Version 1.0.6 released on _2017-06-11_
  - Minor bug fixes
 
