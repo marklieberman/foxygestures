@@ -119,7 +119,7 @@ modules.commands = (function (settings, helpers) {
       id: 'pageDown',
       handler: data => commands.executeInContent('pageDown', data),
       label: 'Page Down',
-      tooltip: 'Increment the page number in the URL using matching heuristics',
+      tooltip: 'Decrement the page number in the URL using matching heuristics',
       defaultGesture: 'DRD'
     },
     {
