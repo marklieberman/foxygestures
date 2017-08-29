@@ -113,6 +113,18 @@
           </p>
         </div>
 
+        <h4>Other Commands</h4>
+
+        <!-- Zoom step amount -->
+        <div class="form-group" ng-class="{'has-error':controls.optionsForm.zoomStep.$invalid}">
+          <label class="control-label">Amount to change zoom factor for Zoom In/Out commands</label>
+          <div class="input-group">
+            <input class="form-control" type="number" name="zoomStep"
+                   ng-model="settings.zoomStep" fg-percent-input=""></input>
+            <span class="input-group-addon">percent</span>
+          </div>
+        </div>
+
       </div><!-- /.col-md-6 -->
     </div><!-- /.row -->
 

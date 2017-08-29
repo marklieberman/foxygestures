@@ -45,13 +45,31 @@ app.directive('fgCssColor', [
   function () {
     return {
       require: 'ngModel',
-      link: function(scope, elm, attrs, ctrl) {
+      link: function (scope, elm, attrs, ctrl) {
         ctrl.$validators.cssColor = (modelValue, viewValue) => {
           let element = document.createElement("div");
       	  element.style.color = viewValue;
           let value = element.style.color;
       	  return !!value.split(/\s+/).join('');
         };
+      }
+    };
+  }]);
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Formatter/parser to make a numberic input work as a percent input.
+app.directive('fgPercentInput', [
+  '$filter',
+  function ($filter) {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attr, ctrl) {
+        element[0].min = 1;
+        element[0].max = 100;
+        element[0].step = 1;
+
+        ctrl.$parsers.unshift(viewValue => parseFloat(viewValue) / 100);
+        ctrl.$formatters.unshift(modelValue => $filter('number')(modelValue * 100, 0));
       }
     };
   }]);

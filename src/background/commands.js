@@ -172,6 +172,22 @@ modules.commands = (function (settings, helpers) {
       handler: commandUndoClose,
       label: 'Undo Close',
       defaultGesture: 'RLR'
+    },
+    {
+      id: 'zoomIn',
+      handler: commandZoomIn,
+      label: 'Zoom In'
+    },
+    {
+      id: 'zoomOut',
+      handler: commandZoomOut,
+      label: 'Zoom Out'
+    },
+    {
+      id: 'zoomReset',
+      handler: commandZoomReset,
+      label: 'Reset Zoom',
+      tooltip: 'Set tab zoom to 100%'
     }
   ];
 
@@ -450,6 +466,29 @@ modules.commands = (function (settings, helpers) {
         return browser.sessions.restore(sessionId);
       }
     });
+  }
+
+  // Increase the zoom factor of the active tab.
+  function commandZoomIn () {
+    return browser.tabs.getZoom().then(amount => {
+      // Clamp amount between 0.3 and 3.
+      amount = Math.max(0.3, Math.min(3, amount + settings.zoomStep));
+      return browser.tabs.setZoom(amount);
+    });
+  }
+
+  // Decrease the zoom factor of the active tab.
+  function commandZoomOut () {
+    return browser.tabs.getZoom().then(amount => {
+      // Clamp amount between 0.3 and 3.
+      amount = Math.max(0.3, Math.min(3, amount - settings.zoomStep));
+      return browser.tabs.setZoom(amount);
+    });
+  }
+
+  // Reset the zoom factor of the active tab.
+  function commandZoomReset () {
+    return browser.tabs.setZoom(0);
   }
 
   return commands;

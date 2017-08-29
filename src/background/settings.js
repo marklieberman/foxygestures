@@ -42,6 +42,7 @@ modules.settings = (function () {
     useRelPrevNext: true,      // Use <a rel="prev|next"> hint for page up and down.
     insertTabIsActive: false,  // Immediately switch focus to new tabs.
     insertRelatedTab: true,    // New tabs are inserted adjacent to the active tab.
+    zoomStep: 0.1,             // Amount to change zoom factor for zoom commands.
 
     // Templates
     statusTemplate: STATUS_TEMPLATE
