@@ -101,7 +101,7 @@
 
         <!-- Scroll duration -->
         <div class="form-group" ng-class="{'has-error':controls.optionsForm.scrollDuration.$invalid}">
-          <label class="control-label">Duration of the animation for the Scroll to Top/Bottom commands</label>
+          <label class="control-label">Duration of the animation for the Scroll family of commands</label>
           <div class="input-group">
             <input class="form-control" type="number" name="scrollDuration"
                    min="0" max="10000"
@@ -110,6 +110,20 @@
           </div>
           <p class="help-block">
             Use zero to disable.
+          </p>
+        </div>
+
+        <!-- Scroll amount -->
+        <div class="form-group" ng-class="{'has-error':controls.optionsForm.scrollAmount.$invalid}">
+          <label class="control-label">Amount of viewport to scroll for Scroll Up/Down commands</label>
+          <div class="input-group">
+            <input class="form-control" type="number" name="scrollAmount"
+                   min="1" max="1000" step="1"
+                   ng-model="settings.scrollAmount"></input>
+            <span class="input-group-addon">vh</span>
+          </div>
+          <p class="help-block">
+            1 vh = <sup>1</sup>/<sub>100</sub> viewport height.
           </p>
         </div>
 

@@ -12,14 +12,17 @@
     'pageUp'         : commandPageUp,
     'pageDown'       : commandPageDown,
     'reloadFrame'    : commandReloadFrame,
-    'scrollTop'      : commandScrollTop,
     'scrollBottom'   : commandScrollBottom,
+    'scrollDown'     : commandScrollDown,
+    'scrollTop'      : commandScrollTop,
+    'scrollUp'       : commandScrollUp,
     'userScript'     : commandUserScript
   };
 
   // Settings for this module.
   var settings = modules.helpers.initModuleSettings({
     scrollDuration: 1000,
+    scrollAmount: 100,
     useRelPrevNext: true
   });
 
@@ -197,6 +200,26 @@
     });
   }
 
+  // Try to determine if the scroll command occurred inside a frame that cannot be scrolled.
+  // The callback is invoked if the frame is scrollable, otherwise the command bubbles up to the parent frame.
+  // Disqus comment sections are an example of embedded non-scrolling frames. See also: #31.
+  function bubbleScroll (data, callback) {
+    let scrollHeight = document.scrollingElement.scrollHeight;
+    let clientHeight =  document.scrollingElement.clientHeight;
+    let scrollOffset = document.scrollingElement.scrollTop;
+
+    if ((scrollHeight <= clientHeight) && (window.parent !== window.self)) {
+      // Invoke this command on the parent frame.
+      delete data.context.scriptFrameId;
+      postTo(window.parent, 'delegateCommand', data);
+      return false;
+    } else {
+      // This frame can be scrolled.
+      callback(scrollHeight, clientHeight);
+      return true;
+    }
+  }
+
   // Command implementations -------------------------------------------------------------------------------------------
 
   // Navigate back in history.
@@ -229,36 +252,40 @@
     window.location.reload();
   }
 
-  // Scroll to the top of the frame or page.
-  function commandScrollTop (data) {
-    let scrollHeight = document.documentElement.scrollHeight;
-    let clientHeight =  document.documentElement.clientHeight;
-
-    // Try to determine if the command occurred inside a frame that cannot be scrolled.
-    if ((scrollHeight <= clientHeight) && (window.parent !== window.self)) {
-      // Invoke this command on the parent frame.
-      delete data.context.scriptFrameId;
-      postTo(window.parent, 'delegateCommand', data);
-    } else {
-      return scrollYEase(0, settings.scrollDuration);
-    }
-  }
-
   // Scroll to the bottom of the frame or page.
   function commandScrollBottom (data) {
-    let scrollHeight = document.documentElement.scrollHeight;
-    let clientHeight =  document.documentElement.clientHeight;
+    bubbleScroll(data, (scrollHeight, clientHeight) => {
+      let scrollMax = Math.max(scrollHeight - clientHeight, 0);
+      return scrollYEase(scrollMax, settings.scrollDuration);
+    });
+  }
 
-    // Try to determine if the command occurred inside a frame that cannot be scrolled.
-    if ((scrollHeight <= clientHeight) && (window.parent !== window.self)) {
-      // Invoke this command on the parent frame.
-      delete data.context.scriptFrameId;
-      postTo(window.parent, 'delegateCommand', data);
-    } else {
-      // Clamp the value so it can never be negative for whatever reason.
-      let scrollMaxY = Math.max(0, scrollHeight - clientHeight);
-      return scrollYEase(scrollMaxY, settings.scrollDuration);
-    }
+  // Scroll the viewport down.
+  function commandScrollDown (data) {
+    bubbleScroll(data, (scrollHeight, clientHeight) => {
+      let scrollAmount = clientHeight * (settings.scrollAmount / 100);
+      let scrollTop = document.scrollingElement.scrollTop;
+      let scrollMax = Math.max(scrollHeight - clientHeight, 0);
+      let scrollTo = Math.min(scrollTop + scrollAmount, scrollMax);
+      scrollYEase(scrollTo, settings.scrollDuration);
+    });
+  }
+
+  // Scroll to the top of the frame or page.
+  function commandScrollTop (data) {
+    bubbleScroll(data, (scrollHeight, clientHeight) => {
+      scrollYEase(0, settings.scrollDuration);
+    });
+  }
+
+  // Scroll the viewport up.
+  function commandScrollUp (data) {
+    bubbleScroll(data, (scrollHeight, clientHeight) => {
+      let scrollAmount = clientHeight * (settings.scrollAmount / 100);
+      let scrollTop = document.scrollingElement.scrollTop;
+      let scrollTo = Math.max(scrollTop - scrollAmount, 0);
+      scrollYEase(scrollTo, settings.scrollDuration);
+    });
   }
 
   // Execute a user script.

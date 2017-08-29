@@ -151,16 +151,26 @@ modules.commands = (function (settings, helpers) {
       tooltip: 'Save an image or HTML5 audio/video'
     },
     {
+      id: 'scrollBottom',
+      handler: data => commands.executeInContent('scrollBottom', data),
+      label: 'Scroll to Bottom',
+      defaultGesture: 'DLR'
+    },
+    {
+      id: 'scrollDown',
+      handler: data => commands.executeInContent('scrollDown', data),
+      label: 'Scroll Down'
+    },
+    {
       id: 'scrollTop',
       handler: data => commands.executeInContent('scrollTop', data),
       label: 'Scroll to Top',
       defaultGesture: 'ULR'
     },
     {
-      id: 'scrollBottom',
-      handler: data => commands.executeInContent('scrollBottom', data),
-      label: 'Scroll to Bottom',
-      defaultGesture: 'DLR'
+      id: 'scrollUp',
+      handler: data => commands.executeInContent('scrollUp', data),
+      label: 'Scroll Up'
     },
     {
       id: 'showOnlyThisFrame',

@@ -35,6 +35,7 @@ modules.settings = (function () {
       right: null
     },
     scrollDuration: 500,       // Animation duration from scroll commands.
+    scrollAmount: 100,         // Scroll amount for scroll up/down in vh units.
     nextTabWrap: true,         // Next/prev tab command wraps at end?
     newTabUrl: null,           // Default URL for tabs opened with New Tab.
     newWindowUrl: null,        // Default URL for windows opened with New Window.
