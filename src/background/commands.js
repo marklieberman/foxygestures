@@ -197,7 +197,7 @@ modules.commands = (function (settings, helpers) {
       id: 'zoomReset',
       handler: commandZoomReset,
       label: 'Reset Zoom',
-      tooltip: 'Set tab zoom to 100%'
+      tooltip: 'Reset tab zoom factor to default'
     }
   ];
 

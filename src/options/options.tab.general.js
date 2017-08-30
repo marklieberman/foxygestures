@@ -57,7 +57,7 @@ app.directive('fgCssColor', [
   }]);
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Formatter/parser to make a numberic input work as a percent input.
+// Formatter/parser to make a number input work as a percent input.
 app.directive('fgPercentInput', [
   '$filter',
   function ($filter) {
