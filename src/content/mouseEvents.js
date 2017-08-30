@@ -106,6 +106,9 @@ modules.mouseEvents = (function () {
   });
 
   window.addEventListener('mousedown', function (event) {
+    // Ignore untrusted events.
+    if (!event.isTrusted) { return; }
+
     var data = getMouseData(event, true);
     state.mouseDown = event;
     if (state.isNested) {
@@ -117,6 +120,9 @@ modules.mouseEvents = (function () {
   }, true);
 
   window.addEventListener('mouseup', function (event) {
+    // Ignore untrusted events.
+    if (!event.isTrusted) { return; }
+
     var data = getMouseData(event);
     if (state.isNested) {
       // Post to parent - must apply frame offsets.
@@ -127,6 +133,9 @@ modules.mouseEvents = (function () {
   }, true);
 
   window.addEventListener('mousemove', function (event) {
+    // Ignore untrusted events.
+    if (!event.isTrusted) { return; }
+
     if (state.gestureState) {
       var data = getMouseData(event);
       if (state.isNested) {
@@ -139,6 +148,9 @@ modules.mouseEvents = (function () {
   }, true);
 
   window.addEventListener('wheel', function (event) {
+    // Ignore untrusted events.
+    if (!event.isTrusted) { return; }
+
     if (settings.wheelGestures && state.gestureState) {
       // Cancel scrolling.
       event.preventDefault();
