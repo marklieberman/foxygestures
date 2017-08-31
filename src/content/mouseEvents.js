@@ -50,7 +50,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
     if (event.data) {
       switch (event.data.topic) {
         case 'mg-stateUpdate':
-          replicateState(event.data.data);
+          exports.replicateState(event.data.data);
           break;
         case 'mg-loadFrame':
           onLoadFrame(event.data.data, event.source);
@@ -182,27 +182,6 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // Functions ---------------------------------------------------------------------------------------------------------
 
-  // Reset the gesture state.
-  function resetState () {
-    // Replicate state to nested frames.
-    replicateState({
-      gestureState: GESTURE_STATE.NONE
-    });
-  }
-
-  // Get a partial copy of the state; enough to restore this state in another tab.
-  function cloneState () {
-    return {
-      gestureState: state.gestureState,
-      contextMenu: state.contextMenu
-    };
-  }
-
-  // Restore a partial copy of the state for this module.
-  function restoreState (clone) {
-    replicateState(clone);
-  }
-
   // Post a message to the given window with the given topic.
   // Typically used to send messages up the frame/window hierarchy.
   function postTo (targetWindow, topic, data) {
@@ -222,11 +201,11 @@ window.fg.module('mouseEvents', function (exports, fg) {
   };
 
   // Modify the state and replicate the changes to nested frames.
-  function replicateState (newState) {
+  exports.replicateState = function (newState) {
     // Refer this event down the hierarchy.
     Object.assign(state, newState);
     exports.broadcast('stateUpdate', newState);
-  }
+  };
 
   // Remember nested frames when their DOM is parsed.
   // Invoked when the nested frame posts an event at document_end. (i.e.: when
@@ -321,7 +300,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
   function onMouseDown (data, event) {
     if (data.button === settings.gestureButton && !state.isUnloading) {
       // Replicate state to nested frames.
-      replicateState({
+      exports.replicateState({
         gestureState: GESTURE_STATE.MOUSE_DOWN,
         contextMenu: true
       });
@@ -344,7 +323,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
       }
 
       // Replicate state to nested frames.
-      replicateState({
+      exports.replicateState({
         gestureState: GESTURE_STATE.NONE
       });
     }
@@ -356,7 +335,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
     switch (state.gestureState) {
       case GESTURE_STATE.MOUSE_DOWN:
         // Replicate state to nested frames.
-        replicateState({
+        exports.replicateState({
           gestureState: GESTURE_STATE.MOUSE_MOVE,
           contextMenu: false
         });
@@ -375,7 +354,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
       switch (state.gestureState) {
         case GESTURE_STATE.MOUSE_DOWN:
         case GESTURE_STATE.MOUSE_MOVE:
-          replicateState({
+          exports.replicateState({
             gestureState: GESTURE_STATE.WHEEL,
             contextMenu: false
           });
@@ -399,7 +378,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
     // Re-enable the context menu for subsequent clicks.
     if (!state.contextMenu) {
-      replicateState({
+      exports.replicateState({
         contextMenu: true
       });
     }

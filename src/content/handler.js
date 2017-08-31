@@ -29,17 +29,13 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   // Handle messages from the background script.
   browser.runtime.onMessage.addListener((message, sender) => {
     switch (message.topic) {
-      case 'mg-cloneState':
-        // Return a clone of the state.
-        return Promise.resolve({
-          handler: cloneState(),
-          mouseEvents: fg.mouseEvents.cloneState()
-        });
-      case 'mg-restoreState':
+      case 'mg-applyState':
         // Restore a clone of the state.
-        let clone = message.data;
-        restoreState(clone.handler);
-        fg.mouseEvents.restoreState(clone.mouseEvents);
+        exports.replicateState(message.data);
+        break;
+      case 'mg-abortGesture':
+        // Cancel any in-progress gesture state.
+        exports.abortMouseGesture(true);
         break;
       case 'mg-status':
         // Update the status text.
@@ -58,20 +54,6 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       }
     }
   });
-
-  // Functions ---------------------------------------------------------------------------------------------------------
-
-  // Get a partial copy of the state; enough to restore this state in another tab.
-  function cloneState () {
-    return {
-      mouseDown: state.mouseDown
-    };
-  }
-
-  // Restore a partial copy of the state for this module.
-  function restoreState (clone) {
-    Object.assign(state, clone);
-  }
 
   // Mouse gestures ----------------------------------------------------------------------------------------------------
 
@@ -102,7 +84,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       if (settings.gestureTimeout && !state.timeoutHandle) {
         state.timeoutHandle = window.setInterval(function () {
           if (++state.noMovementTicks >= (settings.gestureTimeout / 100)) {
-            abortMouseGesture(true);
+            exports.abortMouseGesture(true);
           }
         }, 100);
       }
@@ -150,7 +132,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   };
 
   // Abort a mouse gesture and reset the interface.
-  function abortMouseGesture (resetState) {
+  exports.abortMouseGesture = function (resetState) {
     // Clear the gesture timeout interval.
     window.clearInterval(state.timeoutHandle);
     state.timeoutHandle = null;
@@ -167,9 +149,11 @@ window.fg.extend('mouseEvents', function (exports, fg) {
 
     // Optionally reset the low level gesture state.
     if (resetState) {
-      fg.mouseEvents.resetState();
+      exports.replicateState({
+        gestureState: exports.GESTURE_STATE.NONE
+      });
     }
-  }
+  };
 
   // Wheel gestures ----------------------------------------------------------------------------------------------------
 
@@ -192,7 +176,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   // Invoked when a mouse gesture transitions to a wheel gesture.
   exports.wheelGestureStart = function (data) {
     // Abort the mouse gesture.
-    abortMouseGesture(false);
+    exports.abortMouseGesture(false);
 
     // Handle the wheel gesture.
     let gesture = getWheelDirection(data.wheel);
@@ -201,7 +185,14 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       data: {
         context: state.mouseDown.context,
         element: state.mouseDown.element,
-        gesture: gesture
+        gesture: gesture,
+
+        // If the wheel gesture changes the active tab, then the gesture state must be cloned to the new active tab.
+        cloneState: {
+          gestureState: state.gestureState,
+          contextMenu: state.contextMenu,
+          mouseDown: state.mouseDown
+        }
       }
     });
 
@@ -211,7 +202,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       } else
       if (result.cleanup) {
         // Cleanup the gesture state.
-        fg.mouseEvents.resetState();
+        exports.abortMouseGesture(true);
       } else
       if (result.popup)  {
         // TODO Not implemented yet.

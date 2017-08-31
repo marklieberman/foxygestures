@@ -251,20 +251,20 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Clone the gesture state from one tab to another.
-  function transitionGesture (from, to, skip) {
-    if (!!skip) {
-      return Promise.resolve();
-    } else {
-      return browser.tabs.sendMessage(from.id, { topic: 'mg-cloneState' })
-        .then(state => browser.tabs.sendMessage(to.id, { topic: 'mg-restoreState', data: state }))
+  function transitionGesture (from, to, state) {
+    if (state) {
+      return browser.tabs.sendMessage(from.id, { topic: 'mg-abortGesture' })
+        .then(() => browser.tabs.sendMessage(to.id, { topic: 'mg-applyState', data: state }))
         // If the tab being activated is internal to the browser, a channel exception will be thrown.
         .catch(t => {});
+    } else {
+      return Promise.resolve();
     }
   }
 
   // Switch the active tab and clone the gesture state if necessary.
-  function switchActiveTab (from, to, transition) {
-    return transitionGesture(from, to, !transition)
+  function switchActiveTab (from, to, state) {
+    return transitionGesture(from, to, state)
       .then(unused => browser.tabs.update(to.id, { active: true }))
       // Ensure the gesture state in the de-activated tab is cleaned up.
       .then(() => ({ cleanup: true }));
@@ -341,7 +341,7 @@ modules.commands = (function (settings, helpers) {
       } else {
         let index = (active.index + 1) % tabs.length;
         let next = tabs[index];
-        return switchActiveTab(active, next, !!data.wheel);
+        return switchActiveTab(active, next, data.cloneState);
       }
     });
   }
@@ -427,7 +427,7 @@ modules.commands = (function (settings, helpers) {
       } else {
         let index = (active.index - 1) % tabs.length;
         let previous = tabs[index < 0 ? tabs.length - 1 : index];
-        return switchActiveTab(active, previous, !!data.wheel);
+        return switchActiveTab(active, previous, data.cloneState);
       }
     });
   }
