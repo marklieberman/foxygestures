@@ -3,7 +3,7 @@
 /**
  * Executes commands that need to happen in the content script on behalf of the background script.
  */
-(function () {
+window.fg.module('commands', function (exports, fg) {
 
   // Hash of handler functions for supported commands.
   var commandHandlers = {
@@ -20,7 +20,7 @@
   };
 
   // Settings for this module.
-  var settings = modules.helpers.initModuleSettings({
+  var settings = fg.helpers.initModuleSettings({
     scrollDuration: 1000,
     scrollAmount: 100,
     useRelPrevNext: true
@@ -54,9 +54,9 @@
   // Execute the delegated command or pass it down the frame hierachy.
   function onDelegateCommand (data, sender) {
     // Check if the command should be handled by this frame.
-    if (data.context.scriptFrameId && (modules.mouseEvents.scriptFrameId !== data.context.scriptFrameId)) {
+    if (data.context.scriptFrameId && (fg.mouseEvents.scriptFrameId !== data.context.scriptFrameId)) {
       // This is not the correct frame.
-      modules.mouseEvents.broadcast('delegateCommand', data);
+      fg.mouseEvents.broadcast('delegateCommand', data);
     } else {
       // Execute the delegated command in this frame.
       commandHandlers[data.command](data);
@@ -292,7 +292,7 @@
   function commandUserScript (data) {
     /* jshint evil:true */
     try {
-      var mouseDown = modules.mouseEvents.getMouseDown();
+      var mouseDown = fg.mouseEvents.state.mouseDown;
       eval(data.userScript.script);
     } catch (err) {
       // Report any error with the user script.
@@ -322,4 +322,4 @@
     postTo(window.top, 'status', status);
   }
 
-}());
+});

@@ -319,7 +319,7 @@ app.directive('mgGestureInput', [
           if (state.inProgress) {
             var mouseMove = getMouseData(event);
             deltaAccumulator.accumulate(mouseMove);
-            if (modules.helpers.distanceDelta(mouseMove) >= scope.settings.gestureFidelity) {
+            if (window.fg.helpers.distanceDelta(mouseMove) >= scope.settings.gestureFidelity) {
               deltaAccumulator.reset();
               gestureDetector.addPoint(mouseMove);
 

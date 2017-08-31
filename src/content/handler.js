@@ -4,21 +4,20 @@
  * This module is responsible for coordinating gesture state between the
  * background and content scripts.
  */
-var modules = modules || {};
-modules.handler = (function () {
+window.fg.extend('mouseEvents', function (exports, fg) {
 
   var deltaAccumulator = new MouseDeltaAccumulator();
   var gestureDetector = new UDLRGestureDetector();
 
   // State for this module.
-  var state = {
+  var state = Object.assign(exports.state, {
     timeoutHandle: null, // Gesture timeout interval handle.
     noMovementTicks: 0,  // Number of 100ms ticks without movement.
     mouseDown: null      // Mouse event at the start of gesture.
-  };
+  });
 
   // Settings for this module.
-  var settings = modules.helpers.initModuleSettings({
+  var settings = fg.helpers.initModuleSettings({
     drawTrails: true,
     gestureFidelity: 10,
     gestureTimeout: 2000,
@@ -34,17 +33,17 @@ modules.handler = (function () {
         // Return a clone of the state.
         return Promise.resolve({
           handler: cloneState(),
-          mouseEvents: modules.mouseEvents.cloneState()
+          mouseEvents: fg.mouseEvents.cloneState()
         });
       case 'mg-restoreState':
         // Restore a clone of the state.
         let clone = message.data;
         restoreState(clone.handler);
-        modules.mouseEvents.restoreState(clone.mouseEvents);
+        fg.mouseEvents.restoreState(clone.mouseEvents);
         break;
       case 'mg-status':
         // Update the status text.
-        modules.interface.status(message.data);
+        fg.ui.status(message.data);
         break;
     }
     return false;
@@ -54,7 +53,7 @@ modules.handler = (function () {
     if (event.data) {
       switch (event.data.topic) {
         case 'mg-status':
-          modules.interface.status(event.data.data);
+          fg.ui.status(event.data.data);
           break;
       }
     }
@@ -77,7 +76,7 @@ modules.handler = (function () {
   // Mouse gestures ----------------------------------------------------------------------------------------------------
 
   // Invoked when a mouse gesture begins.
-  function mouseGestureStart (mouseDown) {
+  exports.mouseGestureStart = function (mouseDown) {
     // Start tracking the gesture.
     deltaAccumulator.reset();
     gestureDetector.reset(mouseDown);
@@ -85,15 +84,15 @@ modules.handler = (function () {
 
     // Paint the gesture trail.
     if (settings.drawTrails) {
-      modules.interface.beginTrail(mouseDown);
+      fg.ui.beginTrail(mouseDown);
     }
-  }
+  };
 
   // Invoked when the mouse moves during a mouse gesture.
-  function mouseGestureUpdate (mouseMove) {
+  exports.mouseGestureUpdate = function (mouseMove) {
     // Limit the fidelity of gesture updates to reduce gesture jitter.
     deltaAccumulator.accumulate(mouseMove);
-    if (modules.helpers.distanceDelta(mouseMove) >= settings.gestureFidelity) {
+    if (fg.helpers.distanceDelta(mouseMove) >= settings.gestureFidelity) {
       deltaAccumulator.reset();
 
       // Reset the number of ticks without movement.
@@ -120,20 +119,20 @@ modules.handler = (function () {
 
       // Paint the gesture trail.
       if (settings.drawTrails) {
-        modules.interface.updateTrail(mouseMove);
+        fg.ui.updateTrail(mouseMove);
       }
     }
-  }
+  };
 
   // Invoked when a mouse gesture ends.
-  function mouseGestureFinish (mouseUp) {
+  exports.mouseGestureFinish = function (mouseUp) {
     // Clear the gesture timeout interval.
     window.clearInterval(state.timeoutHandle);
     state.timeoutHandle = null;
 
     // Hide the gesture trail.
     if (settings.drawTrails) {
-      modules.interface.finishTrail();
+      fg.ui.finishTrail();
     }
 
     // Handle the gesture.
@@ -148,7 +147,7 @@ modules.handler = (function () {
         }
       });
     }
-  }
+  };
 
   // Abort a mouse gesture and reset the interface.
   function abortMouseGesture (resetState) {
@@ -158,17 +157,17 @@ modules.handler = (function () {
 
     // Hide the gesture trail.
     if (settings.drawTrails) {
-      modules.interface.finishTrail();
+      fg.ui.finishTrail();
     }
 
     // Hide the status text.
     if (settings.showStatusText) {
-      modules.interface.status(null);
+      fg.ui.status(null);
     }
 
     // Optionally reset the low level gesture state.
     if (resetState) {
-      modules.mouseEvents.resetState();
+      fg.mouseEvents.resetState();
     }
   }
 
@@ -191,7 +190,7 @@ modules.handler = (function () {
   }
 
   // Invoked when a mouse gesture transitions to a wheel gesture.
-  function wheelGestureStart (data) {
+  exports.wheelGestureStart = function (data) {
     // Abort the mouse gesture.
     abortMouseGesture(false);
 
@@ -212,26 +211,16 @@ modules.handler = (function () {
       } else
       if (result.cleanup) {
         // Cleanup the gesture state.
-        modules.mouseEvents.resetState();
+        fg.mouseEvents.resetState();
       } else
       if (result.popup)  {
         // TODO Not implemented yet.
       }
     });
-  }
-
-  // Invoked on subsequent scroll events during a wheel gesture.
-  function wheelGestureUpdate (data) {
-    // TODO This will change when popups are implemented.
-    wheelGestureStart(data);
-  }
-
-  return {
-    mouseGestureStart: mouseGestureStart,
-    mouseGestureUpdate: mouseGestureUpdate,
-    mouseGestureFinish: mouseGestureFinish,
-    wheelGestureStart: wheelGestureStart,
-    wheelGestureUpdate: wheelGestureUpdate
   };
 
-}());
+  // Invoked on subsequent scroll events during a wheel gesture.
+  // TODO This will change when popups are implemented.
+  exports.wheelGestureUpdate = exports.wheelGestureStart;
+
+});

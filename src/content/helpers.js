@@ -1,13 +1,43 @@
 'use strict';
 
 /**
+ * Define and extend modules that may be loaded asynchronously, such as modules in different content_script blocks.
+ */
+window.fg = window.fg || {};
+
+// Register a module. If another module is waiting to extend this module, its extender function will be called after
+// this module is built.
+window.fg.module = function (module, builder) {
+  let exports = window.fg[module] = {};
+  builder(exports, window.fg);
+
+  // Any modules waiting to extend this module can now be built.
+  if (window.fg['$$' + module]) {
+    window.fg['$$' + module](exports, window.fg);
+    delete window.fg['$$' + module];
+  }
+};
+
+// Extend an existing module. If the module does not exist, the extender function call will be deferred until the
+// module has been built.
+window.fg.extend = function (module, extender) {
+  if (window.fg[module]) {
+    extender(window.fg[module], window.fg);
+  } else {
+    // Queue this module extender until the module is ready.
+    window.fg['$$' + module] = extender;
+  }
+};
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Helper methods for the content scripts.
  */
-var modules = modules || {};
-modules.helpers = (function (module) {
+window.fg.module('helpers', function (exports) {
 
   // Keep the given settings hash up-to-date when browser storage changes.
-  module.initModuleSettings = (settings) => {
+  exports.initModuleSettings = (settings) => {
     // Update default values from storage.
     browser.storage.sync.get(settings).then(results => {
       Object.keys(settings).forEach(key => {
@@ -28,16 +58,16 @@ modules.helpers = (function (module) {
   };
 
   // Calculate the magnitude of the vector (dx,dy).
-  module.distanceDelta = (data) =>
+  exports.distanceDelta = (data) =>
     Math.sqrt((data.dx * data.dx) + (data.dy * data.dy));
 
   // Generate a unique string to identify a frame.
-  module.makeScriptFrameId = () =>
+  exports.makeScriptFrameId = () =>
     new Date().getTime() + ';' + String(window.location.href);
 
   // Examine each node walking up the DOM until an enclosing link is found.
   // Search up to 40 nodes before giving up.
-  module.findLinkHref = (element) => {
+  exports.findLinkHref = (element) => {
     for (let i = 0; !!element && (i < 40); i++) {
       if ((element.tagName === 'A') && element.href) {
         // Ignore inline javascript links.
@@ -59,7 +89,7 @@ modules.helpers = (function (module) {
   // Find a URL for the image, video, or audio of a DOM element. The function
   // currently looks for image source, HTML5 video or audio sources, and CSS
   // nearby background images.
-  module.getMediaInfo = (element) => {
+  exports.getMediaInfo = (element) => {
     if (element instanceof window.HTMLImageElement) {
       return {
         source: String(element.src),
@@ -100,6 +130,4 @@ modules.helpers = (function (module) {
     return null;
   };
 
-  return module;
-
-}(modules.helpers || {}));
+});

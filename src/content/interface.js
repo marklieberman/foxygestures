@@ -4,8 +4,7 @@
  * This module is responsible for painting the gesture trail.
  * No attempt is made to draw a trail if the document body is not loaded.
  */
-var modules = modules || {};
-modules.interface = (function () {
+window.fg.module('ui', function (exports, fg) {
 
   var MAX_SAFE_Z_INDEX = 2147483647;
   var deltaAccumulator = new MouseDeltaAccumulator();
@@ -28,7 +27,7 @@ modules.interface = (function () {
   };
 
   // Settings for this module.
-  var settings = modules.helpers.initModuleSettings({
+  var settings = fg.helpers.initModuleSettings({
     trailColor: 'purple',
     trailFidelity: 10,
     trailWidth: 2,
@@ -66,7 +65,7 @@ modules.interface = (function () {
   function updateTrail (mouseMove) {
     // Require a minimum distance travelled before painting will occur.
     deltaAccumulator.accumulate(mouseMove);
-    if (modules.helpers.distanceDelta(mouseMove) >= settings.trailFidelity) {
+    if (fg.helpers.distanceDelta(mouseMove) >= settings.trailFidelity) {
       deltaAccumulator.reset();
 
       if (!findBody()) {
@@ -169,11 +168,9 @@ modules.interface = (function () {
     state.status.handle = null;
   }
 
-  return {
-    beginTrail: beginTrail,
-    updateTrail: updateTrail,
-    finishTrail: finishTrail,
-    status: status
-  };
+  exports.beginTrail = beginTrail;
+  exports.updateTrail = updateTrail;
+  exports.finishTrail = finishTrail;
+  exports.status = status;
 
-}());
+});

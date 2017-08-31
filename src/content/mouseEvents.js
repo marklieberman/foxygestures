@@ -1,46 +1,47 @@
 'use strict';
 
 /**
- * This module is responsible for seamlessly unifying mouse events from all
- * frames in a tab.
+ * This module is responsible for seamlessly unifying mouse events from all frames in a tab.
  */
-var modules = modules || {};
-modules.mouseEvents = (function () {
+window.fg.module('mouseEvents', function (exports, fg) {
 
-  // States for the mouse gesture state machine.
-  // No gesture in progress.
-  var PROGRESS_NONE = 0;
-  // Mouse down has occurred but not movement.
-  // Context menu is displayed if immediately followed by a mouse up.
-  var PROGRESS_MOUSE_DOWN = 1;
-  // Mouse movement has occurred.
-  // Context menu will not be displayed following the gesture.
-  var PROGRESS_MOUSE_MOVE = 2;
-  // The mouse wheel was scrolled during a gesture.
-  // Context menu will not be displayed following the gesture.
-  var PROGRESS_WHEEL = 3;
+  var GESTURE_STATE = exports.GESTURE_STATE = {
+    // States for the mouse gesture state machine.
+    // No gesture in progress.
+    NONE: 0,
+    // Mouse down has occurred but not movement.
+    // Context menu is displayed if immediately followed by a mouse up.
+    MOUSE_DOWN: 1,
+    // Mouse movement has occurred.
+    // Context menu will not be displayed following the gesture.
+    MOUSE_MOVE: 2,
+    // The mouse wheel was scrolled during a gesture.
+    // Context menu will not be displayed following the gesture.
+    WHEEL: 3
+  };
+
+  // A unique identifier for this frame.
+  // Used by commands to target a specific nested frame.
+  exports.scriptFrameId = fg.helpers.makeScriptFrameId();
 
   // State for this module.
-  var state = {
-    // A unique identifier for this frame.
-    // Used by commands to target a specific nested frame.
-    scriptFrameId: modules.helpers.makeScriptFrameId(),
-    gestureState: PROGRESS_NONE,       // Gesture state machine state.
+  var state = (exports.state = {
+    gestureState: GESTURE_STATE.NONE,       // Gesture state machine state.
     contextMenu: false,                // Context menu is enabled?
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
     isUnloading: false                 // Is the page is unloading?
-  };
+  });
 
   // Settings for this module.
-  var settings = modules.helpers.initModuleSettings({
+  var settings = fg.helpers.initModuleSettings({
     gestureButton: 2,
     wheelGestures: false
   });
 
   if (state.isNested) {
     // Notify the parent script instance that a nested frame has loaded.
-    postTo(window.parent, 'loadFrame', { id: state.scriptFrameId });
+    postTo(window.parent, 'loadFrame', { id: exports.scriptFrameId });
   }
 
   // Event listeners ---------------------------------------------------------------------------------------------------
@@ -185,7 +186,7 @@ modules.mouseEvents = (function () {
   function resetState () {
     // Replicate state to nested frames.
     replicateState({
-      gestureState: PROGRESS_NONE
+      gestureState: GESTURE_STATE.NONE
     });
   }
 
@@ -213,18 +214,18 @@ modules.mouseEvents = (function () {
 
   // Post a mesage to all nested frames known to the script.
   // Typically used to send messages down the frame/window hierarchy.
-  function broadcast (topic, data) {
+  exports.broadcast = function (topic, data) {
     state.nestedFrames.forEach(tuple => tuple.source.postMessage({
       topic: 'mg-' + topic,
       data: data || {}
     }, '*'));
-  }
+  };
 
   // Modify the state and replicate the changes to nested frames.
   function replicateState (newState) {
     // Refer this event down the hierarchy.
     Object.assign(state, newState);
-    broadcast('stateUpdate', newState);
+    exports.broadcast('stateUpdate', newState);
   }
 
   // Remember nested frames when their DOM is parsed.
@@ -283,7 +284,7 @@ modules.mouseEvents = (function () {
       // Information about the event context: script ID, frame URL, etc.
       data.context = {
         nested: state.isNested,
-        scriptFrameId: state.scriptFrameId,
+        scriptFrameId: exports.scriptFrameId,
         frameUrl: String(window.location.href)
       };
 
@@ -294,10 +295,10 @@ modules.mouseEvents = (function () {
         tag: event.target.tagName,
 
         // Search for a link href on or around the element.
-        linkHref: modules.helpers.findLinkHref(event.target),
+        linkHref: fg.helpers.findLinkHref(event.target),
 
         // Search for a media URL related to the element.
-        mediaInfo: modules.helpers.getMediaInfo(event.target)
+        mediaInfo: fg.helpers.getMediaInfo(event.target)
       };
     }
 
@@ -321,12 +322,12 @@ modules.mouseEvents = (function () {
     if (data.button === settings.gestureButton && !state.isUnloading) {
       // Replicate state to nested frames.
       replicateState({
-        gestureState: PROGRESS_MOUSE_DOWN,
+        gestureState: GESTURE_STATE.MOUSE_DOWN,
         contextMenu: true
       });
 
       // Start a mouse gesture.
-      modules.handler.mouseGestureStart(data);
+      exports.mouseGestureStart(data);
     }
   }
 
@@ -335,16 +336,16 @@ modules.mouseEvents = (function () {
   function onMouseUp (data) {
     if (data.button === settings.gestureButton && state.gestureState) {
       switch (state.gestureState) {
-        case PROGRESS_MOUSE_DOWN:
-        case PROGRESS_MOUSE_MOVE:
+        case GESTURE_STATE.MOUSE_DOWN:
+        case GESTURE_STATE.MOUSE_MOVE:
           // Finish a mouse gesture.
-          modules.handler.mouseGestureFinish(data);
+          exports.mouseGestureFinish(data);
           break;
       }
 
       // Replicate state to nested frames.
       replicateState({
-        gestureState: PROGRESS_NONE
+        gestureState: GESTURE_STATE.NONE
       });
     }
   }
@@ -353,16 +354,16 @@ modules.mouseEvents = (function () {
   // The event may have bubbled up from nested frames.
   function onMouseMove (data) {
     switch (state.gestureState) {
-      case PROGRESS_MOUSE_DOWN:
+      case GESTURE_STATE.MOUSE_DOWN:
         // Replicate state to nested frames.
         replicateState({
-          gestureState: PROGRESS_MOUSE_MOVE,
+          gestureState: GESTURE_STATE.MOUSE_MOVE,
           contextMenu: false
         });
         /* falls through */
-      case PROGRESS_MOUSE_MOVE:
+      case GESTURE_STATE.MOUSE_MOVE:
         // Update a mouse gesture.
-        modules.handler.mouseGestureUpdate(data);
+        exports.mouseGestureUpdate(data);
         break;
     }
   }
@@ -372,19 +373,19 @@ modules.mouseEvents = (function () {
   function onWheel (data) {
     if (settings.wheelGestures) {
       switch (state.gestureState) {
-        case PROGRESS_MOUSE_DOWN:
-        case PROGRESS_MOUSE_MOVE:
+        case GESTURE_STATE.MOUSE_DOWN:
+        case GESTURE_STATE.MOUSE_MOVE:
           replicateState({
-            gestureState: PROGRESS_WHEEL,
+            gestureState: GESTURE_STATE.WHEEL,
             contextMenu: false
           });
 
           // Switch handler to wheel gesture mode.
-          modules.handler.wheelGestureStart(data);
+          exports.wheelGestureStart(data);
           break;
-        case PROGRESS_WHEEL:
+        case GESTURE_STATE.WHEEL:
           // Update a wheel gesture.
-          modules.handler.wheelGestureUpdate(data);
+          exports.wheelGestureUpdate(data);
           break;
       }
     }
@@ -404,16 +405,4 @@ modules.mouseEvents = (function () {
     }
   }
 
-  return {
-    // Context
-    scriptFrameId: state.scriptFrameId,
-    // State management
-    resetState: resetState,
-    cloneState: cloneState,
-    restoreState: restoreState,
-    broadcast: broadcast,
-    //
-    getMouseDown: () => state.mouseDown
-  };
-
-}());
+});
