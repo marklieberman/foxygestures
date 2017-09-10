@@ -13,7 +13,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   var state = Object.assign(exports.state, {
     timeoutHandle: null, // Gesture timeout interval handle.
     noMovementTicks: 0,  // Number of 100ms ticks without movement.
-    mouseDown: null      // Mouse event at the start of gesture.
+    mouseData: null      // Mouse event at the start of gesture.
   });
 
   // Settings for this module.
@@ -58,15 +58,15 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   // Mouse gestures ----------------------------------------------------------------------------------------------------
 
   // Invoked when a mouse gesture begins.
-  exports.mouseGestureStart = function (mouseDown) {
+  exports.mouseGestureStart = function (mouseData) {
     // Start tracking the gesture.
     deltaAccumulator.reset();
-    gestureDetector.reset(mouseDown);
-    state.mouseDown = mouseDown;
+    gestureDetector.reset(mouseData);
+    state.mouseData = mouseData;
 
     // Paint the gesture trail.
     if (settings.drawTrails) {
-      fg.ui.beginTrail(mouseDown);
+      fg.ui.beginTrail(mouseData);
     }
   };
 
@@ -123,8 +123,8 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       browser.runtime.sendMessage({
         topic: 'mg-mouseGesture',
         data: {
-          context: state.mouseDown.context,
-          element: state.mouseDown.element,
+          context: state.mouseData.context,
+          element: state.mouseData.element,
           gesture: gesture
         }
       });
@@ -183,15 +183,15 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     let handler = browser.runtime.sendMessage({
       topic: 'mg-wheelGesture',
       data: {
-        context: state.mouseDown.context,
-        element: state.mouseDown.element,
+        context: state.mouseData.context,
+        element: state.mouseData.element,
         gesture: gesture,
 
         // If the wheel gesture changes the active tab, then the gesture state must be cloned to the new active tab.
         cloneState: {
           gestureState: state.gestureState,
           contextMenu: state.contextMenu,
-          mouseDown: state.mouseDown
+          mouseData: state.mouseData
         }
       }
     });
