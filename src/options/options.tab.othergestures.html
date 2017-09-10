@@ -48,5 +48,47 @@
       </fieldset>
     </div>
 
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="checkbox clearfix">
+          <label>
+            <input type="checkbox"
+                   ng-model="settings.chordGestures"></input>
+            Enable chord gestures.
+          </label>
+          <div class="pull-right">
+            <i class="fa fa-info-circle"></i>
+            Press two or more buttons simultaneously to perform a chord gesture.
+          </div>
+        </div>
+      </div>
+      <fieldset class="panel-body"
+                ng-disabled="!settings.chordGestures">
+        <div class="form-group"
+             ng-repeat="chordMapping in settings.chordMappings | index | orderBy:'chord'">
+          <label class="control-label">{{getChordPreview(chordMapping.chord)}}</label>
+          <div class="input-group">
+            <select class="form-control"
+                    ng-options="item as item.label for item in mappables track by item.id"
+                    ng-model="controls.chordMappings[chordMapping.index]"
+                    ng-change="chordMapping.mapping = controls.chordMappings[chordMapping.index].mapping"></select>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button"
+                      uib-tooltip="Remove Chord" tooltip-placement="left"
+                      ng-click="removeChordMapping(chordMapping)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+        <div class="form-group clearfix">
+          <button class="btn btn-default pull-right" type="button"
+                  ng-click="addChordMapping()">
+            Add Chord
+          </button>
+        </div>
+      </fieldset>
+    </div>
+
   </div>
 </div>

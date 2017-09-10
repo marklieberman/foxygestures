@@ -293,8 +293,9 @@ modules.commands = (function (settings, helpers) {
     if (state) {
       // Always disable the gesture state in the de-activating tab because the de-activating tab may not be the tab
       // that generated the wheel gesture. (e.g.: rapidly scrolling the wheel through Next Tab commands.)
-      return browser.tabs.sendMessage(from.id, { topic: 'mg-abortGesture' })
-        .then(() => browser.tabs.sendMessage(to.id, { topic: 'mg-applyState', data: state }))
+      return browser.tabs.sendMessage(to.id, { topic: 'mg-applyState', data: state })
+        // Disable the gesture state after transitioning to the new tab or window.
+        .then(() => browser.tabs.sendMessage(from.id, { topic: 'mg-abortGesture' }))
         // If the tab being activated is internal to the browser, a channel exception will be thrown.
         .catch(t => {});
     } else {

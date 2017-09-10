@@ -85,6 +85,7 @@
                      placeholder="Name of the user script"></input>
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button"
+                        uib-tooltip="Remove User Script" tooltip-placement="left"
                         ng-click="removeUserScript(userScript)">
                   <i class="fa fa-trash"></i>
                 </button>
@@ -106,7 +107,7 @@
     </div><!-- .user-script-list -->
 
     <div class="clearfix" ng-if="settings.sawXSSWarning">
-      <button class="btn btn-primary pull-right" type="button" ng-click="addUserScript()">
+      <button class="btn btn-default pull-right" type="button" ng-click="addUserScript()">
         Add User Script
       </button>
     </div>

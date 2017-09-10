@@ -11,10 +11,9 @@ window.fg.extend('mouseEvents', function (exports, fg) {
 
   // State for this module.
   var state = Object.assign(exports.state, {
-    timeoutHandle: null,    // Gesture timeout interval handle.
-    noMovementTicks: 0,     // Number of 100ms ticks without movement.
-    mouseData: null,        // Mouse event at the start of gesture.
-    canRepeatGesture: false // Flag to disable gesture repetition for wheel/chord gestures.
+    disableGestures: false,            // Disable gesture handlers when true.
+    timeoutHandle: null,               // Gesture timeout interval handle.
+    noMovementTicks: 0                 // Number of 100ms ticks without movement.
   });
 
   // Settings for this module.
@@ -31,12 +30,26 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   browser.runtime.onMessage.addListener((message, sender) => {
     switch (message.topic) {
       case 'mg-applyState':
+        // Cancel any pending state changes.
+        if (state.deadTimeHandle !== null) {
+          window.clearTimeout(state.deadTimeHandle);
+          state.deadTimeHandle = null;
+        }
+
         // Restore a clone of the state.
         exports.replicateState(message.data);
         break;
       case 'mg-abortGesture':
-        // Cancel any in-progress gesture state.
-        exports.abortMouseGesture(true);
+        // Cancel any in-progress gesture state using a dead-time. In this way, if a command is handled quickly such
+        // that the contextmenu or other events arrive after the abort message, no contextmenu will be shown.
+        exports.abortMouseGesture();
+        exports.clickDeadTime({
+          gestureState: exports.GESTURE_STATE.NONE,
+          contextMenu: false
+        }, {
+          chordButtons: [],
+          contextMenu: true
+        }, 600);
         break;
       case 'mg-status':
         // Update the status text.
@@ -63,7 +76,6 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     // Start tracking the gesture.
     deltaAccumulator.reset();
     gestureDetector.reset(mouseData);
-    state.mouseData = mouseData;
 
     // Paint the gesture trail.
     if (settings.drawTrails) {
@@ -85,7 +97,11 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       if (settings.gestureTimeout && !state.timeoutHandle) {
         state.timeoutHandle = window.setInterval(function () {
           if (++state.noMovementTicks >= (settings.gestureTimeout / 100)) {
-            exports.abortMouseGesture(true);
+            // Abort the mouse gesture but ensure context menu and clicks are prevented.
+            exports.abortMouseGesture();
+            exports.replicateState({
+              gestureState: exports.GESTURE_STATE.MOUSE_TIMEOUT
+            });
           }
         }, 100);
       }
@@ -124,8 +140,8 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       browser.runtime.sendMessage({
         topic: 'mg-mouseGesture',
         data: {
-          context: state.mouseData.context,
-          element: state.mouseData.element,
+          context: state.mouseDownData.context,
+          element: state.mouseDownData.element,
           gesture: gesture
         }
       });
@@ -133,10 +149,12 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   };
 
   // Abort a mouse gesture and reset the interface.
-  exports.abortMouseGesture = function (resetState, resetStatus) {
+  exports.abortMouseGesture = function () {
     // Clear the gesture timeout interval.
-    window.clearInterval(state.timeoutHandle);
-    state.timeoutHandle = null;
+    if (state.timeoutHandle) {
+      window.clearInterval(state.timeoutHandle);
+      state.timeoutHandle = null;
+    }
 
     // Hide the gesture trail.
     if (settings.drawTrails) {
@@ -146,13 +164,6 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     // Hide the status text.
     if (settings.showStatusText) {
       fg.ui.status(null);
-    }
-
-    // Optionally reset the low level gesture state.
-    if (resetState) {
-      exports.replicateState({
-        gestureState: exports.GESTURE_STATE.NONE
-      });
     }
   };
 
@@ -174,51 +185,97 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     }
   }
 
-  // Invoked when a mouse gesture transitions to a wheel gesture.
-  exports.wheelGestureStart = function (data) {
+  // Invoked when a wheel gesture is performed.
+  exports.wheelGestureInitial = function (data) {
+    if (state.disableGestures) { return; }
+
     // Handle the wheel gesture.
-    let gesture = getWheelDirection(data.wheel);
     let handler = browser.runtime.sendMessage({
       topic: 'mg-wheelGesture',
       data: {
-        context: state.mouseData.context,
-        element: state.mouseData.element,
-        gesture: gesture,
+        context: state.mouseDownData.context,
+        element: state.mouseDownData.element,
+        gesture: getWheelDirection(data.wheel),
 
         // If the wheel gesture changes the active tab, then the gesture state must be cloned to the new active tab.
         cloneState: {
-          gestureState: state.gestureState,
+          mouseDownData: state.mouseDownData,
+          gestureState: exports.GESTURE_STATE.WHEEL,
+          chordButtons: state.chordButtons,
           contextMenu: state.contextMenu,
-          mouseData: state.mouseData
+          preventClick: state.preventClick
         }
       }
     });
 
-    // By default the wheel gesture is completed when handled. However, some commands may return { repeat: true }
-    // indicating that the command be repeated. In this case, the gesture state may be reset to WHEEL. The flag
-    // canRepeatGesture will be reset if the gesture button is released before the handler promise resolves.
-    exports.abortMouseGesture(true);
-    state.canRepeatGesture = true;
+    // Disable gesture handlers until this gesture has been processed by the background script.
+    state.disableGestures = true;
+    exports.abortMouseGesture();
 
     // Handle popup items or allow additional wheel gestures to be performed.
     handler.then(result => {
+      state.disableGestures = false;
+
       // Handle popup items if the command is a popup type.
       if (result.popup) {
         // TODO Not implemented yet.
-        return;
-      }
-
-      // Resume the WHEEL gesture state if the command supports repetition and the gesture button is still pressed.
-      if (result.repeat && state.canRepeatGesture) {
-        exports.replicateState({
-          gestureState: exports.GESTURE_STATE.WHEEL
-        });
+      } else
+      // End the gesture if repetition is not allowed.
+      if (!result.repeat) {
+        exports.abortGesture();
       }
     });
   };
 
   // Invoked on subsequent scroll events during a wheel gesture.
   // TODO This will change when popups are implemented.
-  exports.wheelGestureUpdate = exports.wheelGestureStart;
+  exports.wheelGestureRepeat = exports.wheelGestureInitial;
+
+  // Chord gestures ----------------------------------------------------------------------------------------------------
+
+  // Invoked when a chord gesture is performed.
+  exports.chordGesture = function (data) {
+    if (state.disableGestures) { return; }
+
+    // Handle the chord gesture.
+    let handler = browser.runtime.sendMessage({
+      topic: 'mg-chordGesture',
+      data: {
+        context: state.mouseDownData.context,
+        element: state.mouseDownData.element,
+        gesture: data.chord,
+
+        // If the chord gesture changes the active tab, then the gesture state must be cloned to the new active tab.
+        cloneState: {
+          mouseDownData: state.mouseDownData,
+          gestureState: exports.GESTURE_STATE.CHORD,
+          chordButtons: state.chordButtons,
+          contextMenu: state.contextMenu,
+          preventClick: state.preventClick
+        }
+      }
+    });
+
+    // Disable gesture handlers until this gesture has been processed by the background script.
+    exports.abortMouseGesture();
+    state.disableGestures = true;
+
+    // Handle popup items or allow additional chord gestures to be performed.
+    handler.then(result => {
+      state.disableGestures = false;
+
+      // Handle popup items if the command is a popup type.
+      if (result.popup) {
+        // TODO Not implemented yet.
+      } else
+      // End the gesture if repetition is not allowed.
+      if (!result.repeat) {
+        exports.abortGesture({
+          contextMenu: false
+        });
+      }
+    });
+
+  };
 
 });

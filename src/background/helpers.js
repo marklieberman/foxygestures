@@ -81,6 +81,20 @@ modules.helpers = (function (module) {
     return null;
   };
 
+  module.getChordPreview = (chord) => {
+    return (chord || [])
+      .map(button => {
+        switch (button) {
+          case 0: return 'Left';
+          case 1: return 'Middle';
+          case 2: return 'Right';
+          default:
+            return 'Button' + button;
+        }
+      })
+      .join(' + ');
+  };
+
   return module;
 
 }(modules.helpers || {}));

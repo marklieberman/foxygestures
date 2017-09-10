@@ -174,3 +174,24 @@ app.controller('OptionsCtrl', [
     };
 
   }]);
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Define the array index as a non-enumerable property of each item in an arrray.
+// Useful to preserve the original array index when ordering an array in ng-repeat.
+app.filter('index', [ function () {
+  return function (array, index) {
+    if (!index) {
+      index = 'index';
+    }
+
+    for (let i = 0; i < array.length; ++i) {
+        Object.defineProperty(array[i], index, {
+          enumerable: false,
+          configurable: true,
+          value: i
+        });
+    }
+
+    return array;
+  };
+}]);

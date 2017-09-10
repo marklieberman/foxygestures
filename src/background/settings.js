@@ -15,6 +15,11 @@ modules.settings = (function () {
 
   // Settings for the extension.
   var settings = {
+    // Addon settings
+    showStatusText: true,      // Show status text when enabled.
+    statusTimeout: 2000,       // Timeout to hide the status text.
+
+    // Mouse gestures
     gestureButton: 2,          // The button to start a gesture.
     gestureTimeout: 2000,      // Movement timeout to cancel a gesture.
     gestureFidelity: 10,       // Fidelity of mouse events in gestures.
@@ -22,11 +27,9 @@ modules.settings = (function () {
     trailFidelity: 10,         // Minimum size of gesture trial segments.
     trailWidth: 2,             // The width of the gesture trail.
     trailColor: 'purple',      // The color of the gesture trail.
-    showStatusText: true,      // Show status text when enabled.
-    statusTimeout: 2000,       // Timeout to hide the status text.
     mouseMappings: [],         // Array of gesture mappings.
-    userScripts: [],           // Array of user scripts.
-    sawXSSWarning: false,      // Did the user read the XSS warning?
+
+    // Wheel gestures
     wheelGestures: false,      // Enable wheel gestures?
     wheelMappings: {           // Mappings for wheel gestures.
       up: null,
@@ -34,6 +37,19 @@ modules.settings = (function () {
       left: null,
       right: null
     },
+
+    // Chord gestures
+    chordGestures: false,      // Enable chord gestures
+    chordMappings: [           // Mappings for chord gestures.
+      { chord: [ 0, 2 ], mapping: null },
+      { chord: [ 2, 0 ], mapping: null }
+    ],
+
+    // User scripts
+    userScripts: [],           // Array of user scripts.
+    sawXSSWarning: false,      // Did the user read the XSS warning?
+
+    // Command settings
     scrollDuration: 500,       // Animation duration from scroll commands.
     scrollAmount: 100,         // Scroll amount for scroll up/down in vh units.
     nextTabWrap: true,         // Next/prev tab command wraps at end?

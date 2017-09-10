@@ -14,6 +14,18 @@
     });
   }
 
+  function compareChords (a, b) {
+    if (a.length !== b.length) {
+      return false;
+    }
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // Get the mapping for a mouse gesture.
   function findMouseMappingForGesture (gesture) {
     return browser.storage.sync.get({ 'mouseMappings': [] }).then(results =>
@@ -24,6 +36,14 @@
   function findWheelMappingForGesture (gesture) {
     return browser.storage.sync.get({ 'wheelMappings': {} }).then(results =>
       Optional.of(results.wheelMappings[gesture]));
+  }
+
+  // Get the mapping for a chord gesture.
+  function findChordMappingForGesture (gesture) {
+    return browser.storage.sync.get({ 'chordMappings': [] }).then(results =>
+      Optional.of(results.chordMappings.find(chordMapping =>
+        !!chordMapping.mapping && compareChords(gesture, chordMapping.chord)))
+        .map(value => value.mapping));
   }
 
   // Update the status text for a gesture.
@@ -64,6 +84,9 @@
       case 'mg-wheelGesture':
         // This function will reply via a promise.
         return onWheelGesture(data);
+      case 'mg-chordGesture':
+        // This function will reply via a promise.
+        return onChordGesture(data);
       case 'mg-executeInBackground':
         // This function will reply via a promise.
         return commands.executeInBackground(data);
@@ -138,6 +161,38 @@
         if ((assigned = mapping.map(value => commands.findById(value.command))).isPresent()) {
           let label = assigned.get().label;
           return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
+            // The command output may contain popup items.
+            data.wheel = true;
+            return assigned.get().handler(data);
+          });
+        }
+      }
+
+      return false;
+    });
+  }
+
+  // Execute the mapped command for a wheel gesture.
+  function onChordGesture (data) {
+    // Return a promise which may contain popup items.
+    return findChordMappingForGesture(data.gesture).then(mapping => {
+      let assigned = Optional.EMPTY;
+      if (mapping.isPresent()) {
+        let gesture = helpers.getChordPreview(data.gesture);
+
+        // Check user scripts for a matching user script ID.
+        if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
+          let label = assigned.get().label || 'User Script';
+          return updateStatusForGesture(data.sender, gesture, label).then(() => {
+            data.userScript = assigned.get();
+            return commands.executeInContent('userScript', data, true);
+          });
+        }
+
+        // Check commands for a matching command ID.
+        if ((assigned = mapping.map(value => commands.findById(value.command))).isPresent()) {
+          let label = assigned.get().label;
+          return updateStatusForGesture(data.sender, gesture, label).then(() => {
             // The command output may contain popup items.
             data.wheel = true;
             return assigned.get().handler(data);

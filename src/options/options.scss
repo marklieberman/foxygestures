@@ -1,6 +1,7 @@
 $nav-tabs-border-color: #ccc;
 $nav-tabs-active-link-hover-border-color: #ccc;
 $panel-heading-padding: 1px 15px 0px 15px;
+$default-padding: 15px;
 
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 
@@ -43,6 +44,23 @@ body {
 
   .btn-danger {
     margin-top: 10px;
+  }
+}
+
+// ----- Modals common -----
+
+.modal-content {
+  padding: (2 * $padding-base-horizontal) (4 * $padding-base-vertical);
+  padding-bottom: $padding-base-vertical;
+
+  .actions {
+    padding-top: 20px;
+    text-align: right;
+
+    button {
+      margin-left: 4px;
+      min-width: 100px;
+    }
   }
 }
 
@@ -118,6 +136,18 @@ canvas.gesture-input {
     height: 300px;
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+}
+
+// ----- Other gestures -----
+
+.modal-chord {
+
+
+  .chord-preview {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
   }
 }
 

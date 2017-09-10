@@ -37,7 +37,7 @@ window.fg.extend = function (module, extender) {
 window.fg.module('helpers', function (exports) {
 
   // Keep the given settings hash up-to-date when browser storage changes.
-  exports.initModuleSettings = (settings) => {
+  exports.initModuleSettings = (settings, callback) => {
     // Update default values from storage.
     browser.storage.sync.get(settings).then(results => {
       Object.keys(settings).forEach(key => {

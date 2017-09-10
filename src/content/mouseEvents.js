@@ -5,19 +5,50 @@
  */
 window.fg.module('mouseEvents', function (exports, fg) {
 
-  var GESTURE_STATE = exports.GESTURE_STATE = {
-    // States for the mouse gesture state machine.
+  // Enum of buttons in event.button.
+  // See: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
+  const BUTTON = exports.BUTTON = {
+    LEFT: 0,
+    MIDDLE: 1,
+    RIGHT: 2,
+    BUTTON4: 3,
+    BUTTON5: 4
+  };
+
+  // Enum of buttons event.buttons.
+  // See: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
+  const BUTTONS_MASK = exports.BUTTONS_MASK = {
+    NONE: 0x0,
+    LEFT: 0x1,
+    MIDDLE: 0x4,
+    RIGHT: 0x2,
+    BUTTON4: 0x8,
+    BUTTON5: 0x10,
+  };
+
+  // Retrieve the buttons mask for button by indexing the array.
+  const GET_BUTTONS_MASK = [
+    BUTTONS_MASK.LEFT,
+    BUTTONS_MASK.MIDDLE,
+    BUTTONS_MASK.RIGHT,
+    BUTTONS_MASK.BUTTON4,
+    BUTTONS_MASK.BUTTON5
+  ];
+
+  // Enum of states in gesture state machine.
+  const GESTURE_STATE = exports.GESTURE_STATE = {
     // No gesture in progress.
     NONE: 0,
-    // Mouse down has occurred but not movement.
-    // Context menu is displayed if immediately followed by a mouse up.
+    // Mouse down on the gesture button has occurred.
     MOUSE_DOWN: 1,
-    // Mouse movement has occurred.
-    // Context menu will not be displayed following the gesture.
+    // Mouse has moved with the gesture button pressed.
     MOUSE_MOVE: 2,
-    // The mouse wheel was scrolled during a gesture.
-    // Context menu will not be displayed following the gesture.
-    WHEEL: 3
+    // Mouse gesture has timed out.
+    MOUSE_TIMEOUT: 3,
+    // A wheel gesture was performed.
+    WHEEL: 4,
+    // A chord gesture was performed.
+    CHORD: 5
   };
 
   // A unique identifier for this frame.
@@ -25,18 +56,23 @@ window.fg.module('mouseEvents', function (exports, fg) {
   exports.scriptFrameId = fg.helpers.makeScriptFrameId();
 
   // State for this module.
-  var state = (exports.state = {
-    gestureState: GESTURE_STATE.NONE,       // Gesture state machine state.
-    contextMenu: false,                // Context menu is enabled?
+  const state = (exports.state = {
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
-    isUnloading: false                 // Is the page is unloading?
+    isUnloading: false,                // Is the page is unloading?
+    gestureState: GESTURE_STATE.NONE,  // Gesture state machine state.
+    chordButtons: [],                  // Buttons in the chord gesture.
+    contextMenu: false,                // Context menu is enabled?
+    preventClick: false,               // Prevent handling of clicks when truthy.
+    deadTimeHandle: null               // Timeout for click preventing dead time.
   });
 
   // Settings for this module.
-  var settings = fg.helpers.initModuleSettings({
-    gestureButton: 2,
-    wheelGestures: false
+  const settings = fg.helpers.initModuleSettings({
+    gestureButton: BUTTON.RIGHT,
+    wheelGestures: false,
+    chordGestures: false,
+    deadTimeMillis: 300
   });
 
   if (state.isNested) {
@@ -58,6 +94,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
         case 'mg-unloadFrame':
           onUnloadFrame(event.data.data, event.source);
           break;
+
+        // Messages that may bubble up from nested frames and require applyFrameOffset() to be applied.
         case 'mg-mousedown':
           // Offset the x,y-coordinates by the source element's position.
           applyFrameOffset(event.data.data, event.source);
@@ -78,40 +116,45 @@ window.fg.module('mouseEvents', function (exports, fg) {
             onMouseUp(event.data.data);
           }
           break;
+
+        // Note: applyFrameOffset() is not required as the following messages are posted directly to window.top.
         case 'mg-mousemove':
-          // Note: applyFrameOffset() is not required and messages are posted directly to top window.
           onMouseMove(event.data.data);
           break;
+        case 'mg-click':
+          onClick(event.data.data);
+          break;
         case 'mg-wheel':
-          // Note: applyFrameOffset() is not required and messages are posted directly to top window.
           onWheel(event.data.data);
           break;
         case 'mg-contextmenu':
-          if (state.isNested) {
-            // Refer this event up the hierarchy.
-            postTo(window.parent, 'contextmenu', event.data.data);
-          } else {
-            onContextMenu(event.data.data);
-          }
+          onContextMenu(event.data.data);
           break;
       }
     }
   });
 
   window.addEventListener('unload', function () {
+    state.isUnloading = true;
     if (state.isNested) {
       postTo(window.parent, 'unloadFrame');
-    } else {
-      state.isUnloading = true;
     }
   });
 
   window.addEventListener('mousedown', function (event) {
     // Ignore untrusted events.
-    if (!event.isTrusted) { return; }
+    if (!event.isTrusted || state.isUnloading) { return; }
+
+    // Record the original mouse event.
+    state.mouseDown = event;
+
+    // Prevent handling of mousedown events during a gesture.
+    if (state.gestureState) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
 
     var data = getMouseData(event, true);
-    state.mouseDown = event;
     if (state.isNested) {
       // Post to parent - must apply frame offsets.
       postTo(window.parent, 'mousedown', data);
@@ -122,7 +165,13 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   window.addEventListener('mouseup', function (event) {
     // Ignore untrusted events.
-    if (!event.isTrusted) { return; }
+    if (!event.isTrusted || state.isUnloading) { return; }
+
+    // Prevent handling of mouseup events during a gesture.
+    if (state.gestureState) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
 
     var data = getMouseData(event);
     if (state.isNested) {
@@ -135,8 +184,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   window.addEventListener('mousemove', function (event) {
     // Ignore untrusted events.
-    if (!event.isTrusted) { return; }
+    if (!event.isTrusted || state.isUnloading) { return; }
 
+    // Only handle mousemove events during a gesture.
     if (state.gestureState) {
       var data = getMouseData(event);
       if (state.isNested) {
@@ -150,8 +200,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   window.addEventListener('wheel', function (event) {
     // Ignore untrusted events.
-    if (!event.isTrusted) { return; }
+    if (!event.isTrusted || state.isUnloading) { return; }
 
+    // Only handle wheel events (if enabled) during a gesture.
     if (settings.wheelGestures && state.gestureState) {
       // Cancel scrolling.
       event.preventDefault();
@@ -166,8 +217,38 @@ window.fg.module('mouseEvents', function (exports, fg) {
     }
   }, true);
 
+  window.addEventListener('click', function (event) {
+    // Ignore untrusted events.
+    if (!event.isTrusted || state.isUnloading) { return; }
+
+    // Prevent default actions for all clicks on any button during a gesture.
+    if (state.preventClick ||
+      (state.gestureState !== GESTURE_STATE.NONE) &&
+      (state.gestureState !== GESTURE_STATE.MOUSE_DOWN)
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
+
+  window.addEventListener('dblclick', function (event) {
+    // Ignore untrusted events.
+    if (!event.isTrusted || state.isUnloading) { return; }
+
+    // Prevent double clicks during chord gestures. These sometimes happen due to the initial mousedown "leaking"
+    // since a gesture hasn't started. This is really annoying if it takes a HTML5 video to fullscreen.
+    if (state.preventClick || state.gestureState) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
+
   window.addEventListener('contextmenu', function (event) {
-    if (!state.contextMenu) {
+    // Disable the context menu event after a gesture.
+    if (!state.contextMenu ||
+      (state.gestureState !== GESTURE_STATE.NONE) &&
+      (state.gestureState !== GESTURE_STATE.MOUSE_DOWN)
+    ) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -179,6 +260,22 @@ window.fg.module('mouseEvents', function (exports, fg) {
       onContextMenu();
     }
   }, true);
+
+  window.addEventListener('selectstart', function (event) {
+    // Prevent a selection from starting during a gesture.
+    if (state.gestureState !== GESTURE_STATE.NONE) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+
+  window.addEventListener('dragstart', function (event) {
+    // Prevent a drag and drop from starting during a gesture.
+    if (state.gestureState !== GESTURE_STATE.NONE) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
 
   // Functions ---------------------------------------------------------------------------------------------------------
 
@@ -205,6 +302,56 @@ window.fg.module('mouseEvents', function (exports, fg) {
     // Refer this event down the hierarchy.
     Object.assign(state, newState);
     exports.broadcast('stateUpdate', newState);
+  };
+
+  // Reset all state associated with gestures.
+  exports.abortGesture = function (extraState) {
+    // Cancel any pending state changes.
+    if (state.deadTimeHandle !== null) {
+      window.clearTimeout(state.deadTimeHandle);
+    }
+
+    exports.replicateState(Object.assign({
+      gestureState: GESTURE_STATE.NONE,
+      chordButtons: [],
+      contextMenu: true,
+      preventClick: false
+    }, extraState || {}));
+  };
+
+  // Invoke preventDefault() on click events for the given number of milliseconds.
+  exports.clickDeadTime = function (beforeState, afterState, millis) {
+    // Prevent clicks and contextmenu event from being handled.
+    exports.replicateState(Object.assign({
+      preventClick: true
+    }, beforeState || {}));
+
+    // Re-enable clicks and contextmenu events after the timeout.
+    if (state.deadTimeHandle !== null) {
+      window.clearTimeout(state.deadTimeHandle);
+    }
+    state.deadTimeHandle = window.setTimeout(() => {
+      exports.replicateState(Object.assign({
+        preventClick: false
+      }, afterState || {}));
+      state.deadTimeHandle = null;
+    }, millis || settings.deadTimeMillis || 300);
+  };
+
+  // This is a catch-all handler for sticky gesture scenarios. Every gesture requires at least one button to be
+  // pressed. Therefore, if no buttons are pressed during a gesture state it must be a sticky gesture scenario.
+  // This happens most often when the mouse leaves the DOM during a gesture and some mouse events are not able to
+  // be handled.
+  exports.stickyGestureCheck = function (data) {
+    if (data.buttons === BUTTONS_MASK.NONE) {
+      // Sticky gesture detected.
+      console.log('sticky gesture detected', state.gestureState);
+      exports.abortGesture();
+      return true;
+    }
+
+    // Gesture is not sticky.
+    return false;
   };
 
   // Remember nested frames when their DOM is parsed.
@@ -242,8 +389,16 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Get the relevant parts of the mouse event as an object.
   // The return value must be serializeable for compatabiltiy with postMessage() and sendMessage().
   function getMouseData (event, detailed) {
+    // Xray Vision considers this data object to be cross origin when it originates in a frame.
+    // You cannot attach object or array properties to cross-origin objects.
+    // This can impact handlers in parent frames, so you can stub empty properties here.
     var data = {
       button: event.button,
+      buttons: event.buttons,
+      altKey: event.altKey,
+      ctrlKey: event.ctrlKey,
+      metaKey: event.metaKey,
+      chord: [],
       x: event.clientX,
       y: event.clientY,
       dx: event.movementX,
@@ -298,82 +453,160 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Invoked by the mousedown event.
   // The event may have bubbled up from nested frames.
   function onMouseDown (data, event) {
-    if (data.button === settings.gestureButton && !state.isUnloading) {
-      // Replicate state to nested frames.
+    // Keep a reference to the data for this mousedown event.
+    state.mouseDownData = data;
+
+    // Handle or update the chord gesture state when enabled.
+    if (settings.chordGestures && buttonDownChordGesture(data)) { return; }
+
+    // Start a mouse gesture if the gesture button was pressed.
+    if (data.button === settings.gestureButton) {
       exports.replicateState({
         gestureState: GESTURE_STATE.MOUSE_DOWN,
         contextMenu: true
       });
-
-      // Start a mouse gesture.
       exports.mouseGestureStart(data);
+    } else
+    // Ensure the context menu is enabled for non-gestures.
+    if (data.button === BUTTON.RIGHT) {
+      exports.replicateState({
+        contextMenu: true
+      });
+    }
+  }
+
+  // Support chord gestures by handling mousedown events.
+  // This method is called by onMouseDown().
+  // Return false to end handling of the mouse down event.
+  function buttonDownChordGesture (data) {
+    // Add the pressed button to the chord on mouse down.
+    // Do not allow duplicates which may occur during tab changes or from missed events.
+    if (!state.chordButtons.some(button => button === data.button)) {
+      state.chordButtons.push(data.button);
+    }
+
+    // Remove any button that is not currently pressed which may occur due to the above.
+    state.chordButtons = state.chordButtons.filter(button => data.buttons & GET_BUTTONS_MASK[button]);
+
+    // Handle this mousedown event once two or more buttons are pressed..
+    if (state.chordButtons.length >= 2) {
+      // Switch state to chord gesture mode.
+      exports.replicateState({
+        gestureState: GESTURE_STATE.CHORD,
+        contextMenu: false
+      });
+
+      // Copy the chord into the event data.
+      data.chord.push(...state.chordButtons);
+
+      // Handle a chord gesture.
+      window.setTimeout(() => exports.chordGesture(data), 0);
+
+      // Cancel further handling of the mousedown event.
+      return true;
     }
   }
 
   // Invoked by the mouseup event.
   // The event may have bubbled up from nested frames.
   function onMouseUp (data) {
-    if (data.button === settings.gestureButton) {
-      // Gesture button is released and gesture is over.
-      // Wheel gesture may not be repeated on scroll.
-      state.canRepeatGesture = false;
+    // Handle or update the chord gesture state when enabled.
+    if (settings.chordGestures && buttonUpChordGesture(data)) { return; }
 
-      // Finish a mouse gesture if one is in progress.
+    // End a mouse gesture if the gesture button was released.
+    if (data.button === settings.gestureButton) {
       switch (state.gestureState) {
         case GESTURE_STATE.MOUSE_DOWN:
+          exports.abortMouseGesture();
+          exports.replicateState({
+            gestureState: GESTURE_STATE.NONE
+          });
+          break;
         case GESTURE_STATE.MOUSE_MOVE:
           // Finish a mouse gesture.
           exports.mouseGestureFinish(data);
           /* falls through */
         case GESTURE_STATE.WHEEL:
-          // Gesture button is released and gesture is over.
-          exports.replicateState({
-            gestureState: GESTURE_STATE.NONE
+        case GESTURE_STATE.MOUSE_TIMEOUT:
+          // Finish a wheel gesture.
+          exports.clickDeadTime({
+            gestureState: GESTURE_STATE.NONE,
+            // Prevent the context menu if the gesture button is right.
+            contextMenu: (settings.gestureButton !== BUTTON.RIGHT)
           });
           break;
-        case GESTURE_STATE.NONE:
-          // Nothing else to do.
-          return;
       }
+    }
+  }
+
+  // Support chord gestures by handling mouseup events.
+  // This method is called by onMouseUp().
+  // Return false to end handling of the mouse up event.
+  function buttonUpChordGesture (data) {
+    // Remove any button that is not currently pressed.
+    state.chordButtons = state.chordButtons.filter(button => data.buttons & GET_BUTTONS_MASK[button]);
+
+    // Handle this mouseup event during a chord gesture.
+    if (state.gestureState === GESTURE_STATE.CHORD) {
+      // End the chord gesture once all buttons have been released.
+      if (state.chordButtons.length === 0) {
+        // Exit the gesture state and impose a click handling dead time. The contextmenu event may or may not fire for
+        // certain button combinations, so use dead-time as a best effort prevention.
+        exports.clickDeadTime({
+          gestureState: GESTURE_STATE.NONE,
+          contextMenu: false
+        }, {
+          contextMenu: true
+        });
+      }
+
+      // Cancel further handling of the mouse up event.
+      return true;
     }
   }
 
   // Invoked by the mousemove event.
   // The event may have bubbled up from nested frames.
   function onMouseMove (data) {
-    switch (state.gestureState) {
-      case GESTURE_STATE.MOUSE_DOWN:
-        // Replicate state to nested frames.
-        exports.replicateState({
-          gestureState: GESTURE_STATE.MOUSE_MOVE,
-          contextMenu: false
-        });
-        /* falls through */
-      case GESTURE_STATE.MOUSE_MOVE:
-        // Update a mouse gesture.
-        exports.mouseGestureUpdate(data);
-        break;
+    // Perform a check on gesture state and buttons.
+    if (!exports.stickyGestureCheck(data)) {
+      // Start or update a mouse gesture.
+      switch (state.gestureState) {
+        case GESTURE_STATE.MOUSE_DOWN:
+          // The mouse has moved while the gesture button is pressed.
+          exports.replicateState({
+            gestureState: GESTURE_STATE.MOUSE_MOVE
+          });
+          /* falls through */
+        case GESTURE_STATE.MOUSE_MOVE:
+          // Update the mouse gesture.
+          exports.mouseGestureUpdate(data);
+          break;
+      }
     }
   }
 
   // Invoked by the wheel event.
   // The event may have bubbled up from nested frames.
   function onWheel (data) {
-    if (settings.wheelGestures) {
+    // Perform a check on gesture state and buttons.
+    if (settings.wheelGestures && !exports.stickyGestureCheck(data)) {
+      // Start or update a wheel gesture.
       switch (state.gestureState) {
         case GESTURE_STATE.MOUSE_DOWN:
         case GESTURE_STATE.MOUSE_MOVE:
+        case GESTURE_STATE.CHORD:
+          // Transition gesture state to wheel gesture.
           exports.replicateState({
-            gestureState: GESTURE_STATE.WHEEL,
-            contextMenu: false
+            gestureState: GESTURE_STATE.WHEEL
           });
 
-          // Switch handler to wheel gesture mode.
-          exports.wheelGestureStart(data);
+          // Handle a wheel gesture.
+          exports.wheelGestureInitial(data);
           break;
         case GESTURE_STATE.WHEEL:
-          // Update a wheel gesture.
-          exports.wheelGestureUpdate(data);
+          // Update the wheel gesture.
+          exports.wheelGestureRepeat(data);
           break;
       }
     }
@@ -382,10 +615,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Invoked by the contextmenu event.
   // The event may have bubbled up from nested frames.
   function onContextMenu () {
-    // The event listener will call preventDefault() on the native event when
-    // necessary since it must be done synchronously.
-
-    // Re-enable the context menu for subsequent clicks.
+    // Re-enable the context menu for subsequent clicks. The event listener will call preventDefault() on the native
+    // event while contextMenu is false.
     if (!state.contextMenu) {
       exports.replicateState({
         contextMenu: true

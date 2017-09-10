@@ -1,0 +1,34 @@
+<form class="modal-chord">
+  <p class="well"
+     ng-show="controls.error === 'short'">
+    <i class="fa fa-2x fa-info-circle"></i>
+    Press two or more mouse buttons simultaneously to record a chord gesture.
+  </p>
+
+  <p class="well text-danger"
+     ng-show="controls.error === 'conflict'">
+    <i class="fa fa-2x fa-warning"></i>
+    This chord contains or is contained within an already defined chord.
+  </p>
+
+  <p class="well text-success"
+     ng-show="!controls.error">
+    <i class="fa fa-2x fa-check-circle"></i>
+    Press OK to accept this chord gesture.
+  </p>
+
+  <p class="chord-preview">
+    {{ getChordPreview(controls.chord) || 'Waiting...' }}
+  </p>
+
+  <div class="form-group actions">
+    <button class="btn btn-default" ng-click="$dismiss()">
+      Cancel
+    </button>
+    <button class="btn btn-primary"
+            ng-disabled="controls.error"
+            ng-click="$close(controls.chord)">
+      OK
+    </button>
+  </div>
+</form>
