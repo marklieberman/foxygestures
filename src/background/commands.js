@@ -38,7 +38,8 @@ modules.commands = (function (settings, helpers) {
     {
       id: 'duplicateTabInNewPrivateWindow',
       handler: commandDuplicateTabInNewPrivateWindow,
-      label: 'Duplicate Tab in New Private Window'
+      label: 'Duplicate Tab in New Private Window',
+      tooltip: 'The duplicated tab\'s history is not preserved in the private window'
     },
     {
       id: 'historyBack',
@@ -307,13 +308,7 @@ modules.commands = (function (settings, helpers) {
   // Duplicate the active tab.
   function commandDuplicateTab () {
     return getActiveTab(tab => {
-      let tabOptions = {};
-      tabOptions.url = tab.url;
-      tabOptions.active = settings.insertTabIsActive;
-      if (settings.insertRelatedTab) {
-        tabOptions.index = tab.index + 1;
-      }
-      return browser.tabs.create(tabOptions);
+      return browser.tabs.duplicate(tab.id);
     });
   }
 

@@ -26,10 +26,12 @@
            ng-repeat="command in commands | filter:controls.searchCommands | orderBy:'label'">
 
         <label class="control-label command-label">
-           {{command.label}}
-           <i class="fa fa-question-circle"
-              ng-if="command.tooltip"
-              uib-tooltip="{{command.tooltip}}"></i>
+          <span>
+            {{command.label}}
+            <i class="fa fa-question-circle"
+               ng-if="command.tooltip"
+               uib-tooltip="{{command.tooltip}}"></i>
+          </span>
         </label>
 
         <input class="form-control mapped-gesture"
