@@ -135,6 +135,11 @@ modules.commands = (function (settings, helpers) {
       defaultGesture: 'RDLU'
     },
     {
+      id: 'reloadBypassCache',
+      handler: commandReloadBypassCache,
+      label: 'Reload (Bypass Cache)'
+    },
+    {
       id: 'reloadFrame',
       handler: data => commands.executeInContent('reloadFrame', data),
       label: 'Reload Frame'
@@ -430,6 +435,13 @@ modules.commands = (function (settings, helpers) {
   // Reload the active tab.
   function commandReload () {
     return getActiveTab(tab => browser.tabs.reload(tab.id));
+  }
+
+  // Reload the active tab and bypass the cache.
+  function commandReloadBypassCache () {
+    return getActiveTab(tab => browser.tabs.reload(tab.id, {
+      bypassCache: true
+    }));
   }
 
   // Save the media URL of the element under the gesture.
