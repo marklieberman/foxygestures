@@ -2,6 +2,9 @@
 <html ng-app="mgOptionsApp" ng-strict-di>
   <head>
     <meta charset="utf-8">
+
+    <title>Foxy Gestures Options</title>
+
     <link rel="stylesheet" href="lib/ui-bootstrap-custom-2.5.0-csp.css">
     <link rel="stylesheet" href="lib/font-awesome.min.css">
     <link rel="stylesheet" href="options.css">
@@ -17,6 +20,8 @@
   </head>
 
   <body ng-controller="OptionsCtrl">
+    <h1>Foxy Gestures Options</h1>
+
     <!-- Do not show until settings are loaded -->
     <form class="form" name="controls.optionsForm" ng-if="commands.loaded && settings.loaded">
 
