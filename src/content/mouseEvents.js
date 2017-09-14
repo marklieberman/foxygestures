@@ -313,19 +313,28 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Invoked by the mouseup event.
   // The event may have bubbled up from nested frames.
   function onMouseUp (data) {
-    if (data.button === settings.gestureButton && state.gestureState) {
+    if (data.button === settings.gestureButton) {
+      // Gesture button is released and gesture is over.
+      // Wheel gesture may not be repeated on scroll.
+      state.canRepeatGesture = false;
+
+      // Finish a mouse gesture if one is in progress.
       switch (state.gestureState) {
         case GESTURE_STATE.MOUSE_DOWN:
         case GESTURE_STATE.MOUSE_MOVE:
           // Finish a mouse gesture.
           exports.mouseGestureFinish(data);
+          /* falls through */
+        case GESTURE_STATE.WHEEL:
+          // Gesture button is released and gesture is over.
+          exports.replicateState({
+            gestureState: GESTURE_STATE.NONE
+          });
           break;
+        case GESTURE_STATE.NONE:
+          // Nothing else to do.
+          return;
       }
-
-      // Replicate state to nested frames.
-      exports.replicateState({
-        gestureState: GESTURE_STATE.NONE
-      });
     }
   }
 

@@ -11,9 +11,10 @@ window.fg.extend('mouseEvents', function (exports, fg) {
 
   // State for this module.
   var state = Object.assign(exports.state, {
-    timeoutHandle: null, // Gesture timeout interval handle.
-    noMovementTicks: 0,  // Number of 100ms ticks without movement.
-    mouseData: null      // Mouse event at the start of gesture.
+    timeoutHandle: null,    // Gesture timeout interval handle.
+    noMovementTicks: 0,     // Number of 100ms ticks without movement.
+    mouseData: null,        // Mouse event at the start of gesture.
+    canRepeatGesture: false // Flag to disable gesture repetition for wheel/chord gestures.
   });
 
   // Settings for this module.
@@ -132,7 +133,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   };
 
   // Abort a mouse gesture and reset the interface.
-  exports.abortMouseGesture = function (resetState) {
+  exports.abortMouseGesture = function (resetState, resetStatus) {
     // Clear the gesture timeout interval.
     window.clearInterval(state.timeoutHandle);
     state.timeoutHandle = null;
@@ -175,9 +176,6 @@ window.fg.extend('mouseEvents', function (exports, fg) {
 
   // Invoked when a mouse gesture transitions to a wheel gesture.
   exports.wheelGestureStart = function (data) {
-    // Abort the mouse gesture.
-    exports.abortMouseGesture(false);
-
     // Handle the wheel gesture.
     let gesture = getWheelDirection(data.wheel);
     let handler = browser.runtime.sendMessage({
@@ -196,16 +194,25 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       }
     });
 
+    // By default the wheel gesture is completed when handled. However, some commands may return { repeat: true }
+    // indicating that the command be repeated. In this case, the gesture state may be reset to WHEEL. The flag
+    // canRepeatGesture will be reset if the gesture button is released before the handler promise resolves.
+    exports.abortMouseGesture(true);
+    state.canRepeatGesture = true;
+
+    // Handle popup items or allow additional wheel gestures to be performed.
     handler.then(result => {
-      if (!result) {
-        // Do nothing.
-      } else
-      if (result.cleanup) {
-        // Cleanup the gesture state.
-        exports.abortMouseGesture(true);
-      } else
-      if (result.popup)  {
+      // Handle popup items if the command is a popup type.
+      if (result.popup) {
         // TODO Not implemented yet.
+        return;
+      }
+
+      // Resume the WHEEL gesture state if the command supports repetition and the gesture button is still pressed.
+      if (result.repeat && state.canRepeatGesture) {
+        exports.replicateState({
+          gestureState: exports.GESTURE_STATE.WHEEL
+        });
       }
     });
   };
