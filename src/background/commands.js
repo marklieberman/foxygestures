@@ -389,6 +389,7 @@ modules.commands = (function (settings, helpers) {
       let tabOptions = {};
       tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
       tabOptions.active = true;
+      tabOptions.cookieStoreId = tab.cookieStoreId;
       return browser.tabs.create(tabOptions);
     });
   }
@@ -410,6 +411,7 @@ modules.commands = (function (settings, helpers) {
         let tabOptions = {};
         tabOptions.url = data.context.frameUrl;
         tabOptions.active = settings.insertTabIsActive;
+        tabOptions.cookieStoreId = tab.cookieStoreId;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -421,7 +423,14 @@ modules.commands = (function (settings, helpers) {
   // Open a frame in a new window.
   function commandOpenFrameInNewWindow (data) {
     if (data.context.frameUrl) {
-      return browser.windows.create({ url: data.context.frameUrl });
+      return getActiveTab(tab => {
+        let tabOptions = {};
+        tabOptions.url = data.context.frameUrl;
+        tabOptions.cookieStoreId = tab.cookieStoreId;
+        return browser.tabs.create(tabOptions);
+      }).then(tab => {
+        return browser.windows.create({ tabId: tab.id });
+      });
     }
   }
 
@@ -432,6 +441,7 @@ modules.commands = (function (settings, helpers) {
         let tabOptions = {};
         tabOptions.url = data.element.linkHref;
         tabOptions.active = settings.insertTabIsActive;
+        tabOptions.cookieStoreId = tab.cookieStoreId;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -443,7 +453,14 @@ modules.commands = (function (settings, helpers) {
   // Open a link in a new window.
   function commandOpenLinkInNewWindow (data) {
     if (data.element.linkHref) {
-      return browser.windows.create({ url: data.element.linkHref });
+      return getActiveTab(tab => {
+        let tabOptions = {};
+        tabOptions.url = data.element.linkHref;
+        tabOptions.cookieStoreId = tab.cookieStoreId;
+        return browser.tabs.create(tabOptions);
+      }).then(tab => {
+        return browser.windows.create({ tabId: tab.id });
+      });
     }
   }
 
