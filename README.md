@@ -66,7 +66,14 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
-Version 1.0.7 released on _2017_08_15_
+Version 1.0.8
+ - Added commands: reload (bypass cache), scroll up, scroll down, zoom in, zoom out, zoom reset.
+ - Improved duplicate tab command.
+ - Fixed sticky gesture state from wheel gestures.
+ - Fixed containers not preserved by open link in new tab and related commands.
+ - Moved settings page to a tab until [1385548](https://bugzilla.mozilla.org/show_bug.cgi?id=1385548) is fixed.
+
+Version 1.0.7
  - Fixed context menu appearing in certain situations.
  - Fixed breakage in frameset pages.
  - Fixed settings not working in 56+.
@@ -79,24 +86,24 @@ Version 1.0.7 released on _2017_08_15_
  - Added backup and restore settings buttons to settings.
  - Settings are now stored in storage.sync.
 
-Version 1.0.6 released on _2017-06-11_
+Version 1.0.6
  - Minor bug fixes
 
-Version 1.0.5 released on _2017-05-24_
+Version 1.0.5
  - Added commands: duplicate tab in new private window, move tab to new window,
    new tab, new window, new private window, open link in new private window,
    close tabs to the left, close tabs to the right, close other tabs.
 
-Version 1.0.3 released on _2017-05-09_
+Version 1.0.3
  - Implement support for wheel gestures.
  - Implement support for user scripts.
  - Added commands: next tab, previous tab, show only this frame.
 
-Version 1.0.2 released on _2017-04-13_
+Version 1.0.2
  - Implement status text for gestures.
 
-Version 1.0.1 released on _2017-04-08_
+Version 1.0.1
  - Scripts injected at document_start for slightly faster loading in some cases.
 
-Version 1.0.0 released on _2017-04-07_
+Version 1.0.0
  - Initial release
