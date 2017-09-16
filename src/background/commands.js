@@ -396,7 +396,15 @@ modules.commands = (function (settings, helpers) {
 
   // Create a new empty window.
   function commandNewWindow (data) {
-    return browser.windows.create({ url: notAboutNewTabUrl(settings.newWindowUrl) });
+    return getActiveTab(tab => {
+      // Firefox default is for new tabs to be active and inserted at the end of the tab bar.
+      let tabOptions = {};
+      tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
+      tabOptions.cookieStoreId = tab.cookieStoreId;
+      return browser.tabs.create(tabOptions);
+    }).then(tab => {
+      return browser.windows.create({ tabId: tab.id });
+    });
   }
 
   // Create a new empty private window.
