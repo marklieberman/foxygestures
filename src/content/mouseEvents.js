@@ -24,13 +24,22 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Used by commands to target a specific nested frame.
   exports.scriptFrameId = fg.helpers.makeScriptFrameId();
 
+  // On OSX/Linux, double right-click to open context menu. See:
+  // https://github.com/marklieberman/foxygestures/issues/67
+  // and for the user agent reference documentation:
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent/Firefox
+  const isLinuxOSX = window.navigator.userAgent.indexOf("Linux") !== -1 ||
+                     window.navigator.userAgent.indexOf("Macintosh") !== -1;
+  const linuxOSXDoubleClickTimeoutValue = 600;
+
   // State for this module.
   var state = (exports.state = {
     gestureState: GESTURE_STATE.NONE,       // Gesture state machine state.
     contextMenu: false,                // Context menu is enabled?
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
-    isUnloading: false                 // Is the page is unloading?
+    isUnloading: false,                // Is the page is unloading?
+    linuxOSXDoubleClickTimeout: null   // No right-click detected yet
   });
 
   // Settings for this module.
@@ -167,6 +176,24 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('contextmenu', function (event) {
+
+    if (isLinuxOSX) {
+      // If this timeout is active (non-null), we're waiting for the second
+      // right-click on Linux or OSX. If it isn't active, this is the first
+      // right-click so we prevent the default action and wait for the next
+      // right-click within linuxOSXDoubleClickTimeoutValue
+      if (state.linuxOSXDoubleClickTimeout) {
+        clearTimeout(state.linuxOSXDoubleClickTimeout)
+        state.linuxOSXDoubleClickTimeout = null;
+      } else {
+        event.preventDefault();
+        event.stopPropagation();
+        state.linuxOSXDoubleClickTimeout = setTimeout(function () {
+          state.linuxOSXDoubleClickTimeout = null;
+        }, linuxOSXDoubleClickTimeoutValue);
+      }
+    }
+
     if (!state.contextMenu) {
       event.preventDefault();
       event.stopPropagation();
