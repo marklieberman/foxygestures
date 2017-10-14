@@ -21,11 +21,11 @@ app.controller('OptionsTabBackupCtrl', [
       return $scope.getSettingsBackup().then(backupData => {
         // Stringify and serialize the backup data.
         let jsonData = JSON.stringify(backupData, null, 2);
-        let blob = new window.Blob([ jsonData ], { type: 'application/json' });
+        let dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonData);
 
         // Prompt the user to download the backup.
         let a = window.document.createElement('a');
-        a.href = window.URL.createObjectURL(blob);
+        a.href = dataUrl;
         a.download = backupData.fileName;
         document.body.appendChild(a);
         a.click();
@@ -100,7 +100,7 @@ app.controller('OptionsTabBackupCtrl', [
     // Overwrite settings keys with values from the backup.
     // Any version specific quirks or upgrades would go here.
     $scope.overwriteSettings = (backupData, selfInfo) => {
-      angular.extend(settings, backupData.settings);
+      angular.copy(backupData.settings, settings);
     };
 
     // Restore a Settings from a backup file and then reset the options form.
