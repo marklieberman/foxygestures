@@ -17,7 +17,7 @@ var sources = {
   ]
 };
 
-gulp.task('default', [ 'sass', 'watch' ]);
+gulp.task('default', [ 'lint', 'sass', 'watch' ]);
 
 gulp.task('watch', [ 'sass' ], function () {
   gulp.watch(sources.js, [ 'lint' ]);
