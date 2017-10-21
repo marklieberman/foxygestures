@@ -15,6 +15,17 @@
       </p>
     </div>
 
+    <!-- Gesture disable button -->
+    <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <input class="control-label" type="checkbox"
+                 ng-model="settings.disableOnAlt"></input>
+          Do not start a gesture while holding the Alt key.
+        </label>
+      </div>
+    </div>
+
     <!-- Gesture timeout -->
     <div class="form-group" ng-class="{'has-error':controls.optionsForm.gestureTimeout.$invalid}">
       <label class="control-label">Gesture Timeout</label>

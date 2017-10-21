@@ -70,6 +70,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Settings for this module.
   const settings = fg.helpers.initModuleSettings({
     gestureButton: BUTTON.RIGHT,
+    disableOnAlt: true,
     wheelGestures: false,
     chordGestures: false,
     deadTimeMillis: 300
@@ -121,9 +122,6 @@ window.fg.module('mouseEvents', function (exports, fg) {
         case 'mg-mousemove':
           onMouseMove(event.data.data);
           break;
-        case 'mg-click':
-          onClick(event.data.data);
-          break;
         case 'mg-wheel':
           onWheel(event.data.data);
           break;
@@ -142,8 +140,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   });
 
   window.addEventListener('mousedown', function (event) {
-    // Ignore untrusted events.
-    if (!event.isTrusted || state.isUnloading) { return; }
+    // Ignore untrusted events and events when Alt is pressed.
+    if (shouldIgnoreEvent(event)) { return; }
 
     // Record the original mouse event.
     state.mouseDown = event;
@@ -164,8 +162,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('mouseup', function (event) {
-    // Ignore untrusted events.
-    if (!event.isTrusted || state.isUnloading) { return; }
+    // Ignore untrusted events and events when Alt is pressed.
+    if (shouldIgnoreEvent(event)) { return; }
 
     // Prevent handling of mouseup events during a gesture.
     if (state.gestureState) {
@@ -183,8 +181,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('mousemove', function (event) {
-    // Ignore untrusted events.
-    if (!event.isTrusted || state.isUnloading) { return; }
+    // Ignore untrusted events and events when Alt is pressed.
+    if (shouldIgnoreEvent(event)) { return; }
 
     // Only handle mousemove events during a gesture.
     if (state.gestureState) {
@@ -199,8 +197,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('wheel', function (event) {
-    // Ignore untrusted events.
-    if (!event.isTrusted || state.isUnloading) { return; }
+    // Ignore untrusted events and events when Alt is pressed.
+    if (shouldIgnoreEvent(event)) { return; }
 
     // Only handle wheel events (if enabled) during a gesture.
     if (settings.wheelGestures && state.gestureState) {
@@ -218,8 +216,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('click', function (event) {
-    // Ignore untrusted events.
-    if (!event.isTrusted || state.isUnloading) { return; }
+    // Ignore untrusted events and events when Alt is pressed.
+    if (shouldIgnoreEvent(event)) { return; }
 
     // Prevent default actions for all clicks on any button during a gesture.
     if (state.preventClick ||
@@ -232,8 +230,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('dblclick', function (event) {
-    // Ignore untrusted events.
-    if (!event.isTrusted || state.isUnloading) { return; }
+    // Ignore untrusted events and events when Alt is pressed.
+    if (shouldIgnoreEvent(event)) { return; }
 
     // Prevent double clicks during chord gestures. These sometimes happen due to the initial mousedown "leaking"
     // since a gesture hasn't started. This is really annoying if it takes a HTML5 video to fullscreen.
@@ -278,6 +276,11 @@ window.fg.module('mouseEvents', function (exports, fg) {
   });
 
   // Functions ---------------------------------------------------------------------------------------------------------
+
+  function shouldIgnoreEvent (event) {
+    // Ignore untrusted events and events when Alt is pressed.
+    return (!event.isTrusted || (settings.disableOnAlt && event.altKey) || state.isUnloading);
+  }
 
   // Post a message to the given window with the given topic.
   // Typically used to send messages up the frame/window hierarchy.

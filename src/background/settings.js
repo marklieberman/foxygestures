@@ -28,6 +28,7 @@ modules.settings = (function () {
     trailWidth: 2,             // The width of the gesture trail.
     trailColor: 'purple',      // The color of the gesture trail.
     mouseMappings: [],         // Array of gesture mappings.
+    disableOnAlt: true,        // Disable gestures when Alt is pressed.
 
     // Wheel gestures
     wheelGestures: false,      // Enable wheel gestures?
