@@ -217,6 +217,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       state.disableGestures = false;
 
       // Handle popup items if the command is a popup type.
+      result = result || {};
       if (result.popup) {
         // TODO Not implemented yet.
       } else
@@ -265,6 +266,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       state.disableGestures = false;
 
       // Handle popup items if the command is a popup type.
+      result = result || {};
       if (result.popup) {
         // TODO Not implemented yet.
       } else
