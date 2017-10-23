@@ -59,16 +59,17 @@ app.controller('OptionsTabOtherGesturesCtrl', [
           mapping: {
             command: command.id
           }
-        })),
+        })).sort((a, b) => a.label.localeCompare(b.label)),
         // Add user scripts.
         settings.userScripts.map(userScript => ({
           id: userScript.id,
-          label: userScript.label || 'User Script',
+          label: 'User Script: ' + (userScript.label || 'Empty Name'),
           mapping: {
             command: 'userScript',
             userScript: userScript.id
           }
-        })));
+        })).sort((a, b) => a.label.localeCompare(b.label))
+      );
     }
 
     // Update the bound controls for the wheel mappings.
