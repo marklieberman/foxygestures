@@ -140,6 +140,11 @@ modules.commands = (function (settings, helpers) {
       defaultGesture: 'DRD'
     },
     {
+      id: 'pinUnpinTab',
+      handler: commandPinUnpinTab,
+      label: 'Pin/Un-pin Tab'
+    },
+    {
       id: 'previousTab',
       handler: commandPreviousTab,
       label: 'Previous Tab'
@@ -478,6 +483,11 @@ modules.commands = (function (settings, helpers) {
     if (data.element.linkHref) {
       return browser.windows.create({ url: data.element.linkHref, incognito: true });
     }
+  }
+
+  // Pin or unpin the current tab.
+  function commandPinUnpinTab (data) {
+    return getActiveTab(tab => browser.tabs.update({ pinned: !tab.pinned }));
   }
 
   // Activate the previous tab.
