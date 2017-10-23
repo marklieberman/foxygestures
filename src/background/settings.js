@@ -58,7 +58,6 @@ modules.settings = (function () {
     newWindowUrl: null,        // Default URL for windows opened with New Window.
     newPrivateWindowUrl: null, // Default URL for private windows opened with New Private Window.
     useRelPrevNext: true,      // Use <a rel="prev|next"> hint for page up and down.
-    insertTabIsActive: false,  // Immediately switch focus to new tabs.
     insertRelatedTab: true,    // New tabs are inserted adjacent to the active tab.
     zoomStep: 0.1,             // Amount to change zoom factor for zoom commands.
 
@@ -80,65 +79,6 @@ modules.settings = (function () {
       .filter(key => changes[key] !== undefined)
       .forEach(key => settings[key] = changes[key].newValue);
   });
-
-  // Perform maintenance operations when installed or updated.
-  if (browser.runtime.onInstalled) {
-    browser.runtime.onInstalled.addListener(details => {
-      // Wait for the first read to complete before trying to modify settings.
-      loadPromise.then(() => {
-        switch (details.reason) {
-          case 'install':
-            onInstalled(details);
-            break;
-          case 'update':
-            onUpdated(details);
-            break;
-        }
-      });
-    });
-  }
-
-  // -------------------------------------------------------------------------------------------------------------------
-
-  // Initialize the addon when first installed.
-  function onInstalled (details) {
-    console.log('foxy gestures installed');
-
-    // Populate the default mouse mappings.
-    if (!settings.mouseMappings.length) {
-      browser.storage.sync.set({
-        mouseMappings: modules.commands
-          // Ignore commands without a default gesture.
-          .filter(command => !!command.defaultGesture)
-          // Generate a mapping for the command.
-          .map(command => ({
-            command: command.id,
-            gesture: command.defaultGesture
-          }))
-      });
-    }
-  }
-
-  // Update the settings when the addon is updated.
-  function onUpdated (details) {
-    let version = modules.helpers.parseAddonVersion(details.previousVersion);
-    console.log('foxy gestures update from', version);
-
-    // Starting with version 1.0.8 settings are stored in storage.sync.
-    if ((version.major === 1) && (version.minor === 0) && (version.maint <= 7)) {
-      // Move settings from storage.local to storage.sync.
-      browser.storage.local.get(null).then(results => {
-        console.log('moving settings from local to sync');
-
-        Object.keys(settings)
-          .filter(key => results[key] !== undefined)
-          .forEach(key => settings[key] = results[key]);
-
-        browser.storage.sync.set(settings);
-        browser.storage.local.clear();
-      });
-    }
-  }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Callable properties will throw a DataCloneError when persisting the settings object. Therefore, methods on the

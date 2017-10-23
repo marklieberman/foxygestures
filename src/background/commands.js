@@ -111,9 +111,14 @@ modules.commands = (function (settings, helpers) {
       label: 'Open Frame in New Window'
     },
     {
-      id: 'openLinkInNewTab',
-      handler: commandOpenLinkInNewTab,
-      label: 'Open Link in New Tab'
+      id: 'openLinkInNewBackgroundTab',
+      handler: commandOpenLinkInNewBackgroundTab,
+      label: 'Open Link in New Background Tab'
+    },
+    {
+      id: 'openLinkInNewForegroundTab',
+      handler: commandOpenLinkInNewForegroundTab,
+      label: 'Open Link in New Foreground Tab'
     },
     {
       id: 'openLinkInNewWindow',
@@ -424,7 +429,7 @@ modules.commands = (function (settings, helpers) {
       return getActiveTab(tab => {
         let tabOptions = {};
         tabOptions.url = data.context.frameUrl;
-        tabOptions.active = settings.insertTabIsActive;
+        tabOptions.active = true;
         tabOptions.cookieStoreId = tab.cookieStoreId;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
@@ -449,12 +454,28 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Open a link in a new tab.
-  function commandOpenLinkInNewTab (data) {
+  function commandOpenLinkInNewBackgroundTab (data) {
     if (data.element.linkHref) {
       return getActiveTab(tab => {
         let tabOptions = {};
         tabOptions.url = data.element.linkHref;
-        tabOptions.active = settings.insertTabIsActive;
+        tabOptions.active = false;
+        tabOptions.cookieStoreId = tab.cookieStoreId;
+        if (settings.insertRelatedTab) {
+          tabOptions.index = tab.index + 1;
+        }
+        return browser.tabs.create(tabOptions);
+      });
+    }
+  }
+
+  // Open a link in a new tab.
+  function commandOpenLinkInNewForegroundTab (data) {
+    if (data.element.linkHref) {
+      return getActiveTab(tab => {
+        let tabOptions = {};
+        tabOptions.url = data.element.linkHref;
+        tabOptions.active = true;
         tabOptions.cookieStoreId = tab.cookieStoreId;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
