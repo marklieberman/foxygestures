@@ -85,6 +85,10 @@ window.fg.module('ui', function (exports, fg) {
         state.canvas.style.left = 0;
         state.canvas.style.zIndex = MAX_SAFE_Z_INDEX;
         state.canvas.style.pointerEvents = 'none';
+        state.canvas.style.backgroundColor = 'transparent';
+        state.canvas.style.margin = 0;
+        state.canvas.style.padding = 0;
+        state.canvas.style.border = 'none';
         state.body.appendChild(state.canvas);
 
         // Initialize the drawing context.
