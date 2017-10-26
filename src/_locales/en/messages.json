@@ -1,0 +1,149 @@
+{
+  "manifestDescription": {
+    "message": "Mouse gestures for Firefox",
+    "description": "The description of this addon in manifest.json"
+  },
+
+  "buttonLeft": {
+    "message": "Left",
+    "description": "Name of left mouse button"
+  },
+
+  "buttonMiddle": {
+    "message": "Middle",
+    "description": "Name of middle mouse button"
+  },
+
+  "buttonRight": {
+    "message": "Right",
+    "description": "Name of right mouse button"
+  },
+
+  "buttonOther": {
+    "message": "Button $BUTTON$",
+    "description": "Name of other mouse buttons (e.g.: Button 4)",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "4"
+      }
+    }
+  },
+
+  "userScriptNoName": {
+    "message": "User Script",
+    "description": "Label used for user scripts without a name in gesture status, etc."
+  },
+
+  "userScriptWithName": {
+    "message": "User Script: $NAME$",
+    "description": "Label used for user scripts with a name in gesture status, etc.",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Custom Script"
+      }
+    }
+  },
+
+  "statusGestureProgress": {
+    "message": "Gesture: $GESTURE$",
+    "description": "Status message during a gesture",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+
+  "statusGestureUnknown": {
+    "message": "Unknown Gesture: $GESTURE$",
+    "description": "Status message when a gesture is not mapped to a command",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+
+  "statusGestureKnown": {
+    "message": "Gesture: $GESTURE$ ($COMMAND$)",
+    "description": "Status message when a gesture is mapped to a command",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      },
+      "command": {
+        "content": "$2",
+        "example": "New Tab"
+      }
+    }
+  },
+
+  "commandCloseLeftTabs":                  { "message": "Close Tabs to the Left" },
+  "commandCloseOtherTabs":                 { "message": "Close Other Tabs" },
+  "commandCloseRightTabs":                 { "message": "Close Tabs to the Right" },
+  "commandCloseTab":                       { "message": "Close Tab" },
+  "commandDuplicateTab":                   { "message": "Duplicate Tab" },
+  "commandDuplicateTabInNewPrivateWindow": { "message": "Duplicate Tab in New Private Window" },
+  "commandHistoryBack":                    { "message": "History Back" },
+  "commandHistoryForward":                 { "message": "History Forward" },
+  "commandMinimize":                       { "message": "Minimize Window" },
+  "commandMoveTabToNewWindow":             { "message": "Move Tab to New Window" },
+  "commandNextTab":                        { "message": "Next Tab" },
+  "commandNewTab":                         { "message": "New Tab" },
+  "commandNewWindow":                      { "message": "New Window" },
+  "commandNewPrivateWindow":               { "message": "New Private Window" },
+  "commandOpenFrameInNewTab":              { "message": "Open Frame in New Tab" },
+  "commandOpenFrameInNewWindow":           { "message": "Open Frame in New Window" },
+  "commandOpenLinkInNewBackgroundTab":     { "message": "Open Link in New Background Tab" },
+  "commandOpenLinkInNewForegroundTab":     { "message": "Open Link in New Foreground Tab" },
+  "commandOpenLinkInNewWindow":            { "message": "Open Link in New Window" },
+  "commandOpenLinkInNewPrivateWindow":     { "message": "Open Link in New Private Window" },
+  "commandPageUp":                         { "message": "Page Up" },
+  "commandPageDown":                       { "message": "Page Down" },
+  "commandPinUnpinTab":                    { "message": "Pin/Un-pin Tab" },
+  "commandPreviousTab":                    { "message": "Previous Tab" },
+  "commandReload":                         { "message": "Reload" },
+  "commandReloadBypassCache":              { "message": "Reload (Bypass Cache)" },
+  "commandReloadFrame":                    { "message": "Reload Frame" },
+  "commandSaveMediaNow":                   { "message": "Save Media Now" },
+  "commandSaveMediaAs":                    { "message": "Save Media As" },
+  "commandScrollBottom":                   { "message": "Scroll to Bottom" },
+  "commandScrollDown":                     { "message": "Scroll Down" },
+  "commandScrollTop":                      { "message": "Scroll to Top" },
+  "commandScrollUp":                       { "message": "Scroll Up" },
+  "commandShowOnlyThisFrame":              { "message": "Show Only This Frame" },
+  "commandUndoClose":                      { "message": "Undo Close" },
+  "commandZoomIn":                         { "message": "Zoom In" },
+  "commandZoomOut":                        { "message": "Zoom Out" },
+  "commandZoomReset":                      { "message": "Reset Zoom" },
+
+  "tooltipDuplicateTabInNewPrivateWindow": {
+    "message": "The duplicated tab's history is not preserved in the private window"
+  },
+
+  "tooltipPageDown": {
+    "message": "Decrement the page number in the URL using matching heuristics"
+  },
+
+  "tooltipPageUp": {
+    "message": "Increment the page number in the URL using matching heuristics"
+  },
+
+  "tooltipSaveMediaNow": {
+    "message": "Save an image or HTML5 audio/video to the downloads folder"
+  },
+
+  "tooltipSaveMediaAs": {
+    "message": "Save an image or HTML5 audio/video"
+  },
+
+  "tooltipZoomReset": {
+    "message": "Reset tab zoom factor to default"
+  }
+
+}

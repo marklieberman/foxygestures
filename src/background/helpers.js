@@ -7,6 +7,17 @@
 var modules = modules || {};
 modules.helpers = (function (module) {
 
+  // Internationalization constants and formatter strings.
+  const i18n = {
+    // No Placeholders
+    buttonLeft: browser.i18n.getMessage('buttonLeft'),
+    buttonMiddle: browser.i18n.getMessage('buttonMiddle'),
+    buttonRight: browser.i18n.getMessage('buttonRight'),
+    // Placeholders
+    buttonOther: (button) =>
+      browser.i18n.getMessage('buttonOther', [ button ])
+  };
+
   // MIME type to extension map.
   // Not an exhaustive list but contains most common mime types.
   // See: https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats
@@ -85,11 +96,11 @@ modules.helpers = (function (module) {
     return (chord || [])
       .map(button => {
         switch (button) {
-          case 0: return 'Left';
-          case 1: return 'Middle';
-          case 2: return 'Right';
+          case 0: return i18n.buttonLeft;
+          case 1: return i18n.buttonMiddle;
+          case 2: return i18n.buttonRight;
           default:
-            return 'Button' + button;
+            return i18n.buttonOther(button);
         }
       })
       .join(' + ');

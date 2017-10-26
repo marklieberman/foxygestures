@@ -19,35 +19,35 @@ modules.commands = (function (settings, helpers) {
     {
       id: 'closeLeftTabs',
       handler: commandCloseLeftTabs,
-      label: 'Close Tabs to the Left'
+      label: browser.i18n.getMessage('commandCloseLeftTabs')
     },
     {
       id: 'closeOtherTabs',
       handler: commandCloseOtherTabs,
-      label: 'Close Other Tabs'
+      label: browser.i18n.getMessage('commandCloseOtherTabs')
     },
     {
       id: 'closeRightTabs',
       handler: commandCloseRightTabs,
-      label: 'Close Tabs to the Right'
+      label: browser.i18n.getMessage('commandCloseRightTabs')
     },
     {
       id: 'closeTab',
       handler: commandCloseTab,
-      label: 'Close Tab',
+      label: browser.i18n.getMessage('commandCloseTab'),
       defaultGesture: 'DR'
     },
     {
       id: 'duplicateTab',
       handler: commandDuplicateTab,
-      label: 'Duplicate Tab',
+      label: browser.i18n.getMessage('commandDuplicateTab'),
       defaultGesture: 'UR'
     },
     {
       id: 'duplicateTabInNewPrivateWindow',
       handler: commandDuplicateTabInNewPrivateWindow,
-      label: 'Duplicate Tab in New Private Window',
-      tooltip: 'The duplicated tab\'s history is not preserved in the private window'
+      label: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindow'),
+      tooltip: browser.i18n.getMessage('tooltipDuplicateTabInNewPrivateWindow')
     },
     {
       id: 'historyBack',
@@ -56,7 +56,7 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       },
-      label: 'History Back',
+      label: browser.i18n.getMessage('commandHistoryBack'),
       defaultGesture: 'L'
     },
     {
@@ -66,121 +66,121 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       },
-      label: 'History Forward',
+      label: browser.i18n.getMessage('commandHistoryForward'),
       defaultGesture: 'R'
     },
     {
       id: 'minimize',
       handler: commandMinimize,
-      label: 'Minimize Window',
+      label: browser.i18n.getMessage('commandMinimize'),
       defaultGesture: 'DL'
     },
     {
       id: 'moveTabToNewWindow',
       handler: commandMoveTabToNewWindow,
-      label: 'Move Tab to New Window'
+      label: browser.i18n.getMessage('commandMoveTabToNewWindow')
     },
     {
       id: 'nextTab',
       handler: commandNextTab,
-      label: 'Next Tab'
+      label: browser.i18n.getMessage('commandNextTab')
     },
     {
       id: 'newTab',
       handler: commandNewTab,
-      label: 'New Tab'
+      label: browser.i18n.getMessage('commandNewTab')
     },
     {
       id: 'newWindow',
       handler: commandNewWindow,
-      label: 'New Window'
+      label: browser.i18n.getMessage('commandNewWindow')
     },
     {
       id: 'newPrivateWindow',
       handler: commandNewPrivateWindow,
-      label: 'New Private Window'
+      label: browser.i18n.getMessage('commandNewPrivateWindow')
     },
     {
       id: 'openFrameInNewTab',
       handler: commandOpenFrameInNewTab,
-      label: 'Open Frame in New Tab'
+      label: browser.i18n.getMessage('commandOpenFrameInNewTab')
     },
     {
       id: 'openFrameInNewWindow',
       handler: commandOpenFrameInNewWindow,
-      label: 'Open Frame in New Window'
+      label: browser.i18n.getMessage('commandOpenFrameInNewWindow')
     },
     {
       id: 'openLinkInNewBackgroundTab',
       handler: commandOpenLinkInNewBackgroundTab,
-      label: 'Open Link in New Background Tab'
+      label: browser.i18n.getMessage('commandOpenLinkInNewBackgroundTab')
     },
     {
       id: 'openLinkInNewForegroundTab',
       handler: commandOpenLinkInNewForegroundTab,
-      label: 'Open Link in New Foreground Tab'
+      label: browser.i18n.getMessage('commandOpenLinkInNewForegroundTab')
     },
     {
       id: 'openLinkInNewWindow',
       handler: commandOpenLinkInNewWindow,
-      label: 'Open Link in New Window'
+      label: browser.i18n.getMessage('commandOpenLinkInNewWindow')
     },
     {
       id: 'openLinkInPrivateWindow',
       handler: commandOpenLinkInNewPrivateWindow,
-      label: 'Open Link in New Private Window'
-    },
-    {
-      id: 'pageUp',
-      handler: data => commands.executeInContent('pageUp', data),
-      label: 'Page Up',
-      tooltip: 'Increment the page number in the URL using matching heuristics',
-      defaultGesture: 'URU'
+      label: browser.i18n.getMessage('commandOpenLinkInNewPrivateWindow')
     },
     {
       id: 'pageDown',
       handler: data => commands.executeInContent('pageDown', data),
-      label: 'Page Down',
-      tooltip: 'Decrement the page number in the URL using matching heuristics',
+      label: browser.i18n.getMessage('commandPageDown'),
+      tooltip: browser.i18n.getMessage('tooltipPageDown'),
       defaultGesture: 'DRD'
     },
     {
-      id: 'pinUnpinTab',
-      handler: commandPinUnpinTab,
-      label: 'Pin/Un-pin Tab'
+      id: 'pageUp',
+      handler: data => commands.executeInContent('pageUp', data),
+      label: browser.i18n.getMessage('commandPageUp'),
+      tooltip: browser.i18n.getMessage('tooltipPageUp'),
+      defaultGesture: 'URU'
     },
     {
       id: 'previousTab',
       handler: commandPreviousTab,
-      label: 'Previous Tab'
+      label: browser.i18n.getMessage('commandPreviousTab')
+    },
+    {
+      id: 'pinUnpinTab',
+      handler: commandPinUnpinTab,
+      label: browser.i18n.getMessage('commandPinUnpinTab')
     },
     {
       id: 'reload',
       handler: commandReload,
-      label: 'Reload',
+      label: browser.i18n.getMessage('commandReload'),
       defaultGesture: 'RDLU'
     },
     {
       id: 'reloadBypassCache',
       handler: commandReloadBypassCache,
-      label: 'Reload (Bypass Cache)'
+      label: browser.i18n.getMessage('commandReloadBypassCache')
     },
     {
       id: 'reloadFrame',
       handler: data => commands.executeInContent('reloadFrame', data),
-      label: 'Reload Frame'
+      label: browser.i18n.getMessage('commandReloadFrame')
     },
     {
       id: 'saveMediaNow',
       handler: commandSaveMediaNow,
-      label: 'Save Media Now',
-      tooltip: 'Save an image or HTML5 audio/video to the downloads folder'
+      label: browser.i18n.getMessage('commandSaveMediaNow'),
+      tooltip: browser.i18n.getMessage('tooltipSaveMediaNow')
     },
     {
       id: 'saveMediaAs',
       handler: commandSaveMediaAs,
-      label: 'Save Media As',
-      tooltip: 'Save an image or HTML5 audio/video'
+      label: browser.i18n.getMessage('commandSaveMediaAs'),
+      tooltip: browser.i18n.getMessage('tooltipSaveMediaAs')
     },
     {
       id: 'scrollBottom',
@@ -189,7 +189,7 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       },
-      label: 'Scroll to Bottom',
+      label: browser.i18n.getMessage('commandScrollBottom'),
       defaultGesture: 'DLR'
     },
     {
@@ -199,7 +199,7 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       },
-      label: 'Scroll Down'
+      label: browser.i18n.getMessage('commandScrollDown')
     },
     {
       id: 'scrollTop',
@@ -208,7 +208,7 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       },
-      label: 'Scroll to Top',
+      label: browser.i18n.getMessage('commandScrollTop'),
       defaultGesture: 'ULR'
     },
     {
@@ -218,34 +218,34 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       },
-      label: 'Scroll Up'
+      label: browser.i18n.getMessage('commandScrollUp'),
     },
     {
       id: 'showOnlyThisFrame',
       handler: commandShowOnlyThisFrame,
-      label: 'Show Only This Frame'
+      label: browser.i18n.getMessage('commandShowOnlyThisFrame')
     },
     {
       id: 'undoClose',
       handler: commandUndoClose,
-      label: 'Undo Close',
+      label: browser.i18n.getMessage('commandUndoClose'),
       defaultGesture: 'RLR'
     },
     {
       id: 'zoomIn',
       handler: commandZoomIn,
-      label: 'Zoom In'
+      label: browser.i18n.getMessage('commandZoomIn')
     },
     {
       id: 'zoomOut',
       handler: commandZoomOut,
-      label: 'Zoom Out'
+      label: browser.i18n.getMessage('commandZoomOut')
     },
     {
       id: 'zoomReset',
       handler: commandZoomReset,
-      label: 'Reset Zoom',
-      tooltip: 'Reset tab zoom factor to default'
+      label: browser.i18n.getMessage('commandZoomReset'),
+      tooltip: browser.i18n.getMessage('tooltipZoomReset')
     }
   ];
 

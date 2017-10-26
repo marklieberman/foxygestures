@@ -6,6 +6,19 @@
  */
 (function (settings, helpers, commands) {
 
+  // Internationalization constants and formatter strings.
+  const i18n = {
+    // No Placeholders
+    userScriptNoName: browser.i18n.getMessage('userScriptNoName'),
+    // Placeholders
+    statusGestureProgress: (gesture) =>
+      browser.i18n.getMessage('statusGestureProgress', [ gesture ]),
+    statusGestureUnknown: (gesture) =>
+      browser.i18n.getMessage('statusGestureUnknown', [ gesture ]),
+    statusGestureKnown: (gesture, label) =>
+      browser.i18n.getMessage('statusGestureKnown', [ gesture, label ])
+  };
+
   // Reply to a sender with a topic message.
   function replyTo (sender, topic, data) {
     return browser.tabs.sendMessage(sender.tab.id, {
@@ -50,20 +63,14 @@
   function updateStatusForGesture (sender, gesture, label) {
     if (settings.showStatusText) {
       if (label === false) {
-        return replyTo(sender, 'mg-status', helpers.format(
-          'Unknown Gesture: {}', gesture
-        ));
+        return replyTo(sender, 'mg-status', i18n.statusGestureUnknown(gesture));
       }
 
       if (label === null) {
-        return replyTo(sender, 'mg-status', helpers.format(
-          'Gesture: {}', gesture, label
-        ));
+        return replyTo(sender, 'mg-status', i18n.statusGestureProgress(gesture));
       }
 
-      return replyTo(sender, 'mg-status', helpers.format(
-        'Gesture: {} ({})', gesture, label
-      ));
+      return replyTo(sender, 'mg-status', i18n.statusGestureKnown(gesture, label));
     } else {
       return Promise.resolve();
     }
@@ -108,7 +115,7 @@
         }
 
         updateStatusForGesture(data.sender, data.gesture, assigned
-          .map(value => value.label || 'User Script')
+          .map(value => value.label || i18n.userScript)
           .orElse(null));
       });
     }
@@ -121,7 +128,7 @@
       if (mapping.isPresent()) {
         // Check user scripts for a matching user script ID.
         if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
-          let label = assigned.get().label || 'User Script';
+          let label = assigned.get().label || i18n.userScriptNoName;
           return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
             data.userScript = assigned.get();
             commands.executeInContent('userScript', data, true);
@@ -150,7 +157,7 @@
       if (mapping.isPresent()) {
         // Check user scripts for a matching user script ID.
         if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
-          let label = assigned.get().label || 'User Script';
+          let label = assigned.get().label || i18n.userScriptNoName;
           return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
             data.userScript = assigned.get();
             return commands.executeInContent('userScript', data, true);
@@ -182,7 +189,7 @@
 
         // Check user scripts for a matching user script ID.
         if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
-          let label = assigned.get().label || 'User Script';
+          let label = assigned.get().label || i18n.userScriptNoName;
           return updateStatusForGesture(data.sender, gesture, label).then(() => {
             data.userScript = assigned.get();
             return commands.executeInContent('userScript', data, true);

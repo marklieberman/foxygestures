@@ -10,7 +10,9 @@
     }
   },
 
-  "description": "Mouse gestures for Firefox",
+  "default_locale": "en",
+
+  "description": "__MSG_manifestDescription__",
 
   "icons": {
     "48": "icons/icon-48.png",
