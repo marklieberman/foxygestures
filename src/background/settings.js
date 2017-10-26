@@ -9,8 +9,8 @@ modules.settings = (function () {
 
   // Default status template snippet.
   var STATUS_TEMPLATE =
-    '<div style="display: block; position: fixed; bottom: 0; right: 0; z-index: 2147483647">\r\n' +
-    '  <div style="background: #fff; border: 1px solid #ccc; color: #333; font-family: sans-serif; font-size: 12px; padding: 2px" data-mg-status></div>\r\n' +
+    '<div style="all: initial; display: block; position: fixed; bottom: 0; right: 0; z-index: 2147483647">\r\n' +
+    '  <div style="all: initial; background: #fff; border: 1px solid #ccc; color: #333; font-family: sans-serif; font-size: 12px; padding: 2px" data-mg-status></div>\r\n' +
     '</div>';
 
   // Settings for the extension.
