@@ -67,7 +67,7 @@ window.fg.module('helpers', function (exports) {
 
   // Examine each node walking up the DOM until an enclosing link is found.
   // Search up to 40 nodes before giving up.
-  exports.findLinkHref = (element) => {
+  exports.findLinkElement = (element) => {
     for (let i = 0; !!element && (i < 40); i++) {
       if ((element.tagName === 'A') && element.href) {
         // Ignore inline javascript links.
@@ -77,7 +77,7 @@ window.fg.module('helpers', function (exports) {
         }
 
         // Found an acceptable link href.
-        return element.href;
+        return element;
       } else {
         // No link; look to the parent node.
         element = element.parentNode;
@@ -86,9 +86,56 @@ window.fg.module('helpers', function (exports) {
     return null;
   };
 
-  // Find a URL for the image, video, or audio of a DOM element. The function
-  // currently looks for image source, HTML5 video or audio sources, and CSS
-  // nearby background images.
+  // Gather the text under or around an element - typically a link.
+  exports.gatherTextUnder = (element) => {
+		let text = '', node = element.firstChild, depth = 1;
+		while (node && depth > 0) {
+      // Append text nodes and alt text.
+			if (node.nodeType == window.Node.TEXT_NODE) {
+				text += ' ' + node.data;
+			} else
+      if (node instanceof window.HTMLImageElement) {
+				let altText = node.getAttribute('alt');
+				if (altText && altText != '') {
+					text += ' ' + altText;
+        }
+			}
+
+      // Search child nodes, siblings, children of siblings, etc.
+      // Depth starts at 1 so parent nodes get processed too.
+			if (node.hasChildNodes()) {
+				node = node.firstChild;
+				depth++;
+			} else {
+				while (depth > 0 && !node.nextSibling) {
+					node = node.parentNode;
+					depth--;
+				}
+				if (node.nextSibling) {
+					node = node.nextSibling;
+        }
+			}
+		}
+
+    // Try some alternative text sources if the text is empty.
+		text = text.trim().replace(/\s+/g, ' ');
+		if (!text || !text.match(/\S/)) {
+			text = element.getAttribute('title');
+			if (!text || !text.match(/\S/)) {
+				text = element.getAttribute('alt');
+				if (!text || !text.match(/\S/)) {
+          let linkElement = exports.findLinkElement(element);
+          if (linkElement) {
+            return linkElement.href;
+          }
+				}
+			}
+		}
+    return text;
+  };
+
+  // Find a URL for the image, video, or audio of a DOM element. The function currently looks for image source, HTML5
+  // video or audio sources, and CSS nearby background images.
   exports.getMediaInfo = (element) => {
     if (element instanceof window.HTMLImageElement) {
       return {
@@ -106,7 +153,7 @@ window.fg.module('helpers', function (exports) {
         };
       } else {
         // Look for embedded <source> tags.
-        var sources = Array.prototype.slice.call(element.children)
+        let sources = Array.prototype.slice.call(element.children)
           .filter(function (child) {
             return child.tagName === 'SOURCE';
           });

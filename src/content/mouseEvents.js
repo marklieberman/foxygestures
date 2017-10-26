@@ -429,14 +429,25 @@ window.fg.module('mouseEvents', function (exports, fg) {
       // Note: not necessarily properties of the element itself.
       // These can be properties of enclosing elements.
       data.element = {
-        tag: event.target.tagName,
-
-        // Search for a link href on or around the element.
-        linkHref: fg.helpers.findLinkHref(event.target),
-
-        // Search for a media URL related to the element.
-        mediaInfo: fg.helpers.getMediaInfo(event.target)
+        tag: event.target.tagName
       };
+
+      // Search for a media URL related to the element.
+      let mediaInfo = fg.helpers.getMediaInfo(event.target);
+      if (mediaInfo) {
+        data.element.mediaSource = mediaInfo.source;
+        data.element.mediaType = mediaInfo.type;
+
+        // TODO Deprecated; remove this in 1.1.x.
+        data.element.mediaInfo = mediaInfo;
+      }
+
+      // Collect information about the enclosing link if present.
+      let linkElement = fg.helpers.findLinkElement(event.target);
+      if (linkElement) {
+        data.element.linkHref = linkElement.href;
+        data.element.linkText = fg.helpers.gatherTextUnder(linkElement);
+      }
     }
 
     return data;
