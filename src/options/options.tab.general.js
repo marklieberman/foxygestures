@@ -10,6 +10,7 @@ app.controller('OptionsTabGeneralCtrl', [
     angular.extend($scope.controls, {
       fewerTrailOptions: true,
       fewerStatusOptions: true,
+      fewerGestureOptions: true,
       gestureTimeout: 0.4,
       statusTimeout: 2.0
     });

@@ -47,7 +47,7 @@ modules.commands = (function (settings, helpers) {
       id: 'duplicateTabInNewPrivateWindow',
       handler: commandDuplicateTabInNewPrivateWindow,
       label: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindow'),
-      tooltip: browser.i18n.getMessage('tooltipDuplicateTabInNewPrivateWindow')
+      tooltip: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindowTooltip')
     },
     {
       id: 'historyBack',
@@ -134,14 +134,14 @@ modules.commands = (function (settings, helpers) {
       id: 'pageDown',
       handler: data => commands.executeInContent('pageDown', data),
       label: browser.i18n.getMessage('commandPageDown'),
-      tooltip: browser.i18n.getMessage('tooltipPageDown'),
+      tooltip: browser.i18n.getMessage('commandPageDownTooltip'),
       defaultGesture: 'DRD'
     },
     {
       id: 'pageUp',
       handler: data => commands.executeInContent('pageUp', data),
       label: browser.i18n.getMessage('commandPageUp'),
-      tooltip: browser.i18n.getMessage('tooltipPageUp'),
+      tooltip: browser.i18n.getMessage('commandPageUpTooltip'),
       defaultGesture: 'URU'
     },
     {
@@ -174,13 +174,13 @@ modules.commands = (function (settings, helpers) {
       id: 'saveMediaNow',
       handler: commandSaveMediaNow,
       label: browser.i18n.getMessage('commandSaveMediaNow'),
-      tooltip: browser.i18n.getMessage('tooltipSaveMediaNow')
+      tooltip: browser.i18n.getMessage('commandSaveMediaNowTooltip')
     },
     {
       id: 'saveMediaAs',
       handler: commandSaveMediaAs,
       label: browser.i18n.getMessage('commandSaveMediaAs'),
-      tooltip: browser.i18n.getMessage('tooltipSaveMediaAs')
+      tooltip: browser.i18n.getMessage('commandSaveMediaAsTooltip')
     },
     {
       id: 'scrollBottom',
@@ -245,7 +245,7 @@ modules.commands = (function (settings, helpers) {
       id: 'zoomReset',
       handler: commandZoomReset,
       label: browser.i18n.getMessage('commandZoomReset'),
-      tooltip: browser.i18n.getMessage('tooltipZoomReset')
+      tooltip: browser.i18n.getMessage('commandZoomResetTooltip')
     }
   ];
 

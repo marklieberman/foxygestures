@@ -3,16 +3,19 @@
 
     <!-- Gesture button -->
     <div class="form-group">
-      <label class="control-label">Gesture Button</label>
+      <label class="control-label" i18n="'optionsGestureButton'"></label>
       <select class="form-control"
               ng-model="settings.gestureButton">
-        <option ng-value="0">Left</option>
-        <option ng-value="1">Middle</option>
-        <option ng-value="2">Right</option>
+        <option ng-value="0" i18n="'mouseButtonLeft'"></option>
+        <option ng-value="1" i18n="'mouseButtonMiddle'"></option>
+        <option ng-value="2" i18n="'mouseButtonRight'"></option>
+        <!--
+        Button 4 and 5 are not working in any tested browser/OS combination.
+        <option ng-value="3" i18n="[ 'mouseButtonOther', '4' ]"></option>
+        <option ng-value="4" i18n="[ 'mouseButtonOther', '5' ]"></option>
+        -->
       </select>
-      <p class="help-block">
-        The mouse button used to start a gesture.
-      </p>
+      <p class="help-block" i18n="'optionsGestureButtonHelp'"></p>
     </div>
 
     <!-- Gesture disable button -->
@@ -21,7 +24,7 @@
         <label>
           <input class="control-label" type="checkbox"
                  ng-model="settings.disableOnAlt"></input>
-          Do not start a gesture while holding the Alt key.
+          <span i18n="'optionsDisableOnAlt'"></span>
         </label>
       </div>
     </div>
@@ -30,23 +33,33 @@
         <label>
           <input class="control-label" type="checkbox"
                  ng-model="settings.disableOnShift"></input>
-          Do not start a gesture while holding the Shift key.
+          <span i18n="'optionsDisableOnShift'"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Can select start -->
+    <div class="form-group"
+         ng-show="settings.gestureButton === 0">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"
+                 ng-model="settings.canSelectStart"></input>
+          <span i18n="'optionsCanSelectStart'"></span>
         </label>
       </div>
     </div>
 
     <!-- Gesture timeout -->
     <div class="form-group" ng-class="{'has-error':controls.optionsForm.gestureTimeout.$invalid}">
-      <label class="control-label">Gesture Timeout</label>
+      <label class="control-label" i18n="'optionsGestureTimeout'"></label>
       <div class="input-group">
         <input class="form-control" type="number" name="gestureTimeout"
                step="0.1" min="0" max="30"
                ng-model="controls.gestureTimeout"></input>
-        <span class="input-group-addon">seconds</span>
+        <span class="input-group-addon" i18n="'secondsAddon'"></span>
       </div>
-      <p class="help-block">
-        Cancel a gesture if there is no movement for this many seconds. Use zero to disable.
-      </p>
+      <p class="help-block" i18n="'optionsGestureTimeoutHelp'"></p>
     </div>
 
     <!-- Draw trails -->
@@ -56,15 +69,17 @@
           <label>
             <input type="checkbox"
                    ng-model="settings.drawTrails"></input>
-            Draw gesture trails
+            <span i18n="'optionsDrawTrails'"></span>
           </label>
-          <a class="pull-right"
+          <a class="pull-right more-or-fewer"
              ng-click="controls.fewerTrailOptions = !controls.fewerTrailOptions">
             <span ng-show="controls.fewerTrailOptions">
-              More options <i class="fa fa-caret-down"></i>
+              <span i18n="'buttonMoreOptions'"></span>
+              <i class="fa fa-caret-down"></i>
             </span>
             <span ng-hide="controls.fewerTrailOptions">
-              Fewer options <i class="fa fa-caret-up"></i>
+              <span i18n="'buttonFewerOptions'"></span>
+              <i class="fa fa-caret-up"></i>
             </span>
           </a>
         </div>
@@ -74,7 +89,7 @@
                 ng-disabled="!settings.drawTrails">
         <!-- Trail width -->
         <div class="form-group" ng-class="{'has-error':controls.optionsForm.trailWidth.$invalid}">
-          <label class="control-label">Trail Width</label>
+          <label class="control-label" i18n="'optionsTrailWidth'"></label>
           <div class="input-group">
             <input class="form-control" type="number" name="trailWidth"
                    step="0.5" min="0.5" max="40"
@@ -87,12 +102,10 @@
 
         <!-- Trail color -->
         <div class="form-group" ng-class="{'has-error':controls.optionsForm.trailColor.$invalid}">
-          <label class="control-label">Trail Color</label>
+          <label class="control-label" i18n="'optionsTrailColor'"></label>
           <input class="form-control" type="text" name="trailColor"
                  ng-model="settings.trailColor" fg-css-color=""></input>
-          <p class="help-block">
-            Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)
-          </p>
+          <p class="help-block" i18n="'optionsTrailColorHelp'"></p>
         </div>
       </fieldset>
     </div>
@@ -104,15 +117,17 @@
           <label>
             <input type="checkbox"
                    ng-model="settings.showStatusText"></input>
-            Show status text
+            <span i18n="'optionsShowStatusText'"></span>
           </label>
-          <a class="pull-right"
+          <a class="pull-right more-or-fewer"
              ng-click="controls.fewerStatusOptions = !controls.fewerStatusOptions">
             <span ng-show="controls.fewerStatusOptions">
-              More options <i class="fa fa-caret-down"></i>
+              <span i18n="'buttonMoreOptions'"></span>
+              <i class="fa fa-caret-down"></i>
             </span>
             <span ng-hide="controls.fewerStatusOptions">
-              Fewer options <i class="fa fa-caret-up"></i>
+              <span i18n="'buttonFewerOptions'"></span>
+              <i class="fa fa-caret-up"></i>
             </span>
           </a>
         </div>
@@ -123,48 +138,42 @@
 
         <!-- Status timeout -->
         <div class="form-group" ng-class="{'has-error':controls.optionsForm.statusTimeout.$invalid}">
-          <label class="control-label">Status Timeout</label>
+          <label class="control-label" i18n="'optionsStatusTimeout'"></label>
           <div class="input-group">
             <input class="form-control" type="number" name="statusTimeout"
                    step="0.1" min="0.1" max="30"
                    ng-model="controls.statusTimeout"></input>
-            <span class="input-group-addon">seconds</span>
+            <span class="input-group-addon" i18n="'secondsAddon'"></span>
           </div>
-          <p class="help-block">
-            Amount of time to display the status text after a gesture.
-          </p>
+          <p class="help-block" i18n="'optionsStatusTimeoutHelp'"></p>
         </div>
 
         <!-- Status template -->
         <div class="form-group">
-          <label class="control-label">Status Template</label>
-          <a class="pull-right" ng-click="settings.statusTemplate = settings.templates.statusTemplate">Reset</a>
+          <label class="control-label" i18n="'optionsStatusTemplate'"></label>
+          <a class="pull-right"
+             ng-click="settings.statusTemplate = settings.templates.statusTemplate"
+             i18n="'buttonReset'"></a>
           <textarea class="form-control"
                     ng-model="settings.statusTemplate"></textarea>
-          <p class="help-block">
-            Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text.
-          </p>
+          <p class="help-block" i18n="'optionsStatusTemplateHelp'"></p>
         </div>
 
       </fieldset>
     </div>
 
     <div ng-show="showDoubleRightClick()">
-      <h4>OSX and Linux Only</h4>
+      <h4 i18n="'optionsHeadingOSXLinuxOnly'"></h4>
+
       <!-- Double Click to Show Context menu on Mac / Linux -->
       <div class="form-group">
         <div class="checkbox">
           <label>
             <input type="checkbox"
                    ng-model="settings.doubleRightClick"></input>
-            Double right-click to open context menu
+            <span i18n="'optionsDoubleRightClick'"></span>
           </label>
-          <p class="help-block">
-            OSX and Linux display the context menu as soon as the right button is pressed. (As opposed to Windows which
-            displays the context menu when the right button is released.) This causes a problem because the context menu
-            is displayed before the addon can determine if a gesture has occurred. Enabling this setting will prevent
-            the context menu from being displayed unless you perform a double right-click.
-          </p>
+          <p class="help-block" i18n="'optionsDoubleRightClickHelp'"></p>
         </div>
       </div>
     </div>

@@ -123,6 +123,32 @@ app.factory('settings', [
   }]);
 
 // ---------------------------------------------------------------------------------------------------------------------
+// A wrapper around the commands module that presents itself as an array of commands similar to the underlying module.
+app.directive('i18n', [
+  function () {
+    return {
+      restrict: 'EA',
+      scope: {
+        i18n: '='
+      },
+      link: (scope, element, attrs) => {
+        // Only treat the string as HTML if enabled by attribute.
+        let setter = angular.isDefined(attrs.i18nHtml) ? 'innerHTML' : 'innerText';
+
+        scope.$watch('i18n', args => {
+          if (angular.isString(args)) {
+            element[0][setter] = browser.i18n.getMessage(args);
+          } else
+          if (angular.isArray(args)) {
+            let message = args.unshift();
+            element[0][setter] = browser.i18n.getMessage(message, args);
+          }
+        });
+      }
+    };
+  }]);
+
+// ---------------------------------------------------------------------------------------------------------------------
 app.controller('OptionsCtrl', [
   '$scope',
   '$controller',
@@ -175,6 +201,9 @@ app.controller('OptionsCtrl', [
     });
 
     // Functions -------------------------------------------------------------------------------------------------------
+
+    // Expose a function to get lcoalized strings.
+    $scope.i18n = (message, args) => browser.i18n.getMessage(message, args);
 
     // Start monitoring the settings for changes.
     $scope.startWatchingSettings = () => {

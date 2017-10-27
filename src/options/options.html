@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 
-    <title>Foxy Gestures Options</title>
+    <title i18n="'optionsTitle'"></title>
 
     <link rel="stylesheet" href="lib/ui-bootstrap-custom-2.5.0-csp.css">
     <link rel="stylesheet" href="lib/font-awesome.min.css">
@@ -19,34 +19,40 @@
   </head>
 
   <body ng-controller="OptionsCtrl">
-    <h1>Foxy Gestures Options</h1>
+    <h1 i18n="'optionsTitle'"></h1>
 
     <!-- Do not show until settings are loaded -->
     <form class="form" name="controls.optionsForm" ng-if="commands.loaded && settings.loaded">
 
       <uib-tabset active="0">
 
-        <uib-tab index="0" heading="General Settings">
+        <uib-tab index="0">
+          <uib-tab-heading i18n="'tabGeneral'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.general.html'"></div>
         </uib-tab>
 
-        <uib-tab index="1" heading="Built-in Commands">
+        <uib-tab index="1">
+          <uib-tab-heading i18n="'tabCommands'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.commands.html'"></div>
         </uib-tab>
 
-        <uib-tab index="2" heading="User Scripts">
-          <div ng-include="'/options/options.tab.userscripts.html'"></div>
-        </uib-tab>
-
-        <uib-tab index="3" heading="Other Gestures">
+        <uib-tab index="2">
+          <uib-tab-heading i18n="'tabOtherGestures'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.othergestures.html'"></div>
         </uib-tab>
 
-        <uib-tab index="4" heading="More Preferences">
+        <uib-tab index="3">
+          <uib-tab-heading i18n="'tabUserScripts'"></uib-tab-heading>
+          <div ng-include="'/options/options.tab.userscripts.html'"></div>
+        </uib-tab>
+
+        <uib-tab index="4">
+          <uib-tab-heading i18n="'tabMorePrefs'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.moreprefs.html'"></div>
         </uib-tab>
 
-        <uib-tab index="5" heading="Backup &amp; Restore">
+        <uib-tab index="5">
+          <uib-tab-heading i18n="'tabBackupRestore'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.backup.html'"></div>
         </uib-tab>
 

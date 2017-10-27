@@ -20,6 +20,11 @@ body {
   border-bottom-right-radius: $border-radius-base;
 }
 
+.panel-heading > div:not(.checkbox) {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .panel:last-child {
   margin-bottom: 0px;
 }
@@ -32,6 +37,10 @@ body {
   i {
     margin-right: 10px;
   }
+}
+
+.more-or-fewer {
+  cursor: pointer;
 }
 
 .self-xss-warning {

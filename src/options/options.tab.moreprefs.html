@@ -3,15 +3,13 @@
 
     <div class="well">
       <i class="fa fa-2x fa-info-circle"></i>
-      <span>
-        Preferences to modify the behaviour of built-in commands and other tweaks.
-      </span>
+      <span i18n="'optionsMorePrefsWellHelp'"></span>
     </div>
 
     <div class="row">
       <div class="col-md-6">
 
-        <h4>Tab and Window Commands</h4>
+        <h4 i18n="'optionsHeadingTabAndWindow'"></h4>
 
         <!-- Insert related tab -->
         <div class="form-group">
@@ -19,8 +17,7 @@
             <label>
               <input type="checkbox"
                      ng-model="settings.insertRelatedTab"></input>
-              Open in New Tab family of commands insert the tab after the current tab.
-              This setting is similar browser.tabs.insertRelatedAfterCurrent.
+              <span i18n="'optionsMorePrefsInsertRelatedTab'"></span>
             </label>
           </div>
         </div>
@@ -31,48 +28,39 @@
             <label>
               <input type="checkbox"
                      ng-model="settings.nextTabWrap"></input>
-              Next Tab and Previous Tab commands wrap from last tab to first tab.
+              <span i18n="'optionsMorePrefsNextTabWrap'"></span>
             </label>
           </div>
         </div>
 
         <!-- New tab default URL -->
         <div class="form-group">
-          <label class="control-label">Default URL for tabs opened with New Tab command</label>
+          <label class="control-label" i18n="'optionsMorePrefsNewTabUrl'"></label>
           <input class="form-control" type="text"
                  ng-model="settings.newTabUrl"></input>
-          <p class="help-block">
-            Leave this field empty to use the default URL about:newtab.
-            Unplivileged about: pages like about:blank and about:home are also acceptable.
-          </p>
+          <p class="help-block" i18n="'optionsMorePrefsNewTabOrWindowHelp'"></p>
         </div>
 
         <!-- New window default URL -->
         <div class="form-group">
-          <label class="control-label">Default URL for windows opened with New Window command</label>
+          <label class="control-label" i18n="'optionsMorePrefsNewWindowUrl'"></label>
           <input class="form-control" type="text"
                  ng-model="settings.newWindowUrl"></input>
-          <p class="help-block">
-            Leave this field empty to use the default URL about:newtab.
-            Unplivileged about: pages like about:blank and about:home are also acceptable.
-          </p>
+          <p class="help-block" i18n="'optionsMorePrefsNewTabOrWindowHelp'"></p>
         </div>
 
         <!-- New private window default URL -->
         <div class="form-group">
-          <label class="control-label">Default URL for windows opened with New Private Window command</label>
+          <label class="control-label" i18n="'optionsMorePrefsNewPrivateWindowUrl'"></label>
           <input class="form-control" type="text"
                  ng-model="settings.newPrivateWindowUrl"></input>
-          <p class="help-block">
-            Leave this field empty to use the default URL about:newtab.
-            Unplivileged about: pages like about:blank and about:home are also acceptable.
-          </p>
+          <p class="help-block" i18n="'optionsMorePrefsNewTabOrWindowHelp'"></p>
         </div>
 
       </div><!-- /.col-md-6 -->
       <div class="col-md-6">
 
-        <h4>Navigation and Scrolling</h4>
+        <h4 i18n="'optionsHeadingNavigationAndScrolling'"></h4>
 
         <!-- Use link rel next or prev -->
         <div class="form-group">
@@ -80,64 +68,44 @@
             <label>
               <input type="checkbox"
                      ng-model="settings.useRelPrevNext"></input>
-              Page Up and Page Down commands follow rel=next and rel=prev attributes. See:
-              <a href="https://support.google.com/webmasters/answer/1663744?hl=en">
-                Indicate paginated content
-              </a>.
+              <span i18n="'optionsMorePrefsUseRelPrevNext'"></span>
             </label>
           </div>
         </div>
 
         <!-- Scroll duration -->
         <div class="form-group" ng-class="{'has-error':controls.optionsForm.scrollDuration.$invalid}">
-          <label class="control-label">Duration of the animation for the Scroll family of commands</label>
+          <label class="control-label" i18n="'optionsMorePrefsScrollDuration'"></label>
           <div class="input-group">
             <input class="form-control" type="number" name="scrollDuration"
                    min="0" max="10000"
                    ng-model="settings.scrollDuration"></input>
-            <span class="input-group-addon">milliseconds</span>
+            <span class="input-group-addon" i18n="'millisecondsAddon'"></span>
           </div>
-          <p class="help-block">
-            Use zero to disable.
-          </p>
+          <p class="help-block" i18n="'optionsMorePrefsScrollDurationHelp'"></p>
         </div>
 
         <!-- Scroll amount -->
         <div class="form-group" ng-class="{'has-error':controls.optionsForm.scrollAmount.$invalid}">
-          <label class="control-label">Amount of viewport to scroll for Scroll Up/Down commands</label>
+          <label class="control-label" i18n="'optionsMorePrefsScrollAmount'"></label>
           <div class="input-group">
             <input class="form-control" type="number" name="scrollAmount"
                    min="1" max="1000" step="1"
                    ng-model="settings.scrollAmount"></input>
             <span class="input-group-addon">vh</span>
           </div>
-          <p class="help-block">
-            1 vh = <sup>1</sup>/<sub>100</sub> viewport height.
-          </p>
+          <p class="help-block" i18n="'optionsMorePrefsScrollAmountHelp'"></p>
         </div>
 
-        <h4>Other Commands</h4>
+        <h4 i18n="'optionsHeadingOtherCommands'"></h4>
 
         <!-- Zoom step amount -->
         <div class="form-group" ng-class="{'has-error':controls.optionsForm.zoomStep.$invalid}">
-          <label class="control-label">Amount to change zoom factor for Zoom In/Out commands</label>
+          <label class="control-label" i18n="'optionsMorePrefsZoomStep'"></label>
           <div class="input-group">
             <input class="form-control" type="number" name="zoomStep"
                    ng-model="settings.zoomStep" fg-percent-input=""></input>
-            <span class="input-group-addon">percent</span>
-          </div>
-        </div>
-
-        <h4>Advanced Gesture Settings</h4>
-
-        <!-- Can select start -->
-        <div class="form-group">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"
-                     ng-model="settings.canSelectStart"></input>
-              Allow text to be selected during a gesture. (Do not prevent 'selectstart' events during gestures.)
-            </label>
+            <span class="input-group-addon" i18n="'percentAddon'"></span>
           </div>
         </div>
 

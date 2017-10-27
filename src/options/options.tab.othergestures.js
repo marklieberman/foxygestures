@@ -12,7 +12,7 @@ app.controller('OptionsTabOtherGesturesCtrl', [
     $scope.mappables = [];
     $scope.noCommand = {
       id: null,
-      label: '-- No Command --',
+      label: browser.i18n.getMessage('noCommand'),
       mapping: null
     };
 

@@ -10,12 +10,12 @@ modules.helpers = (function (module) {
   // Internationalization constants and formatter strings.
   const i18n = {
     // No Placeholders
-    buttonLeft: browser.i18n.getMessage('buttonLeft'),
-    buttonMiddle: browser.i18n.getMessage('buttonMiddle'),
-    buttonRight: browser.i18n.getMessage('buttonRight'),
+    mouseButtonLeft: browser.i18n.getMessage('mouseButtonLeft'),
+    mouseButtonMiddle: browser.i18n.getMessage('mouseButtonMiddle'),
+    mouseButtonRight: browser.i18n.getMessage('mouseButtonRight'),
     // Placeholders
     buttonOther: (button) =>
-      browser.i18n.getMessage('buttonOther', [ button ])
+      browser.i18n.getMessage('mouseButtonOther', [ button ])
   };
 
   // MIME type to extension map.
@@ -96,11 +96,11 @@ modules.helpers = (function (module) {
     return (chord || [])
       .map(button => {
         switch (button) {
-          case 0: return i18n.buttonLeft;
-          case 1: return i18n.buttonMiddle;
-          case 2: return i18n.buttonRight;
+          case 0: return i18n.mouseButtonLeft;
+          case 1: return i18n.mouseButtonMiddle;
+          case 2: return i18n.mouseButtonRight;
           default:
-            return i18n.buttonOther(button);
+            return i18n.mouseButtonOther(button);
         }
       })
       .join(' + ');

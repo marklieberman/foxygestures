@@ -7,39 +7,39 @@
           <label>
             <input type="checkbox"
                    ng-model="settings.wheelGestures"></input>
-            Enable wheel gestures.
+            <span i18n="'optionsEnableWheelGestures'"></span>
           </label>
           <div class="pull-right">
             <i class="fa fa-info-circle"></i>
-            Hold the gesture button and scroll the mouse wheel to perform a wheel gesture.
+            <span i18n="'optionsEnableWheelGesturesHelp'"><span>
           </div>
         </div>
       </div>
       <fieldset class="panel-body"
                 ng-disabled="!settings.wheelGestures">
         <div class="form-group">
-          <label class="control-label">Scroll Up</label>
+          <label class="control-label" i18n="'labelScrollUp'"></label>
           <select class="form-control"
                   ng-options="item as item.label for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.up"
                   ng-change="settings.wheelMappings.up = controls.wheelMappings.up.mapping"></select>
         </div>
         <div class="form-group">
-          <label class="control-label">Scroll Down</label>
+          <label class="control-label" i18n="'labelScrollDown'"></label>
           <select class="form-control"
                   ng-options="item as item.label for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.down"
                   ng-change="settings.wheelMappings.down = controls.wheelMappings.down.mapping"></select>
         </div>
         <div class="form-group">
-          <label class="control-label">Scroll Left</label>
+          <label class="control-label" i18n="'labelScrollLeft'"></label>
           <select class="form-control"
                   ng-options="item as item.label for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.left"
                   ng-change="settings.wheelMappings.left = controls.wheelMappings.left.mapping"></select>
         </div>
         <div class="form-group">
-          <label class="control-label">Scroll Right</label>
+          <label class="control-label" i18n="'labelScrollRight'"></label>
           <select class="form-control"
                   ng-options="item as item.label for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.right"
@@ -54,11 +54,11 @@
           <label>
             <input type="checkbox"
                    ng-model="settings.chordGestures"></input>
-            Enable chord gestures.
+            <span i18n="'optionsEnableChordGestures'"></span>
           </label>
           <div class="pull-right">
             <i class="fa fa-info-circle"></i>
-            Press two or more buttons simultaneously to perform a chord gesture.
+            <span i18n="'optionsEnableChordGesturesHelp'"></span>
           </div>
         </div>
       </div>
@@ -83,9 +83,8 @@
         </div>
         <div class="form-group clearfix">
           <button class="btn btn-default pull-right" type="button"
-                  ng-click="addChordMapping()">
-            Add Chord
-          </button>
+                  ng-click="addChordMapping()"
+                  i18n="'buttonAddChord'"></button>
         </div>
       </fieldset>
     </div>
