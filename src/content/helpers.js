@@ -96,7 +96,7 @@ window.fg.module('helpers', function (exports) {
 			} else
       if (node instanceof window.HTMLImageElement) {
 				let altText = node.getAttribute('alt');
-				if (altText && altText != '') {
+				if (altText && altText !== '') {
 					text += ' ' + altText;
         }
 			}
