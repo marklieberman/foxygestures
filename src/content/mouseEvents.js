@@ -166,7 +166,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
     if (shouldIgnoreEvent(event)) { return; }
 
     // Prevent handling of mouseup events during a gesture.
-    if (state.gestureState) {
+    if (state.gestureState &&
+        (state.gestureState !== GESTURE_STATE.MOUSE_DOWN)
+    ) {
       event.preventDefault();
       event.stopPropagation();
     }
