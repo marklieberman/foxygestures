@@ -7,7 +7,6 @@
 window.fg.module('ui', function (exports, fg) {
 
   var MAX_SAFE_Z_INDEX = 2147483647;
-  var deltaAccumulator = new MouseDeltaAccumulator();
 
   // State for this module.
   var state = {
@@ -29,7 +28,6 @@ window.fg.module('ui', function (exports, fg) {
   // Settings for this module.
   var settings = fg.helpers.initModuleSettings({
     trailColor: 'purple',
-    trailFidelity: 10,
     trailWidth: 2,
     showStatusText: false,
     statusTemplate: null,
@@ -63,55 +61,48 @@ window.fg.module('ui', function (exports, fg) {
 
   // Start or continue painting the gesture trail.
   function updateTrail (mouseMove) {
-    // Require a minimum distance travelled before painting will occur.
-    deltaAccumulator.accumulate(mouseMove);
-    if (fg.helpers.distanceDelta(mouseMove) >= settings.trailFidelity) {
-      deltaAccumulator.reset();
-
-      if (!findBody()) {
-        return;
-      }
-
-      // Create the canvas on the first mouse move event.
-      if (!state.canvas) {
-        state.canvas = document.createElement('canvas');
-
-        // Use fixed positioning and match the window size.
-        state.canvas.setAttribute('width', window.innerWidth);
-        state.canvas.setAttribute('height', window.innerHeight);
-        state.canvas.style.display = 'block';
-        state.canvas.style.position = 'fixed';
-        state.canvas.style.top = 0;
-        state.canvas.style.left = 0;
-        state.canvas.style.zIndex = MAX_SAFE_Z_INDEX;
-        state.canvas.style.pointerEvents = 'none';
-        state.canvas.style.backgroundColor = 'transparent';
-        state.canvas.style.margin = 0;
-        state.canvas.style.padding = 0;
-        state.canvas.style.border = 'none';
-        state.body.appendChild(state.canvas);
-
-        // Initialize the drawing context.
-        state.ctx = state.canvas.getContext('2d');
-        state.ctx.lineWidth = settings.trailWidth;
-        state.ctx.strokeStyle = settings.trailColor;
-        state.ctx.lineCap = "round";
-      }
-
-      // Draw a segment of the mouse gesture line.
-      state.ctx.beginPath();
-      state.ctx.moveTo(state.x, state.y);
-      state.x += mouseMove.dx;
-      state.y += mouseMove.dy;
-      state.ctx.lineTo(state.x, state.y);
-      state.ctx.stroke();
+    if (!findBody()) {
+      return;
     }
+
+    // Create the canvas on the first mouse move event.
+    if (!state.canvas) {
+      state.canvas = document.createElement('canvas');
+
+      // Use fixed positioning and match the window size.
+      state.canvas.setAttribute('width', window.innerWidth);
+      state.canvas.setAttribute('height', window.innerHeight);
+      state.canvas.style.display = 'block';
+      state.canvas.style.position = 'fixed';
+      state.canvas.style.top = 0;
+      state.canvas.style.left = 0;
+      state.canvas.style.zIndex = MAX_SAFE_Z_INDEX;
+      state.canvas.style.pointerEvents = 'none';
+      state.canvas.style.backgroundColor = 'transparent';
+      state.canvas.style.margin = 0;
+      state.canvas.style.padding = 0;
+      state.canvas.style.border = 'none';
+      state.body.appendChild(state.canvas);
+
+      // Initialize the drawing context.
+      state.ctx = state.canvas.getContext('2d');
+      state.ctx.lineWidth = settings.trailWidth;
+      state.ctx.strokeStyle = settings.trailColor;
+      state.ctx.lineCap = "round";
+    }
+
+    // Draw a segment of the mouse gesture line.
+    state.ctx.beginPath();
+    state.ctx.moveTo(state.x, state.y);
+    state.x += mouseMove.dx;
+    state.y += mouseMove.dy;
+    state.ctx.lineTo(state.x, state.y);
+    state.ctx.stroke();
   }
 
   // Remove the canvas element used to paint the gesture.
   function finishTrail () {
     if (!!state.canvas) {
-      deltaAccumulator.reset();
       state.body.removeChild(state.canvas);
       state.canvas = null;
       state.ctx = null;

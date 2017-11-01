@@ -258,6 +258,28 @@ app.directive('mgGestureInput', [
         // Gesture input
         // -------------------------------------------------------------------------------------------------------------
 
+        /**
+         * A utility to aggregate dx and dy in mouse events.
+         * This is used to throttle processing of mouse move events.
+         */
+        class MouseAccumulator {
+          constructor () {
+            this.reset();
+          }
+
+          // Reset the accumulated deltas.
+          reset () {
+            this.dx1 = this.dy1 = 0;
+          }
+
+          // Accumulate the mouse deltas in a mouse event.
+          accumulate (mouseMove) {
+            mouseMove.dx = (this.dx1 += mouseMove.dx);
+            mouseMove.dy = (this.dy1 += mouseMove.dy);
+            return mouseMove;
+          }
+        }
+
         var state = {
           inProgress: false,
           mouseOut: false,
@@ -265,7 +287,7 @@ app.directive('mgGestureInput', [
           y: 0
         };
 
-        var deltaAccumulator = new MouseDeltaAccumulator();
+        var mouseAccumulator = new MouseAccumulator();
         var gestureDetector = new UDLRGestureDetector();
 
         element.on('mousedown', onMouseDown);
@@ -297,7 +319,7 @@ app.directive('mgGestureInput', [
           if (event.button === scope.settings.gestureButton) {
             state.inProgress = true;
             state.contextMenu = false;
-            deltaAccumulator.reset();
+            mouseAccumulator.reset();
             gestureDetector.reset();
             state.x = mouseDown.x;
             state.y = mouseDown.y;
@@ -318,9 +340,9 @@ app.directive('mgGestureInput', [
         function onMouseMove (event) {
           if (state.inProgress) {
             var mouseMove = getMouseData(event);
-            deltaAccumulator.accumulate(mouseMove);
+            mouseAccumulator.accumulate(mouseMove);
             if (window.fg.helpers.distanceDelta(mouseMove) >= scope.settings.gestureFidelity) {
-              deltaAccumulator.reset();
+              mouseAccumulator.reset();
               gestureDetector.addPoint(mouseMove);
 
               // Draw a segment on the canvas.

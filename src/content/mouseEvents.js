@@ -70,6 +70,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Settings for this module.
   const settings = fg.helpers.initModuleSettings({
     gestureButton: BUTTON.RIGHT,
+    gestureFidelity: 10,
     disableOnAlt: true,
     wheelGestures: false,
     chordGestures: false,
@@ -586,6 +587,18 @@ window.fg.module('mouseEvents', function (exports, fg) {
   function onMouseMove (data) {
     // Perform a check on gesture state and buttons.
     if (!exports.stickyGestureCheck(data)) {
+      // Limit the fidelity of gesture updates. This has two effects: 1) a gesture will not start until gestureFidelity
+      // pixels in distance are covered, and 2) movements are smoothed to avoid rapid changes in gesture direction. The
+      // mouse accumulator instance is added to the state by handler.js, so it only exists in the top window/frame.
+      state.mouseAccumulator.accumulate(data);
+      if (fg.helpers.distanceDelta(data) <= settings.gestureFidelity) {
+        // Not enough distance covered.
+        return;
+      }
+
+      // Reset the accumulated mouse delta.
+      state.mouseAccumulator.reset();
+
       // Start or update a mouse gesture.
       switch (state.gestureState) {
         case GESTURE_STATE.MOUSE_DOWN:

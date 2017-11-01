@@ -62,7 +62,6 @@
       "all_frames": false,
       "run_at": "document_start",
       "js": [
-        "common/MouseDeltaAccumulator.js",
         "common/UDLRGestureDetector.js",
         "content/helpers.js",
         "content/interface.js",

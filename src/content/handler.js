@@ -1,25 +1,45 @@
 'use strict';
 
 /**
- * This module is responsible for coordinating gesture state between the
- * background and content scripts.
+ * This module is responsible for coordinating gesture state between the background and content scripts. This script
+ * extends mouseEvents.js but only in the top window/frame.
  */
 window.fg.extend('mouseEvents', function (exports, fg) {
 
-  var deltaAccumulator = new MouseDeltaAccumulator();
-  var gestureDetector = new UDLRGestureDetector();
+  /**
+   * A utility class to aggregate dx and dy in mouse events.
+   * This is used to throttle processing of mouse move events.
+   */
+  class MouseAccumulator {
+    constructor () {
+      this.reset();
+    }
+
+    // Reset the accumulated deltas.
+    reset () {
+      this.dx1 = this.dy1 = 0;
+    }
+
+    // Accumulate the mouse deltas in a mouse event.
+    accumulate (mouseMove) {
+      mouseMove.dx = (this.dx1 += mouseMove.dx);
+      mouseMove.dy = (this.dy1 += mouseMove.dy);
+      return mouseMove;
+    }
+  }
 
   // State for this module.
-  var state = Object.assign(exports.state, {
-    disableGestures: false,            // Disable gesture handlers when true.
-    timeoutHandle: null,               // Gesture timeout interval handle.
-    noMovementTicks: 0                 // Number of 100ms ticks without movement.
+  const state = Object.assign(exports.state, {
+    mouseAccumulator: new MouseAccumulator(),   // Accumulator to throttle mouse events.
+    gestureDetector: new UDLRGestureDetector(), // Mouse gesture implementation for UDLR gestures.
+    disableGestures: false,                     // Disable gesture handlers when true.
+    timeoutHandle: null,                        // Gesture timeout interval handle.
+    noMovementTicks: 0                          // Number of 100ms ticks without movement.
   });
 
   // Settings for this module.
-  var settings = fg.helpers.initModuleSettings({
+  const settings = fg.helpers.initModuleSettings({
     drawTrails: true,
-    gestureFidelity: 10,
     gestureTimeout: 2000,
     showStatusText: true
   });
@@ -74,8 +94,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   // Invoked when a mouse gesture begins.
   exports.mouseGestureStart = function (mouseData) {
     // Start tracking the gesture.
-    deltaAccumulator.reset();
-    gestureDetector.reset(mouseData);
+    state.gestureDetector.reset(mouseData);
 
     // Paint the gesture trail.
     if (settings.drawTrails) {
@@ -85,41 +104,35 @@ window.fg.extend('mouseEvents', function (exports, fg) {
 
   // Invoked when the mouse moves during a mouse gesture.
   exports.mouseGestureUpdate = function (mouseMove) {
-    // Limit the fidelity of gesture updates to reduce gesture jitter.
-    deltaAccumulator.accumulate(mouseMove);
-    if (fg.helpers.distanceDelta(mouseMove) >= settings.gestureFidelity) {
-      deltaAccumulator.reset();
+    // Reset the number of ticks without movement.
+    state.noMovementTicks = 0;
 
-      // Reset the number of ticks without movement.
-      state.noMovementTicks = 0;
+    // Start the gesture timeout interval.
+    if (settings.gestureTimeout && !state.timeoutHandle) {
+      state.timeoutHandle = window.setInterval(function () {
+        if (++state.noMovementTicks >= (settings.gestureTimeout / 100)) {
+          // Abort the mouse gesture but ensure context menu and clicks are prevented.
+          exports.abortMouseGesture();
+          exports.replicateState({
+            gestureState: exports.GESTURE_STATE.MOUSE_TIMEOUT
+          });
+        }
+      }, 100);
+    }
 
-      // Start the gesture timeout interval.
-      if (settings.gestureTimeout && !state.timeoutHandle) {
-        state.timeoutHandle = window.setInterval(function () {
-          if (++state.noMovementTicks >= (settings.gestureTimeout / 100)) {
-            // Abort the mouse gesture but ensure context menu and clicks are prevented.
-            exports.abortMouseGesture();
-            exports.replicateState({
-              gestureState: exports.GESTURE_STATE.MOUSE_TIMEOUT
-            });
-          }
-        }, 100);
-      }
+    // Update the gesture.
+    if (state.gestureDetector.addPoint(mouseMove)) {
+      browser.runtime.sendMessage({
+        topic: 'mg-gestureProgress',
+        data: {
+          gesture: state.gestureDetector.gesture
+        }
+      });
+    }
 
-      // Update the gesture.
-      if (gestureDetector.addPoint(mouseMove)) {
-        browser.runtime.sendMessage({
-          topic: 'mg-gestureProgress',
-          data: {
-            gesture: gestureDetector.gesture
-          }
-        });
-      }
-
-      // Paint the gesture trail.
-      if (settings.drawTrails) {
-        fg.ui.updateTrail(mouseMove);
-      }
+    // Paint the gesture trail.
+    if (settings.drawTrails) {
+      fg.ui.updateTrail(mouseMove);
     }
   };
 
@@ -135,7 +148,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     }
 
     // Handle the gesture.
-    var gesture = gestureDetector.gesture;
+    var gesture = state.gestureDetector.gesture;
     if (gesture) {
       browser.runtime.sendMessage({
         topic: 'mg-mouseGesture',
