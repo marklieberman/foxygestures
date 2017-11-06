@@ -66,6 +66,16 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
+Version 1.0.10
+ - Fix issue with previous release that broke options page.
+
+Version 1.0.9
+ - Added chord gesture support.
+ - Added option to disable gestures when Alt is pressed.
+ - Added command to pin and unpin the current tab.
+ - Fix backup settings button broken on some platforms.
+ - Mouse gesture will not start unless the mouse moves 10 pixels. This helps to avoid swallowing button clicks when the mouse moves slightly such as when pressing middle button.
+
 Version 1.0.8
  - Added commands: reload (bypass cache), scroll up, scroll down, zoom in, zoom out, zoom reset.
  - Improved duplicate tab command.
