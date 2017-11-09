@@ -72,6 +72,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
     gestureButton: BUTTON.RIGHT,
     gestureFidelity: 10,
     disableOnAlt: true,
+    disableOnShift: true,
+    canSelectStart: false,
     wheelGestures: false,
     chordGestures: false,
     deadTimeMillis: 300
@@ -264,7 +266,10 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   window.addEventListener('selectstart', function (event) {
     // Prevent a selection from starting during a gesture.
-    if (state.gestureState !== GESTURE_STATE.NONE) {
+    // Allow text selection if explicitly enabled by settings.
+    if (!settings.canSelectStart &&
+      (state.gestureState !== GESTURE_STATE.NONE)
+    ) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -280,9 +285,16 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // Functions ---------------------------------------------------------------------------------------------------------
 
+  // True if an event must not be handled by the addon, otherwise false.
   function shouldIgnoreEvent (event) {
-    // Ignore untrusted events and events when Alt is pressed.
-    return (!event.isTrusted || (settings.disableOnAlt && event.altKey) || state.isUnloading);
+    return (
+      // Ignore untrusted or synthetic events.
+      !event.isTrusted ||
+      // Ignore events when Alt or Shift are configured to disable gestures.
+      (settings.disableOnAlt && event.altKey) || (settings.disableOnShift && event.shiftKey) ||
+      // Ignore events during unload.
+      state.isUnloading
+    );
   }
 
   // Post a message to the given window with the given topic.
@@ -404,6 +416,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
       altKey: event.altKey,
       ctrlKey: event.ctrlKey,
       metaKey: event.metaKey,
+      shiftKey: event.shiftKey,
       chord: [],
       x: event.clientX,
       y: event.clientY,

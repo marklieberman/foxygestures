@@ -29,6 +29,8 @@ modules.settings = (function () {
     trailColor: 'purple',      // The color of the gesture trail.
     mouseMappings: [],         // Array of gesture mappings.
     disableOnAlt: true,        // Disable gestures when Alt is pressed.
+    disableOnShift: true,      // Disable gestures when Shift is pressed.
+    canSelectStart: false,     // Allow selectstart event during gesture.
 
     // Wheel gestures
     wheelGestures: false,      // Enable wheel gestures?

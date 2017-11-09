@@ -25,6 +25,15 @@
         </label>
       </div>
     </div>
+    <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <input class="control-label" type="checkbox"
+                 ng-model="settings.disableOnShift"></input>
+          Do not start a gesture while holding the Shift key.
+        </label>
+      </div>
+    </div>
 
     <!-- Gesture timeout -->
     <div class="form-group" ng-class="{'has-error':controls.optionsForm.gestureTimeout.$invalid}">
