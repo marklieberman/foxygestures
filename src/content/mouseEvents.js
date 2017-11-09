@@ -483,6 +483,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
         contextMenu: true
       });
       exports.mouseGestureStart(data);
+
+      // Reset the accumulated mouse delta on mouse down.
+      state.mouseAccumulator.reset();
     } else
     // Ensure the context menu is enabled for non-gestures.
     if (data.button === BUTTON.RIGHT) {
@@ -591,26 +594,23 @@ window.fg.module('mouseEvents', function (exports, fg) {
       // pixels in distance are covered, and 2) movements are smoothed to avoid rapid changes in gesture direction. The
       // mouse accumulator instance is added to the state by handler.js, so it only exists in the top window/frame.
       state.mouseAccumulator.accumulate(data);
-      if (fg.helpers.distanceDelta(data) <= settings.gestureFidelity) {
-        // Not enough distance covered.
-        return;
-      }
+      if (fg.helpers.distanceDelta(data) >= settings.gestureFidelity) {
+        // Reset the accumulated mouse delta.
+        state.mouseAccumulator.reset();
 
-      // Reset the accumulated mouse delta.
-      state.mouseAccumulator.reset();
-
-      // Start or update a mouse gesture.
-      switch (state.gestureState) {
-        case GESTURE_STATE.MOUSE_DOWN:
-          // The mouse has moved while the gesture button is pressed.
-          exports.replicateState({
-            gestureState: GESTURE_STATE.MOUSE_MOVE
-          });
-          /* falls through */
-        case GESTURE_STATE.MOUSE_MOVE:
-          // Update the mouse gesture.
-          exports.mouseGestureUpdate(data);
-          break;
+        // Start or update a mouse gesture.
+        switch (state.gestureState) {
+          case GESTURE_STATE.MOUSE_DOWN:
+            // The mouse has moved while the gesture button is pressed.
+            exports.replicateState({
+              gestureState: GESTURE_STATE.MOUSE_MOVE
+            });
+            /* falls through */
+          case GESTURE_STATE.MOUSE_MOVE:
+            // Update the mouse gesture.
+            exports.mouseGestureUpdate(data);
+            break;
+        }
       }
     }
   }
