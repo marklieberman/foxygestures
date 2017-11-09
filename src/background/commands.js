@@ -453,10 +453,12 @@ modules.commands = (function (settings, helpers) {
     }
   }
 
-  // Open a link in a new tab.
+  // Open a link in a new background tab.
   function commandOpenLinkInNewBackgroundTab (data) {
+    let promise = Promise.resolve();
+
     if (data.element.linkHref) {
-      return getActiveTab(tab => {
+      promise = getActiveTab(tab => {
         let tabOptions = {};
         tabOptions.url = data.element.linkHref;
         tabOptions.active = false;
@@ -467,9 +469,12 @@ modules.commands = (function (settings, helpers) {
         return browser.tabs.create(tabOptions);
       });
     }
+
+    // Allow the wheel or chord gesture to repeat.
+    return promise.then(() => ({ repeat: true }));
   }
 
-  // Open a link in a new tab.
+  // Open a link in a new foreground tab.
   function commandOpenLinkInNewForegroundTab (data) {
     if (data.element.linkHref) {
       return getActiveTab(tab => {
@@ -508,7 +513,9 @@ modules.commands = (function (settings, helpers) {
 
   // Pin or unpin the current tab.
   function commandPinUnpinTab (data) {
-    return getActiveTab(tab => browser.tabs.update({ pinned: !tab.pinned }));
+    return getActiveTab(tab => browser.tabs.update({ pinned: !tab.pinned }))
+      // Allow the wheel or chord gesture to repeat.
+      .then(() => ({ repeat: true }));
   }
 
   // Activate the previous tab.
@@ -550,7 +557,7 @@ modules.commands = (function (settings, helpers) {
     }
 
     // Allow the wheel or chord gesture to repeat.
-    promise.then(() => ({ repeat: true }));
+    return promise.then(() => ({ repeat: true }));
   }
 
   // Save the media URL of the element under the gesture.
@@ -568,7 +575,7 @@ modules.commands = (function (settings, helpers) {
     }
 
     // Allow the wheel or chord gesture to repeat.
-    promise.then(() => ({ repeat: true }));
+    return promise.then(() => ({ repeat: true }));
   }
 
   // Navigate to the URL of the frame.
