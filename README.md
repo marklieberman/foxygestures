@@ -66,6 +66,12 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
+Version 1.0.11
+ - Added preference to enable text selection when gesture button is 'Left'.
+ - Added request for 'clipboardWrite' permission due to user request.
+ - Fixed mouse movement accumulator not reset on mouse down.
+ - Fixed some chord/wheel gestures not resetting correctly.
+
 Version 1.0.10
  - Fix issue with previous release that broke options page.
 
