@@ -55,9 +55,8 @@ app.factory('commands', [
 // ---------------------------------------------------------------------------------------------------------------------
 // A wrapper around the settings module that presents itself as a hash of settings similar to the underlying module.
 app.factory('settings', [
-  '$q',
   'moduleLoader',
-  function ($q, moduleLoader) {
+  function (moduleLoader) {
     var service = {};
 
     // Expose a non-enumerable property that is true once settings have been loaded.
@@ -95,14 +94,9 @@ app.factory('settings', [
     Object.defineProperty(service, 'save', {
       enumerable: false,
       value: () => {
-        var deferred = $q.defer();
-        browser.storage.sync.set(service).then(
-          () => deferred.resolve(),
-          err => {
-            console.log('error saving settings', err);
-            deferred.reject(err);
-          });
-        return deferred.promise;
+        return browser.storage.sync.set(service).catch(err => {
+            console.log('error saving sync settings', err);
+        });
       }
     });
 
