@@ -70,6 +70,15 @@ app.factory('settings', [
     var promise = moduleLoader('settings').then(module => module.loaded).then(settings => {
       angular.extend(service, settings);
 
+      // doubleRightClick isn't enumerable because we don't want it stored in browser.storage.sync. But we do want it extended from settings to service
+      if ('doubleRightClick' in settings) {
+        Object.defineProperty(service, 'doubleRightClick', {
+          enumerable: false,
+          writable: true,
+          value: settings.doubleRightClick
+        });
+      }
+
       // Manually copy the non-enumerable data from the settings reference.
       Object.defineProperty(service, 'templates', {
         enumerable: false,
@@ -94,9 +103,19 @@ app.factory('settings', [
     Object.defineProperty(service, 'save', {
       enumerable: false,
       value: () => {
-        return browser.storage.sync.set(service).catch(err => {
+        var syncPromise = browser.storage.sync.set(service).catch(err => {
             console.log('error saving sync settings', err);
         });
+        // doubleRightClick is a non-enumerable property, so not stored in sync. And it is only present on Linux and OSX
+        if (! ( 'doubleRightClick' in service ) ) {
+          return syncPromise;
+        }
+        var localPromise = browser.storage.local.set({
+          doubleRightClick: service.doubleRightClick
+        }).catch(err => {
+            console.log('error saving local settings', err);
+        });
+        return Promise.all([syncPromise, localPromise]);
       }
     });
 
@@ -159,7 +178,8 @@ app.controller('OptionsCtrl', [
 
     // Start monitoring the settings for changes.
     $scope.startWatchingSettings = () => {
-      return $scope.$watch('settings', newValue => {
+      // doubleRightClick is non-enumerable so it won't trigger if settings is watched by itself
+      return $scope.$watch('[ settings, settings.doubleRightClick ]', newValue => {
         settings.save().then(() => {
           $scope.$broadcast('afterSettingsSaved');
           $scope.$broadcast('redraw');
