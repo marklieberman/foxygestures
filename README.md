@@ -4,6 +4,10 @@ A mouse gestures extension for Firefox. This project was started as a web
 extensions alternative to FireGestures. Unfortunately, FireGestures will stop
 working when XUL/XPCOM add-ons are fully deprecated in Firefox 57.
 
+#### Download
+
+https://addons.mozilla.org/addon/foxy-gestures/
+
 #### Feature Requests
 
 FireGestures is a very mature plugin with a huge number of features. Although I used it for many years, I probably didn't use it in the exact same way as you. Some features maybe have been unintentionally ignored or forgotten by me. I am slowly implementing features in Foxy Gestures as my time allows. [This wiki article contains a list of supported commands vs FireGestures](https://github.com/marklieberman/foxygestures/wiki/Supported-Commands-vs.-FireGestures). The list is not exhaustive and you can request features using GitHub issues even if they are not currently planned.
