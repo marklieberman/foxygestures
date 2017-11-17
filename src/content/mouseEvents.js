@@ -51,6 +51,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
     CHORD: 5
   };
 
+  const LINUX_OSX_DOUBLE_CLICK_TIMEOUT = 600;
+
   // A unique identifier for this frame.
   // Used by commands to target a specific nested frame.
   exports.scriptFrameId = fg.helpers.makeScriptFrameId();
@@ -64,7 +66,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
     chordButtons: [],                  // Buttons in the chord gesture.
     contextMenu: false,                // Context menu is enabled?
     preventClick: false,               // Prevent handling of clicks when truthy.
-    deadTimeHandle: null               // Timeout for click preventing dead time.
+    deadTimeHandle: null,              // Timeout for click preventing dead time.
+    lastRightClickTime: 0,             // No right-click detected yet, so pretend it happened ages ago
   });
 
   // Settings for this module.
@@ -77,6 +80,19 @@ window.fg.module('mouseEvents', function (exports, fg) {
     wheelGestures: false,
     chordGestures: false,
     deadTimeMillis: 300
+  });
+
+  let doubleRightClick;
+  browser.storage.local.get({doubleRightClick: null}).then(results => {
+    if (results.doubleRightClick != null) {
+        doubleRightClick = results.doubleRightClick;
+    }
+  });
+  // Listen for changes to settings.
+  browser.storage.onChanged.addListener((changes, area) => {
+    if (! changes.doubleRightClick)
+      return;
+    doubleRightClick = changes.doubleRightClick.newValue;
   });
 
   if (state.isNested) {
@@ -247,6 +263,16 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('contextmenu', function (event) {
+    if (doubleRightClick) {
+      let time = Date.now();
+      let isSingleClick = time - state.lastRightClickTime > LINUX_OSX_DOUBLE_CLICK_TIMEOUT;
+      state.lastRightClickTime = time;
+      if (isSingleClick) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+    }
     // Disable the context menu event after a gesture.
     if (!state.contextMenu ||
       (state.gestureState !== GESTURE_STATE.NONE) &&

@@ -149,5 +149,29 @@
       </fieldset>
     </div>
 
+    <div ng-show="showDoubleRightClick()">
+      <h4>OSX and Linux Only</h4>
+      <!-- Double Click to Show Context menu on Mac / Linux -->
+      <div class="form-group">
+        <div class="checkbox">
+        <label>
+          <input type="checkbox"
+                 ng-model="settings.doubleRightClick"></input>
+          Double Right-Click to Open Context Menu in OSX/Linux
+        </label>
+        <p class="help-block">
+          In OSX and Linux, the right-click context menu conflicts with mouse
+          gestures, because the right-click context menu opens on mouse-down on
+          these platforms, instead of on mouse-up like on other platforms. See
+          this
+          <a href="https://github.com/marklieberman/foxygestures/issues/67">
+            discussion
+          </a>
+          for further information.
+        </p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

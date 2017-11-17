@@ -14,6 +14,10 @@ app.controller('OptionsTabGeneralCtrl', [
       statusTimeout: 2.0
     });
 
+    $scope.showDoubleRightClick = () => {
+      return 'doubleRightClick' in settings;
+    };
+
     // ----- Event handlers -----
     $scope.$on('reset', () => {
       let inSeconds;
