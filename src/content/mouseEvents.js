@@ -176,7 +176,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
       event.stopPropagation();
     }
 
-    var data = getMouseData(event);
+    var data = getMouseData(event, true);
     if (state.isNested) {
       // Post to parent - must apply frame offsets.
       postTo(window.parent, 'mouseup', data);
@@ -437,7 +437,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
       // Information about the event context: script ID, frame URL, etc.
       data.context = {
         nested: state.isNested,
-        scriptFrameId: exports.scriptFrameId,
+        originFrameId: exports.scriptFrameId,
         frameUrl: String(window.location.href)
       };
 
@@ -485,6 +485,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
   function onMouseDown (data, event) {
     // Keep a reference to the data for this mousedown event.
     state.mouseDownData = data;
+
+    // Set the script frame ID of the top level frame.
+    data.context.topFrameId = exports.scriptFrameId;
 
     // Handle or update the chord gesture state when enabled.
     if (settings.chordGestures && buttonDownChordGesture(data)) { return; }
@@ -545,6 +548,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
   function onMouseUp (data) {
     // Handle or update the chord gesture state when enabled.
     if (settings.chordGestures && buttonUpChordGesture(data)) { return; }
+
+    // Set the script frame ID of the top level frame.
+    data.context.topFrameId = exports.scriptFrameId;
 
     // End a mouse gesture if the gesture button was released.
     if (data.button === settings.gestureButton) {

@@ -40,24 +40,10 @@ window.fg.module('commands', function (exports, fg) {
     return false;
   }
 
-  window.addEventListener('message', function (event) {
-    if (event.data) {
-      switch (event.data.topic) {
-        case 'mg-delegateCommand':
-          // Execute the delegated command or pass it down the frame hierachy.
-          onDelegateCommand(event.data.data);
-          break;
-      }
-    }
-  });
-
   // Execute the delegated command or pass it down the frame hierachy.
   function onDelegateCommand (data, sender) {
     // Check if the command should be handled by this frame.
-    if (data.context.scriptFrameId && (fg.mouseEvents.scriptFrameId !== data.context.scriptFrameId)) {
-      // This is not the correct frame.
-      fg.mouseEvents.broadcast('delegateCommand', data);
-    } else {
+    if (fg.mouseEvents.scriptFrameId === data.context.targetFrameId) {
       // Execute the delegated command in this frame.
       commandHandlers[data.command](data);
     }

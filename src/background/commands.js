@@ -256,17 +256,20 @@ modules.commands = (function (settings, helpers) {
 
   // Delegate a command to the content script.
   // The command may need access to the DOM or other window state.
+  // The message is broadcast to all handlers in the sender tab. Use the script frame IDs to address a specific frame.
   commands.executeInContent = (command, data, delegateToFrame) => {
     if (delegateToFrame === false) {
-      delete data.context.scriptFrameId;
+      // Tell the top frame to handle this command.
+      data.context.targetFrameId = data.context.topFrameId;
+    } else {
+      // Tell the origin frame to handle this command.
+      data.context.targetFrameId = data.context.originFrameId;
     }
 
     data.command = command;
     return browser.tabs.sendMessage(data.sender.tab.id, {
       topic: 'mg-delegateCommand',
       data: data
-    }, {
-      frameId: data.sender.frameId
     });
   };
 
