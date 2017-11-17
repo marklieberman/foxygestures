@@ -68,10 +68,36 @@ modules.settings = (function () {
   };
 
   // Read settings from storage.
-  var loadPromise = browser.storage.sync.get(settings).then(results => {
+  var loadPromiseSync = browser.storage.sync.get(settings).then(results => {
     Object.keys(results).forEach(key => settings[key] = results[key]);
     return settings;
   });
+
+  // We don't want doubleRightClick saved in browser.storage.sync, so we set it up as a non-enumerable property of settings
+  var loadPromiseLocal = browser.runtime.getPlatformInfo().then(info => {
+    var os = info.os;
+    if (os != "mac" && os != "linux") {
+      return;
+    }
+    // Use null as flag meaning "uninitialized value".
+    return browser.storage.local.get({ doubleRightClick: null })
+      .then(results => {
+        // If our "uninitialized value" is used, the value is not in storage
+        if (results.doubleRightClick === null) {
+            // Actual default value
+            results.doubleRightClick = true;
+            // Set the default so the page can pick it up. It also uses
+            // browser.storage.local.get to acces the value.
+            browser.storage.local.set(results);
+        }
+        Object.defineProperty(settings, 'doubleRightClick', {
+          enumerable: false,
+          value: results.doubleRightClick
+        });
+      });
+  });
+
+  var allPromises = Promise.all([ loadPromiseSync, loadPromiseLocal ]);
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
@@ -90,7 +116,7 @@ modules.settings = (function () {
   // This is exposed as the non-enumerable loaded property.
   Object.defineProperty(settings, 'loaded', {
     enumerable: false,
-    value: loadPromise
+    value: allPromises.then(() => settings)
   });
 
   // Get the default value for template settings.
