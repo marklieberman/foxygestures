@@ -42,7 +42,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     drawTrails: true,
     gestureTimeout: 2000,
     showStatusText: true
-  });
+  }, 'sync');
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 

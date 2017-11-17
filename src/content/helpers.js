@@ -36,22 +36,24 @@ window.fg.extend = function (module, extender) {
  */
 window.fg.module('helpers', function (exports) {
 
-  // Keep the given settings hash up-to-date when browser storage changes.
-  exports.initModuleSettings = (settings, callback) => {
+  // Keep the given settings hash up-to-date when storage changes.
+  exports.initModuleSettings = (settings, area) => {
     // Update default values from storage.
-    browser.storage.sync.get(settings).then(results => {
+    browser.storage[area].get(settings).then(results => {
       Object.keys(settings).forEach(key => {
         settings[key] = results[key];
       });
     });
 
     // Listen for changes to settings.
-    browser.storage.onChanged.addListener((changes, area) => {
-      Object.keys(settings).forEach(key => {
-        if (changes[key]) {
-          settings[key] = changes[key].newValue;
-        }
-      });
+    browser.storage.onChanged.addListener((changes, areaName) => {
+      if (area === areaName) {
+        Object.keys(settings).forEach(key => {
+          if (changes[key]) {
+            settings[key] = changes[key].newValue;
+          }
+        });
+      }
     });
 
     return settings;

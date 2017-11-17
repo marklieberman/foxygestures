@@ -32,7 +32,7 @@ window.fg.module('ui', function (exports, fg) {
     showStatusText: false,
     statusTemplate: null,
     statusTimeout: 2000
-  });
+  }, 'sync');
 
   // -------------------------------------------------------------------------------------------------------------------
 

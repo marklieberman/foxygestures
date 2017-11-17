@@ -24,7 +24,7 @@ window.fg.module('commands', function (exports, fg) {
     scrollDuration: 1000,
     scrollAmount: 100,
     useRelPrevNext: true
-  });
+  }, 'sync');
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
