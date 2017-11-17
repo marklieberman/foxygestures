@@ -52,10 +52,10 @@
         article on the wiki before proceeding.
       </span>
     </div>
-
+    
     <div class="mapping-list" ng-if="settings.sawXSSWarning">
       <div class="user-script-item"
-           ng-repeat="userScript in settings.userScripts">
+           ng-repeat="userScript in settings.userScripts track by userScript.id">
 
         <div class="user-script-mapping">
           <label class="control-label">
