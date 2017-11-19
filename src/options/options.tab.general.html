@@ -154,21 +154,17 @@
       <!-- Double Click to Show Context menu on Mac / Linux -->
       <div class="form-group">
         <div class="checkbox">
-        <label>
-          <input type="checkbox"
-                 ng-model="settings.doubleRightClick"></input>
-          Double Right-Click to Open Context Menu in OSX/Linux
-        </label>
-        <p class="help-block">
-          In OSX and Linux, the right-click context menu conflicts with mouse
-          gestures, because the right-click context menu opens on mouse-down on
-          these platforms, instead of on mouse-up like on other platforms. See
-          this
-          <a href="https://github.com/marklieberman/foxygestures/issues/67">
-            discussion
-          </a>
-          for further information.
-        </p>
+          <label>
+            <input type="checkbox"
+                   ng-model="settings.doubleRightClick"></input>
+            Double right-click to open context menu
+          </label>
+          <p class="help-block">
+            OSX and Linux display the context menu as soon as the right button is pressed. (As opposed to Windows which
+            displays the context menu when the right button is released.) This causes a problem because the context menu
+            is displayed before the addon can determine if a gesture has occurred. Enabling this setting will prevent
+            the context menu from being displayed unless you perform a double right-click.
+          </p>
         </div>
       </div>
     </div>

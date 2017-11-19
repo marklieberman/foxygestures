@@ -76,7 +76,7 @@ modules.settings = (function () {
   // We don't want doubleRightClick saved in browser.storage.sync, so we set it up as a non-enumerable property of settings
   var loadPromiseLocal = browser.runtime.getPlatformInfo().then(info => {
     var os = info.os;
-    if (os != "mac" && os != "linux") {
+    if (os !== 'mac' && os !== 'linux') {
       return;
     }
     // Use null as flag meaning "uninitialized value".
