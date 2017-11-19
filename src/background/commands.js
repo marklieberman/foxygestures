@@ -308,7 +308,7 @@ modules.commands = (function (settings, helpers) {
       // that generated the wheel gesture. (e.g.: rapidly scrolling the wheel through Next Tab commands.)
       return browser.tabs.sendMessage(to.id, { topic: 'mg-applyState', data: state })
         // Disable the gesture state after transitioning to the new tab or window.
-        .then(() => browser.tabs.sendMessage(from.id, { topic: 'mg-abortGesture' }))
+        .then(() => (from !== null) ? browser.tabs.sendMessage(from.id, { topic: 'mg-abortGesture' }) : false)
         // If the tab being activated is internal to the browser, a channel exception will be thrown.
         .catch(t => {});
     } else {
@@ -360,12 +360,21 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Close the active tab.
-  function commandCloseTab () {
-    return getActiveTab(tab => {
-      if (!tab.pinned) {
-        return browser.tabs.remove(tab.id);
+  function commandCloseTab (data) {
+    return getActiveTab(currentTab => {
+      if (!currentTab.pinned) {
+        // Remove the current tab and then query for the newly active tab.
+        return browser.tabs.remove(currentTab.id).then(() => {
+          return getActiveTab(tab => {
+            // Transition the gesture state to the newly active tab.
+            return transitionGesture(null, tab, data.cloneState);
+          });
+        });
       }
-    });
+    })
+    // Allow the wheel or chord gesture to repeat.
+    // This covers pinned tabs where the command does nothing.
+    .then(() => ({ repeat: true }));
   }
 
   // Duplicate the active tab.
