@@ -398,27 +398,18 @@ modules.commands = (function (settings, helpers) {
 
   // Create a new empty tab.
   function commandNewTab (data) {
-    return getActiveTab(tab => {
-      // Firefox default is for new tabs to be active and inserted at the end of the tab bar.
-      let tabOptions = {};
-      tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
-      tabOptions.active = true;
-      tabOptions.cookieStoreId = tab.cookieStoreId;
-      return browser.tabs.create(tabOptions);
-    });
+    // In Firefox the New Tab button does not preserve the container.
+    // Firefox's default is for new tabs to be active and inserted at the end of the tab bar.
+    let tabOptions = {};
+    tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
+    tabOptions.active = true;
+    return browser.tabs.create(tabOptions);
   }
 
   // Create a new empty window.
   function commandNewWindow (data) {
-    return getActiveTab(tab => {
-      // Firefox default is for new tabs to be active and inserted at the end of the tab bar.
-      let tabOptions = {};
-      tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
-      tabOptions.cookieStoreId = tab.cookieStoreId;
-      return browser.tabs.create(tabOptions);
-    }).then(tab => {
-      return browser.windows.create({ tabId: tab.id });
-    });
+    // In Firefox a New Window does not preserve the container.
+    return browser.windows.create({ url: notAboutNewTabUrl(settings.newWindowUrl) });
   }
 
   // Create a new empty private window.
@@ -433,8 +424,9 @@ modules.commands = (function (settings, helpers) {
         let tabOptions = {};
         tabOptions.url = data.context.frameUrl;
         tabOptions.active = true;
-        tabOptions.cookieStoreId = tab.cookieStoreId;
         tabOptions.openerTabId = tab.id;
+        // Preserve the container when opening a new tab from a link/frame.
+        tabOptions.cookieStoreId = tab.cookieStoreId;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -445,16 +437,9 @@ modules.commands = (function (settings, helpers) {
 
   // Open a frame in a new window.
   function commandOpenFrameInNewWindow (data) {
+    // In Firefox a New Window does not preserve the container.
     if (data.context.frameUrl) {
-      return getActiveTab(tab => {
-        let tabOptions = {};
-        tabOptions.url = data.context.frameUrl;
-        tabOptions.cookieStoreId = tab.cookieStoreId;
-        tabOptions.openerTabId = tab.id;
-        return browser.tabs.create(tabOptions);
-      }).then(tab => {
-        return browser.windows.create({ tabId: tab.id });
-      });
+      return browser.windows.create({ url: data.context.frameUrl });
     }
   }
 
@@ -467,8 +452,9 @@ modules.commands = (function (settings, helpers) {
         let tabOptions = {};
         tabOptions.url = data.element.linkHref;
         tabOptions.active = false;
-        tabOptions.cookieStoreId = tab.cookieStoreId;
         tabOptions.openerTabId = tab.id;
+        // Preserve the container when opening a new tab from a link/frame.
+        tabOptions.cookieStoreId = tab.cookieStoreId;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -487,8 +473,9 @@ modules.commands = (function (settings, helpers) {
         let tabOptions = {};
         tabOptions.url = data.element.linkHref;
         tabOptions.active = true;
-        tabOptions.cookieStoreId = tab.cookieStoreId;
         tabOptions.openerTabId = tab.id;
+        // Preserve the container when opening a new tab from a link/frame.
+        tabOptions.cookieStoreId = tab.cookieStoreId;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -499,16 +486,9 @@ modules.commands = (function (settings, helpers) {
 
   // Open a link in a new window.
   function commandOpenLinkInNewWindow (data) {
+    // In Firefox a New Window does not preserve the container.
     if (data.element.linkHref) {
-      return getActiveTab(tab => {
-        let tabOptions = {};
-        tabOptions.url = data.element.linkHref;
-        tabOptions.cookieStoreId = tab.cookieStoreId;
-        tabOptions.openerTabId = tab.id;
-        return browser.tabs.create(tabOptions);
-      }).then(tab => {
-        return browser.windows.create({ tabId: tab.id });
-      });
+      return browser.windows.create({ url: data.element.linkHref });
     }
   }
 
