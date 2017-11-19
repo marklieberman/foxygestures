@@ -607,8 +607,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
     // Handle this mouseup event during a chord gesture.
     if (state.gestureState === GESTURE_STATE.CHORD) {
-      // End the chord gesture once all buttons have been released.
-      if (state.chordButtons.length === 0) {
+      // End the chord gesture once one of the buttons has been released.
+      if (state.chordButtons.length <= 1) {
         // Exit the gesture state and impose a click handling dead time. The contextmenu event may or may not fire for
         // certain button combinations, so use dead-time as a best effort prevention.
         exports.clickDeadTime({
