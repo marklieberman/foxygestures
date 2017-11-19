@@ -34,8 +34,7 @@ window.fg.module('commands', function (exports, fg) {
     switch (message.topic) {
       case 'mg-delegateCommand':
         // Execute a command on behalf of the background script.
-        onDelegateCommand(message.data);
-        break;
+        return onDelegateCommand(message.data);
     }
     return false;
   }
@@ -45,8 +44,9 @@ window.fg.module('commands', function (exports, fg) {
     // Check if the command should be handled by this frame.
     if (fg.mouseEvents.scriptFrameId === data.context.targetFrameId) {
       // Execute the delegated command in this frame.
-      commandHandlers[data.command](data);
+      return commandHandlers[data.command](data);
     }
+    return false;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -279,7 +279,7 @@ window.fg.module('commands', function (exports, fg) {
     /* jshint evil:true */
     try {
       var mouseDown = fg.mouseEvents.state.mouseDown;
-      eval(data.userScript.script);
+      return Promise.resolve(eval(data.userScript.script));
     } catch (err) {
       // Report any error with the user script.
       let label =  data.userScript.label || 'User Script';

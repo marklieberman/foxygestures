@@ -160,7 +160,10 @@
           let label = assigned.get().label || i18n.userScriptNoName;
           return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
             data.userScript = assigned.get();
-            return commands.executeInContent('userScript', data, true);
+            return commands.executeInContent('userScript', data, true).then(result => {
+              // Allow user scripts to be repeatable by default.
+              return result || { repeat: true };
+            });
           });
         }
 
@@ -175,7 +178,8 @@
         }
       }
 
-      return false;
+      // If nothing is mapped it is safe to repeat.
+      return { repeat: true };
     });
   }
 
@@ -192,7 +196,10 @@
           let label = assigned.get().label || i18n.userScriptNoName;
           return updateStatusForGesture(data.sender, gesture, label).then(() => {
             data.userScript = assigned.get();
-            return commands.executeInContent('userScript', data, true);
+            return commands.executeInContent('userScript', data, true).then(result => {
+              // Allow user scripts to be repeatable by default.
+              return result || { repeat: true };
+            });
           });
         }
 
@@ -207,7 +214,8 @@
         }
       }
 
-      return false;
+      // If nothing is mapped it is safe to repeat.
+      return { repeat: true };
     });
   }
 

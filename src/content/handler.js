@@ -277,7 +277,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     // Handle popup items or allow additional chord gestures to be performed.
     handler.then(result => {
       state.disableGestures = false;
-
+      
       // Handle popup items if the command is a popup type.
       result = result || {};
       if (result.popup) {
