@@ -434,6 +434,7 @@ modules.commands = (function (settings, helpers) {
         tabOptions.url = data.context.frameUrl;
         tabOptions.active = true;
         tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.openerTabId = tab.id;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -449,6 +450,7 @@ modules.commands = (function (settings, helpers) {
         let tabOptions = {};
         tabOptions.url = data.context.frameUrl;
         tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.openerTabId = tab.id;
         return browser.tabs.create(tabOptions);
       }).then(tab => {
         return browser.windows.create({ tabId: tab.id });
@@ -466,6 +468,7 @@ modules.commands = (function (settings, helpers) {
         tabOptions.url = data.element.linkHref;
         tabOptions.active = false;
         tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.openerTabId = tab.id;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -485,6 +488,7 @@ modules.commands = (function (settings, helpers) {
         tabOptions.url = data.element.linkHref;
         tabOptions.active = true;
         tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.openerTabId = tab.id;
         if (settings.insertRelatedTab) {
           tabOptions.index = tab.index + 1;
         }
@@ -500,6 +504,7 @@ modules.commands = (function (settings, helpers) {
         let tabOptions = {};
         tabOptions.url = data.element.linkHref;
         tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.openerTabId = tab.id;
         return browser.tabs.create(tabOptions);
       }).then(tab => {
         return browser.windows.create({ tabId: tab.id });
