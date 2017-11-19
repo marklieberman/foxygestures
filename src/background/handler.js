@@ -76,6 +76,33 @@
     }
   }
 
+  // Execute the mapped command for a gesture and update the status text.
+  function executeCommandForGesture (mapping, data, gesturePreview) {
+    let assigned = Optional.EMPTY;
+
+    // Check user scripts for a matching user script ID.
+    if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
+      let label = assigned.get().label || i18n.userScriptNoName;
+      return updateStatusForGesture(data.sender, gesturePreview, label).then(() => {
+        data.userScript = assigned.get();
+        return commands.executeInContent('userScript', data, true).then(result => {
+          // Allow user scripts to be repeatable by default.
+          return result || { repeat: true };
+        });
+      });
+    }
+
+    // Check commands for a matching command ID.
+    if ((assigned = mapping.map(value => commands.findById(value.command))).isPresent()) {
+      let label = assigned.get().label;
+      return updateStatusForGesture(data.sender, gesturePreview, label).then(() => {
+        // The command output may contain popup items.
+        data.wheel = true;
+        return assigned.get().handler(data);
+      });
+    }
+  }
+
   // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Handle messages from the content script.
@@ -124,24 +151,8 @@
   // Execute the mapped command for a mouse gesture.
   function onMouseGesture (data) {
     findMouseMappingForGesture(data.gesture).then(mapping => {
-      let assigned = Optional.EMPTY;
       if (mapping.isPresent()) {
-        // Check user scripts for a matching user script ID.
-        if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
-          let label = assigned.get().label || i18n.userScriptNoName;
-          return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
-            data.userScript = assigned.get();
-            commands.executeInContent('userScript', data, true);
-          });
-        }
-
-        // Check commands for a matching command ID.
-        if ((assigned = mapping.map(value => commands.findById(value.command))).isPresent()) {
-          let label = assigned.get().label;
-          return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
-            assigned.get().handler(data);
-          });
-        }
+        executeCommandForGesture(mapping, data, data.gesture);
       } else {
         // Mapping for this gesture not found.
         updateStatusForGesture(data.sender, data.gesture, false);
@@ -153,33 +164,12 @@
   function onWheelGesture (data) {
     // Return a promise which may contain popup items.
     return findWheelMappingForGesture(data.gesture).then(mapping => {
-      let assigned = Optional.EMPTY;
       if (mapping.isPresent()) {
-        // Check user scripts for a matching user script ID.
-        if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
-          let label = assigned.get().label || i18n.userScriptNoName;
-          return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
-            data.userScript = assigned.get();
-            return commands.executeInContent('userScript', data, true).then(result => {
-              // Allow user scripts to be repeatable by default.
-              return result || { repeat: true };
-            });
-          });
-        }
-
-        // Check commands for a matching command ID.
-        if ((assigned = mapping.map(value => commands.findById(value.command))).isPresent()) {
-          let label = assigned.get().label;
-          return updateStatusForGesture(data.sender, data.gesture, label).then(() => {
-            // The command output may contain popup items.
-            data.wheel = true;
-            return assigned.get().handler(data);
-          });
-        }
+        return executeCommandForGesture(mapping, data, data.gesture);
+      } else {
+        // If nothing is mapped it is safe to repeat.
+        return { repeat: true };
       }
-
-      // If nothing is mapped it is safe to repeat.
-      return { repeat: true };
     });
   }
 
@@ -187,35 +177,12 @@
   function onChordGesture (data) {
     // Return a promise which may contain popup items.
     return findChordMappingForGesture(data.gesture).then(mapping => {
-      let assigned = Optional.EMPTY;
       if (mapping.isPresent()) {
-        let gesture = helpers.getChordPreview(data.gesture);
-
-        // Check user scripts for a matching user script ID.
-        if ((assigned = settings.findUserScriptById(mapping.get().userScript)).isPresent()) {
-          let label = assigned.get().label || i18n.userScriptNoName;
-          return updateStatusForGesture(data.sender, gesture, label).then(() => {
-            data.userScript = assigned.get();
-            return commands.executeInContent('userScript', data, true).then(result => {
-              // Allow user scripts to be repeatable by default.
-              return result || { repeat: true };
-            });
-          });
-        }
-
-        // Check commands for a matching command ID.
-        if ((assigned = mapping.map(value => commands.findById(value.command))).isPresent()) {
-          let label = assigned.get().label;
-          return updateStatusForGesture(data.sender, gesture, label).then(() => {
-            // The command output may contain popup items.
-            data.wheel = true;
-            return assigned.get().handler(data);
-          });
-        }
+        return executeCommandForGesture(mapping, data, helpers.getChordPreview(data.gesture));
+      } else {
+        // If nothing is mapped it is safe to repeat.
+        return { repeat: true };
       }
-
-      // If nothing is mapped it is safe to repeat.
-      return { repeat: true };
     });
   }
 
