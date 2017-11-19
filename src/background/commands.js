@@ -328,7 +328,9 @@ modules.commands = (function (settings, helpers) {
     return getCurrentWindowTabs()
       .then(tabs => {
         let activeTabIndex = tabs.find(tab => tab.active).index;
-        return browser.tabs.remove(tabs.filter(tab => tab.index < activeTabIndex).map(tab => tab.id));
+        return browser.tabs.remove(tabs.filter(tab => {
+          return (tab.index < activeTabIndex) && !tab.pinned;
+        }).map(tab => tab.id));
       })
       // Allow the wheel or chord gesture to repeat.
       .then(() => ({ repeat: true }));
@@ -349,7 +351,9 @@ modules.commands = (function (settings, helpers) {
     return getCurrentWindowTabs()
       .then(tabs => {
         let activeTabIndex = tabs.find(tab => tab.active).index;
-        return browser.tabs.remove(tabs.filter(tab => tab.index > activeTabIndex).map(tab => tab.id));
+        return browser.tabs.remove(tabs.filter(tab => {
+           return (tab.index > activeTabIndex) && !tab.pinned;
+        }).map(tab => tab.id));
       })
       // Allow the wheel or chord gesture to repeat.
       .then(() => ({ repeat: true }));
@@ -357,7 +361,11 @@ modules.commands = (function (settings, helpers) {
 
   // Close the active tab.
   function commandCloseTab () {
-    return getActiveTab(tab => browser.tabs.remove(tab.id));
+    return getActiveTab(tab => {
+      if (!tab.pinned) {
+        return browser.tabs.remove(tab.id);
+      }
+    });
   }
 
   // Duplicate the active tab.
