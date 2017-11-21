@@ -291,7 +291,7 @@
   },
   "optionsEnableChordGestures": {
     "description": "Label text for enable chord gestures checkbox.",
-    "message": "Enable chord gestures."
+    "message": "Enable chord gestures"
   },
   "optionsEnableChordGesturesHelp": {
     "description": "Help text for the chord gestures panel.",
@@ -299,7 +299,7 @@
   },
   "optionsEnableWheelGestures": {
     "description": "Label text for enable wheel gestures checkbox.",
-    "message": "Enable wheel gestures."
+    "message": "Enable wheel gestures"
   },
   "optionsEnableWheelGesturesHelp": {
     "description": "Help text for the wheel gestures panel.",
