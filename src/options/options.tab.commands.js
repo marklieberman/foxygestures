@@ -52,15 +52,16 @@ app.controller('OptionsTabCommandsCtrl', [
       let assigned = Optional.EMPTY
         // Check user scripts for a matching user script ID.
         .or(() => $scope.findUserScriptById(mapping.userScript)
-          .map(value => value.label || 'User Script'))
+          .map(userScript => (userScript.label) ?
+              browser.i18n.getMessage('userScriptWithName', userScript.label) :
+              browser.i18n.getMessage('userScriptNoName')))
         // Check commands for a matching command ID.
         .or(() => $scope.findCommandById(mapping.command)
           .map(value => value.label));
 
       // Prompt if the assignment is valid.
-      if (assigned.isPresent() && !window.confirm(modules.helpers.format(
-        '{} is already mapped to {}. Re-assign to {}?',
-        gesture, assigned.get(), label))
+      if (assigned.isPresent() && !window.confirm(browser.i18n.getMessage(
+        'confirmReassignGesture', [ gesture, assigned.get(), label ]))
       ) {
         // Cancel assignment.
         return false;

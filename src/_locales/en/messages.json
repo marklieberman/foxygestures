@@ -525,7 +525,7 @@
   },
   "userScriptNoName": {
     "description": "Label used for user scripts without a name in gesture status, etc.",
-    "message": "User Script"
+    "message": "User Script: <No Name>"
   },
   "userScriptWithName": {
     "description": "Label used for user scripts with a name in gesture status, etc.",
@@ -540,5 +540,59 @@
   "warning": {
     "description": "The word warning.",
     "message": "Warning"
+  },
+  "confirmReassignGesture": {
+    "description": "Confirm dialog when assigning a gesture that is already mapped to a command.",
+    "message": "$GESTURE$ is already mapped to $OLD_COMMAND$. Re-assign to $NEW_COMMAND$?",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "DR"
+      },
+      "old_command": {
+        "content": "$2",
+        "example": "Close Tab"
+      },
+      "new_command": {
+        "content": "$3",
+        "example": "Save Now"
+      }
+    }
+  },
+  "confirmRemoveChord": {
+    "description": "Confirm dialog when removing a chord.",
+    "message": "Remove chord $CHORD$?",
+    "placeholders": {
+      "chord": {
+        "content": "$1",
+        "example": "Left + Right"
+      }
+    }
+  },
+  "confirmRemoveUserScript": {
+    "description": "Confirm dialog when removing a user script.",
+    "message": "Remove $USER_SCRIPT$?",
+    "placeholders": {
+      "user_script": {
+        "content": "$1",
+        "example": "User Script: Go Home"
+      }
+    }
+  },
+  "alertBackupNotRecognized": {
+    "description": "Alert when backup data addon ID is missing or invalid.",
+    "message": "File not recognized; missing or wrong addon ID."
+  },
+  "alertBackupInvalidVersion": {
+    "description": "Alert when backup data version is missing or invalid.",
+    "message": "Invalid or unknown version number."
+  },
+  "alertBackupCorrupt": {
+    "description": "Alert when backup data settings are invalid or corrupt.",
+    "message": "Backup data is invalid or corrupt."
+  },
+  "alertBackupRestored": {
+    "description": "Alert when backup data is successfully restored.",
+    "message": "All settings successfully restored from backup."
   }
 }

@@ -75,7 +75,7 @@ app.controller('OptionsTabBackupCtrl', [
       // Check the addon ID to ensure this is a Foxy Gestures backup.
       if (backupData.addonId !== selfInfo.id) {
         console.log('invalid addon ID', backupData.addonId);
-        window.alert('File not recognized; missing or wrong addon ID');
+        window.alert(browser.i18n.getMessage('alertBackupNotRecognized'));
         return false;
       }
 
@@ -83,14 +83,14 @@ app.controller('OptionsTabBackupCtrl', [
       backupData.$version = modules.helpers.parseAddonVersion(backupData.version);
       if (!backupData.$version) {
         console.log('invalid version', backupData.version);
-        window.alert('Invalid or unknown version number');
+        window.alert(browser.i18n.getMessage('alertBackupInvalidVersion'));
         return false;
       }
 
       // Ensure that the settings key is present as an object.
       if (typeof backupData.settings !== 'object') {
         console.log('invalid settings property', backupData.settings);
-        window.alert('Backup data is invalid or corrupt');
+        window.alert(browser.i18n.getMessage('alertBackupCorrupt'));
         return false;
       }
 
@@ -126,11 +126,11 @@ app.controller('OptionsTabBackupCtrl', [
         $scope.controls.optionsForm.$setUntouched();
 
         // Confirm settings have been restored.
-        window.alert('All settings successfully restored from backup');
+        window.alert(browser.i18n.getMessage('alertBackupRestored'));
       }).catch(err => {
         // Something went wrong andw as unhandled.
-        window.alert('Backup data is invalid or corrupt');
         console.log('unable to restore settings', err);
+        window.alert(browser.i18n.getMessage('alertBackupCorrupt'));
       });
     };
 

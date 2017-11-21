@@ -8,7 +8,7 @@ app.controller('OptionsTabUserScriptsCtrl', [
   function ($scope, commands, settings) {
 
     // ---- Scope variables -----
-    
+
     // Options for ACE editor.
     $scope.aceOpts = {
       theme: 'chrome',
@@ -47,8 +47,11 @@ app.controller('OptionsTabUserScriptsCtrl', [
         return;
       }
 
+      let label = (userScript.label ?
+        browser.i18n.getMessage('userScriptWithName', userScript.label) :
+        browser.i18n.getMessage('userScriptNoName'));
+
       // Prompt when re-assigning a gesture.
-      let label = userScript.label || 'User Script';
       if (!$scope.promptIfGestureInUse(gesture, label, mapping => mapping.userScript === userScript.id)) {
         // Assignment cancelled.
         return;
@@ -76,8 +79,11 @@ app.controller('OptionsTabUserScriptsCtrl', [
     // Remove a user script.
     $scope.removeUserScript = (removing) => {
       // Confirm before deleting.
-      let label = removing.label || 'User Script';
-      if (window.confirm(modules.helpers.format('Permanently delete {}?', label))) {
+      let label = (removing.label ?
+        browser.i18n.getMessage('userScriptWithName', removing.label) :
+        browser.i18n.getMessage('userScriptNoName'));
+
+      if (window.confirm(browser.i18n.getMessage('confirmRemoveUserScript', label))) {
         // Remove the mapping for this user script.
         $scope.removeMappingForUserScript(removing);
 

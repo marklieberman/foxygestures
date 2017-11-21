@@ -63,7 +63,9 @@ app.controller('OptionsTabOtherGesturesCtrl', [
         // Add user scripts.
         settings.userScripts.map(userScript => ({
           id: userScript.id,
-          label: 'User Script: ' + (userScript.label || 'Empty Name'),
+          label: (userScript.label ?
+            browser.i18n.getMessage('userScriptWithName', userScript.label) :
+            browser.i18n.getMessage('userScriptNoName')),
           mapping: {
             command: 'userScript',
             userScript: userScript.id
@@ -124,7 +126,7 @@ app.controller('OptionsTabOtherGesturesCtrl', [
 
     // Remove a mapping for a chord gesture.
     function removeChordMapping (chordMapping) {
-      if (window.confirm(modules.helpers.format('Remove chord "{}"?',
+      if (window.confirm(browser.i18n.getMessage('confirmRemoveChord',
         modules.helpers.getChordPreview(chordMapping.chord)))
       ) {
         settings.chordMappings = settings.chordMappings.filter(mapping => mapping !== chordMapping);
