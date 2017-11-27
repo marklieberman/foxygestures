@@ -66,6 +66,16 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
+Version 1.0.14
+ - Added option for double right click mode OSX/Linux.
+ - Added support for localization with locales to come.
+ - Fixed Closed Tab command not repeatable.
+ - Fixed handling of containers on new tabs, windows, etc. to be more like default Firefox behaviour.
+ - Fixed specify openerTabId on new tabs (for compatibility with Tab Tree, etc.)
+
+Version 1.0.13
+ - Fixed an XSS security bug.
+
 Version 1.0.11
  - Added preference to enable text selection when gesture button is 'Left'.
  - Added request for 'clipboardWrite' permission due to user request.
