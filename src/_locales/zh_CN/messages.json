@@ -1,0 +1,598 @@
+{
+  "buttonAddChord": {
+    "description": "Button text to add a chord.",
+    "message": "添加和弦"
+  },
+  "buttonAddUserScript": {
+    "description": "Label for the button to add a user script",
+    "message": "添加用户脚本"
+  },
+  "buttonCancel": {
+    "description": "Label for cancel buttons",
+    "message": "取消"
+  },
+  "buttonFewerOptions": {
+    "description": "Label for button or link to hide additional options.",
+    "message": "更少选项"
+  },
+  "buttonMoreOptions": {
+    "description": "Label for button or link to show additional options.",
+    "message": "更多选项"
+  },
+  "buttonOK": {
+    "description": "Label for OK buttons",
+    "message": "确定"
+  },
+  "buttonReset": {
+    "description": "Label for button or link to reset something.",
+    "message": "重置"
+  },
+  "buttonXSSWarningAccept": {
+    "description": "Label for the button to accept the user scripts XSS warning.",
+    "message": "我已了解此风险"
+  },
+  "commandCloseLeftTabs": {
+    "message": "关闭左侧标签页"
+  },
+  "commandCloseOtherTabs": {
+    "message": "关闭其他标签页"
+  },
+  "commandCloseRightTabs": {
+    "message": "关闭右侧标签页"
+  },
+  "commandCloseTab": {
+    "message": "关闭标签页"
+  },
+  "commandDuplicateTab": {
+    "message": "创建标签页副本"
+  },
+  "commandDuplicateTabInNewPrivateWindow": {
+    "message": "新建隐私窗口来打开标签页副本"
+  },
+  "commandDuplicateTabInNewPrivateWindowTooltip": {
+    "message": "隐私窗口中的标签页副本不会保留历史记录"
+  },
+  "commandHistoryBack": {
+    "message": "后退"
+  },
+  "commandHistoryForward": {
+    "message": "前进"
+  },
+  "commandMinimize": {
+    "message": "最小化窗口"
+  },
+  "commandMoveTabToNewWindow": {
+    "message": "标签页移动到新窗口"
+  },
+  "commandNewPrivateWindow": {
+    "message": "新建隐私窗口"
+  },
+  "commandNewTab": {
+    "message": "新建标签页"
+  },
+  "commandNewWindow": {
+    "message": "新建窗口"
+  },
+  "commandNextTab": {
+    "message": "下一个标签页"
+  },
+  "commandOpenFrameInNewTab": {
+    "message": "新建标签页打开框架"
+  },
+  "commandOpenFrameInNewWindow": {
+    "message": "新建窗口打开框架"
+  },
+  "commandOpenLinkInNewBackgroundTab": {
+    "message": "新建后台标签页打开链接"
+  },
+  "commandOpenLinkInNewForegroundTab": {
+    "message": "新建前台标签页打开链接"
+  },
+  "commandOpenLinkInNewPrivateWindow": {
+    "message": "新建隐私窗口打开链接"
+  },
+  "commandOpenLinkInNewWindow": {
+    "message": "新建窗口打开链接"
+  },
+  "commandPageDown": {
+    "message": "向前翻页"
+  },
+  "commandPageDownTooltip": {
+    "message": "使用启发式方法匹配并减少网址中的页码"
+  },
+  "commandPageUp": {
+    "message": "向后翻页"
+  },
+  "commandPageUpTooltip": {
+    "message": "使用启发式方法匹配并增加网址中的页码"
+  },
+  "commandPinUnpinTab": {
+    "message": "固定/取消固定标签页"
+  },
+  "commandPreviousTab": {
+    "message": "上一个标签页"
+  },
+  "commandReload": {
+    "message": "重新载入"
+  },
+  "commandReloadBypassCache": {
+    "message": "重新载入 (绕过缓存)"
+  },
+  "commandReloadFrame": {
+    "message": "重新载入框架"
+  },
+  "commandSaveMediaAs": {
+    "message": "媒体另存为"
+  },
+  "commandSaveMediaAsTooltip": {
+    "message": "保存一个图像或 HTML5 音视频"
+  },
+  "commandSaveMediaNow": {
+    "message": "立即保存媒体"
+  },
+  "commandSaveMediaNowTooltip": {
+    "message": "保存一个图像或 HTML5 音视频到下载文件夹"
+  },
+  "commandScrollBottom": {
+    "message": "滚动到底"
+  },
+  "commandScrollDown": {
+    "message": "向下滚动"
+  },
+  "commandScrollTop": {
+    "message": "滚动到顶"
+  },
+  "commandScrollUp": {
+    "message": "向上滚动"
+  },
+  "commandShowOnlyThisFrame": {
+    "message": "只显示此框架"
+  },
+  "commandUndoClose": {
+    "message": "撤销关闭"
+  },
+  "commandZoomIn": {
+    "message": "放大"
+  },
+  "commandZoomOut": {
+    "message": "缩小"
+  },
+  "commandZoomReset": {
+    "message": "重置缩放"
+  },
+  "commandZoomResetTooltip": {
+    "message": "重置标签页缩放级别到默认"
+  },
+  "labelGesture": {
+    "description": "Label for gesture input controls.",
+    "message": "手势"
+  },
+  "labelScrollDown": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll down.",
+    "message": "向下滚动"
+  },
+  "labelScrollLeft": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll left.",
+    "message": "向左滚动"
+  },
+  "labelScrollRight": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll right.",
+    "message": "向右滚动"
+  },
+  "labelScrollUp": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll up.",
+    "message": "向上滚动"
+  },
+  "labelUserScript": {
+    "description": "Label for user script controls.",
+    "message": "用户脚本"
+  },
+  "manifestDescription": {
+    "description": "The description of this addon in manifest.json",
+    "message": "适用于 Firefox 的鼠标手势"
+  },
+  "millisecondsAddon": {
+    "description": "The word milliseconds as a bootstrap input-addon in options.",
+    "message": "毫秒"
+  },
+  "modalChordAcceptable": {
+    "description": "Prompt to accept a chord in the chord gesture modal.",
+    "message": "按确定接受这个和弦手势。"
+  },
+  "modalChordConflict": {
+    "description": "Prompt to indicate a conflict in the chord gesture modal.",
+    "message": "这个和弦已存在。"
+  },
+  "modalChordPrompt": {
+    "description": "Prompt to press a chord in the chord gesture modal.",
+    "message": "同时按下两个或以上的鼠标按钮来录制和铉手势。"
+  },
+  "modalChordWaiting": {
+    "description": "Placeholder text while waiting for buttons to be pressed.",
+    "message": "正在等待..."
+  },
+  "mouseButtonLeft": {
+    "description": "Name of left mouse button",
+    "message": "左"
+  },
+  "mouseButtonMiddle": {
+    "description": "Name of middle mouse button",
+    "message": "中"
+  },
+  "mouseButtonOther": {
+    "description": "Name of other mouse buttons (e.g.: Button 4)",
+    "message": "按钮 $BUTTON$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "4"
+      }
+    }
+  },
+  "mouseButtonRight": {
+    "description": "Name of right mouse button",
+    "message": "右"
+  },
+  "noCommand": {
+    "description": "Placeholder for when a gesture is not assigned to a command.",
+    "message": "-- 无命令 --"
+  },
+  "optionsBackupBackupSettings": {
+    "description": "Header for backup settings section.",
+    "message": "备份设置"
+  },
+  "optionsBackupBackupSettingsButton": {
+    "description": "Button text to download settings.",
+    "message": "下载设置"
+  },
+  "optionsBackupBackupSettingsInfo": {
+    "description": "Description of the backup settings function.",
+    "message": "点击下载包含设置备份及用户脚本的一个 JSON 文件。"
+  },
+  "optionsBackupRestoreSettings": {
+    "description": "Header for restore settings section.",
+    "message": "还原设置"
+  },
+  "optionsBackupRestoreSettingsButton": {
+    "description": "Button text to upload settings.",
+    "message": "从文件还原设置"
+  },
+  "optionsBackupRestoreSettingsInfo": {
+    "description": "Description of the restore settings function.",
+    "message": "选择包含设置及用户脚本的备份文件来还原它们。"
+  },
+  "optionsCanSelectStart": {
+    "description": "Checkbox to enable or disable text selection during gestures",
+    "message": "允许手势期间选中文本。"
+  },
+  "optionsCommandsWellHelp": {
+    "description": "Help text that appears in the well at the top of the commands tap",
+    "message": "在框中画手势来分配。按下并松开手势按钮则清除手势。"
+  },
+  "optionsDisableOnAlt": {
+    "description": "Label text for disable on alt checkbox.",
+    "message": "按住 Alt 键时不开始手势。"
+  },
+  "optionsDisableOnShift": {
+    "description": "Label text for disable on shift checkbox.",
+    "message": "按住 Shift 键时不开始手势。"
+  },
+  "optionsDoubleRightClick": {
+    "description": "Label text for double right-click checkbox.",
+    "message": "双击右键打开上下文菜单"
+  },
+  "optionsDoubleRightClickHelp": {
+    "description": "Help text for double right-click checkbox.",
+    "message": "OSX 及 Linux 上只要按下右键就会显示上下文菜单。这与右键松开时才显示上下文菜单的 Windows 不同。这会导致一个问题，上下文菜单会在本扩展确定手势是否发生之前显示。启用此设置将禁止显示上下文菜单，除非您双击鼠标右键。"
+  },
+  "optionsDrawTrails": {
+    "description": "Label text for draw gesture trails checkbox.",
+    "message": "绘制手势轨迹"
+  },
+  "optionsEnableChordGestures": {
+    "description": "Label text for enable chord gestures checkbox.",
+    "message": "启用和弦手势"
+  },
+  "optionsEnableChordGesturesHelp": {
+    "description": "Help text for the chord gestures panel.",
+    "message": "同时按下两个或以上的鼠标按钮来执行和铉手势"
+  },
+  "optionsEnableWheelGestures": {
+    "description": "Label text for enable wheel gestures checkbox.",
+    "message": "启用滚轮手势"
+  },
+  "optionsEnableWheelGesturesHelp": {
+    "description": "Help text for the wheel gestures panel.",
+    "message": "按住手势按钮并滚动鼠标滚轮执行滚轮手势"
+  },
+  "optionsGestureButton": {
+    "description": "Label for the gesture button select.",
+    "message": "手势按钮"
+  },
+  "optionsGestureButtonHelp": {
+    "description": "Help text for the gesture button select.",
+    "message": "用来开始一次手势的鼠标按钮。"
+  },
+  "optionsGestureTimeout": {
+    "description": "Label for the gesture timeout input.",
+    "message": "手势超时"
+  },
+  "optionsGestureTimeoutHelp": {
+    "description": "Help text for the gesture timeout input.",
+    "message": "超过此时间未移动则取消手势。0 则禁用。"
+  },
+  "optionsHeadingNavigationAndScrolling": {
+    "description": "Heading for navigation and scrolling preferences.",
+    "message": "导航与滚动"
+  },
+  "optionsHeadingOSXLinuxOnly": {
+    "description": "Heading for the OSX and Linux only section in general options.",
+    "message": "仅 OSX 和 Linux"
+  },
+  "optionsHeadingOtherCommands": {
+    "description": "Heading for other command preferences.",
+    "message": "其他命令"
+  },
+  "optionsHeadingTabAndWindow": {
+    "description": "Heading for tab and window preferences.",
+    "message": "标签页和窗口命令"
+  },
+  "optionsMorePrefsInsertRelatedTab": {
+    "description": "Label for the checkbox to toggle insert related tab after current behaviour.",
+    "message": "将新建标签页系列命令打开的标签页放在当前标签页后面。这与 browser.tabs.insertRelatedAfterCurrent 首选项类似。"
+  },
+  "optionsMorePrefsNewPrivateWindowUrl": {
+    "description": "Label for the default URL for new private windows.",
+    "message": "新建隐私窗口命令打开的窗口的默认网址"
+  },
+  "optionsMorePrefsNewTabOrWindowHelp": {
+    "description": "Help text for the default URL for new tabs and windows.",
+    "message": "留空此栏使用默认的 about:newtab。非特权的如 about:blank 和 about:home 也可接受。"
+  },
+  "optionsMorePrefsNewTabUrl": {
+    "description": "Label for the default URL for new tabs.",
+    "message": "新建标签页命令打开的标签页的默认网址"
+  },
+  "optionsMorePrefsNewWindowUrl": {
+    "description": "Label for the default URL for new windows.",
+    "message": "新建窗口命令打开的窗口的默认网址"
+  },
+  "optionsMorePrefsNextTabWrap": {
+    "description": "Label for the checkbox to enable tab wrapping.",
+    "message": "下一个与上一个标签页命令循环切换标签页。"
+  },
+  "optionsMorePrefsScrollAmount": {
+    "description": "Label to configure scroll up and scroll down amount.",
+    "message": "向上/向下滚动命令滚动多大视界"
+  },
+  "optionsMorePrefsScrollAmountHelp": {
+    "description": "Help text to configure scroll up and scroll down amount.",
+    "message": "1 vh = ¹/₁₀₀ 视界高度。"
+  },
+  "optionsMorePrefsScrollDuration": {
+    "description": "Label to configure scroll animation duration.",
+    "message": "滚动系列命令的动画持续时间"
+  },
+  "optionsMorePrefsScrollDurationHelp": {
+    "description": "Help text to configure scroll animation duration.",
+    "message": "0 则禁用。"
+  },
+  "optionsMorePrefsUseRelPrevNext": {
+    "description": "Label for checkbox to follow rel=next attributes.",
+    "message": "向前翻页与向后翻页命令遵守 rel=next 和 rel=prev 属性。"
+  },
+  "optionsMorePrefsWellHelp": {
+    "description": "Help text that appears in the well at the top of the more preferences tab",
+    "message": "修改内置命令及其他方面的举动的偏好设置。"
+  },
+  "optionsMorePrefsZoomStep": {
+    "description": "Label for the amount to change zoom factor.",
+    "message": "放大/缩小命令的调整幅度"
+  },
+  "optionsShowStatusText": {
+    "description": "Label for the checkbox to show status text.",
+    "message": "显示状态文本"
+  },
+  "optionsStatusTemplate": {
+    "description": "Label for the status template field.",
+    "message": "状态模板"
+  },
+  "optionsStatusTemplateHelp": {
+    "description": "Help text for the status template field.",
+    "message": "编辑状态文本的 HTML 模板。有 data-mg-status 属性的元素的内容将被替换为状态文本。"
+  },
+  "optionsStatusTimeout": {
+    "description": "Label for the status timeout field.",
+    "message": "状态超时"
+  },
+  "optionsStatusTimeoutHelp": {
+    "description": "Help text for the status timeout field.",
+    "message": "手势后显示多久状态文本。"
+  },
+  "optionsTitle": {
+    "description": "Large heading at the top of the options page.",
+    "message": "Foxy Gestures 选项"
+  },
+  "optionsTrailColor": {
+    "description": "Label for the input to pick trail color.",
+    "message": "轨迹颜色"
+  },
+  "optionsTrailColorHelp": {
+    "description": "Help text for the input to pick trail color.",
+    "message": "接受各种 CSS 颜色定义。例如：blue、#336699、rgba(64, 128, 192, 0.5)"
+  },
+  "optionsTrailWidth": {
+    "description": "Label for the input to pick trail width.",
+    "message": "轨迹宽度"
+  },
+  "optionsUserScriptsWellHelp1": {
+    "description": "Help text that appears in the well at the top of the user scripts tab",
+    "message": "用鼠标手势执行自定义脚本。"
+  },
+  "optionsUserScriptsWellHelp2": {
+    "description": "Help text that appears in the well at the top of the user scripts tab",
+    "message": "使用前请阅读文章了解用户脚本（英文）。"
+  },
+  "optionsXSSWarning1": {
+    "description": "XSS warning text.",
+    "message": "此功能是为高级用户准备。如果您看到某篇文章说如何操作来制成某项功能，并且并不了解其代码的目的，请审慎使用，恶意代码可能危及您的系统安全。"
+  },
+  "optionsXSSWarning2": {
+    "description": "XSS warning text.",
+    "message": "用户脚本有权访问 Foxy Gestures 可使用的 WebExtensions API。这些 API 可以访问浏览器历史记录、下载恶意脚本，或以其他方式操控您的浏览器。切勿复制粘贴不可靠来源提供的用户脚本。"
+  },
+  "optionsXSSWarningInfo": {
+    "description": "XSS warning text.",
+    "message": "有关的更多信息详见下列资源："
+  },
+  "optionsXSSWarningLink1": {
+    "description": "XSS warning text.",
+    "message": "有关跨站脚本的维基百科条目（英文）。"
+  },
+  "optionsXSSWarningLink2": {
+    "description": "XSS warning text.",
+    "message": "有关 self-XSS 的维基百科条目（英文）。"
+  },
+  "percentAddon": {
+    "description": "The word percent in a bootstrap input-addon in options.",
+    "message": "%"
+  },
+  "secondsAddon": {
+    "description": "The word seconds in a bootstrap input-addon in options.",
+    "message": "秒"
+  },
+  "statusGestureKnown": {
+    "description": "Status message when a gesture is mapped to a command",
+    "message": "手势：$GESTURE$ ($COMMAND$)",
+    "placeholders": {
+      "command": {
+        "content": "$2",
+        "example": "New Tab"
+      },
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+  "statusGestureProgress": {
+    "description": "Status message during a gesture",
+    "message": "手势：$GESTURE$",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+  "statusGestureUnknown": {
+    "description": "Status message when a gesture is not mapped to a command",
+    "message": "未知手势：$GESTURE$",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+  "tabBackupRestore": {
+    "description": "Heading for the backup and restore tab",
+    "message": "备份和还原"
+  },
+  "tabCommands": {
+    "description": "Heading for the built-in commands tab",
+    "message": "内置命令"
+  },
+  "tabGeneral": {
+    "description": "Heading for the general settings tab",
+    "message": "常规设置"
+  },
+  "tabMorePrefs": {
+    "description": "Heading for the more preferences tab",
+    "message": "细节偏好"
+  },
+  "tabOtherGestures": {
+    "description": "Heading for the other gestures tab",
+    "message": "其他手势"
+  },
+  "tabUserScripts": {
+    "description": "Heading for the user scripts tab",
+    "message": "用户脚本"
+  },
+  "tooltipRemoveUserScript": {
+    "description": "Tooltip for the button to delete a user script.",
+    "message": "移除用户脚本"
+  },
+  "userScriptNoName": {
+    "description": "Label used for user scripts without a name in gesture status, etc.",
+    "message": "用户脚本：<无名称>"
+  },
+  "userScriptWithName": {
+    "description": "Label used for user scripts with a name in gesture status, etc.",
+    "message": "用户脚本：$NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "My Custom Script"
+      }
+    }
+  },
+  "warning": {
+    "description": "The word warning.",
+    "message": "警告"
+  },
+  "confirmReassignGesture": {
+    "description": "Confirm dialog when assigning a gesture that is already mapped to a command.",
+    "message": "$GESTURE$ 已经映射到 $OLD_COMMAND$。重新分配给 $NEW_COMMAND$？",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "DR"
+      },
+      "old_command": {
+        "content": "$2",
+        "example": "Close Tab"
+      },
+      "new_command": {
+        "content": "$3",
+        "example": "Save Now"
+      }
+    }
+  },
+  "confirmRemoveChord": {
+    "description": "Confirm dialog when removing a chord.",
+    "message": "移除和铉 $CHORD$？",
+    "placeholders": {
+      "chord": {
+        "content": "$1",
+        "example": "Left + Right"
+      }
+    }
+  },
+  "confirmRemoveUserScript": {
+    "description": "Confirm dialog when removing a user script.",
+    "message": "移除 $USER_SCRIPT$？",
+    "placeholders": {
+      "user_script": {
+        "content": "$1",
+        "example": "User Script: Go Home"
+      }
+    }
+  },
+  "alertBackupNotRecognized": {
+    "description": "Alert when backup data addon ID is missing or invalid.",
+    "message": "无法识别文件，附加组件 ID 缺失或有误。"
+  },
+  "alertBackupInvalidVersion": {
+    "description": "Alert when backup data version is missing or invalid.",
+    "message": "无效或未知的版本号。"
+  },
+  "alertBackupCorrupt": {
+    "description": "Alert when backup data settings are invalid or corrupt.",
+    "message": "备份数据无效或已损坏。"
+  },
+  "alertBackupRestored": {
+    "description": "Alert when backup data is successfully restored.",
+    "message": "成功从备份还原所有设置。"
+  }
+}
