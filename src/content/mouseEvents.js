@@ -66,6 +66,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
     preventClick: false,               // Prevent handling of clicks when truthy.
     deadTimeHandle: null,              // Timeout for click preventing dead time.
     lastContextMenu: 0,                // Time of last contextmenu event.
+    stickyEventCount: 0                // Number of consecutive sticky mousemove events.
   });
 
   // Settings for this module.
@@ -385,16 +386,22 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // pressed. Therefore, if no buttons are pressed during a gesture state it must be a sticky gesture scenario.
   // This happens most often when the mouse leaves the DOM during a gesture and some mouse events are not able to
   // be handled.
+  // Note: OSX will occasionally fire a mousemove event with buttons = 0 at the moment a button is released, just
+  // before the mouseup event. This is handled by requiring two consecutive sticky mousemove events to trigger the
+  // sticky gesture.
   exports.stickyGestureCheck = function (data) {
     if (data.buttons === BUTTONS_MASK.NONE) {
       // Sticky gesture detected.
-      console.log('sticky gesture detected', state.gestureState);
-      exports.abortGesture();
-      return true;
+      if (state.stickyEventCount++ > 1) {
+        console.log('sticky gesture detected', state.gestureState);
+        exports.abortGesture();
+        return true;
+      }
+    } else {
+      // Gesture is not sticky.
+      state.stickyEventCount = 0;
+      return false;
     }
-
-    // Gesture is not sticky.
-    return false;
   };
 
   // Remember nested frames when their DOM is parsed.
@@ -554,7 +561,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
       // Switch state to chord gesture mode.
       exports.replicateState({
         gestureState: GESTURE_STATE.CHORD,
-        contextMenu: false
+        contextMenu: false,
+        lastContextMenu: 0 // Right-clicks should not count towards the double right-click contextmenu.
       });
 
       // Copy the chord into the event data.
@@ -647,7 +655,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
           case GESTURE_STATE.MOUSE_DOWN:
             // The mouse has moved while the gesture button is pressed.
             exports.replicateState({
-              gestureState: GESTURE_STATE.MOUSE_MOVE
+              gestureState: GESTURE_STATE.MOUSE_MOVE,
+              lastContextMenu: 0 // Right-clicks should not count towards the double right-click contextmenu.
             });
             /* falls through */
           case GESTURE_STATE.MOUSE_MOVE:
