@@ -97,7 +97,10 @@ window.fg.module('mouseEvents', function (exports, fg) {
     if (event.data) {
       switch (event.data.topic) {
         case 'mg-stateUpdate':
-          exports.replicateState(event.data.data);
+          // State replication messages should only go down the hierarchy.
+          if (event.source.window === window.parent) {
+            exports.replicateState(event.data.data);
+          }
           break;
         case 'mg-loadFrame':
           onLoadFrame(event.data.data, event.source);
