@@ -159,7 +159,10 @@ app.controller('OptionsCtrl', [
     // ----- Scope variables -----
     $scope.commands = commands;
     $scope.settings = settings;
-    $scope.controls = {};
+    $scope.controls = {
+      // Restore the previously active tab.
+      activeTab: Number(window.localStorage.getItem('activeTab') || 0)
+    };
 
     // ----- Extend controller -----
 
@@ -214,6 +217,13 @@ app.controller('OptionsCtrl', [
           $scope.$broadcast('redraw');
         });
       }, true);
+    };
+
+    // Remember the active tab.
+    $scope.onActiveTabChanged = ($event, index) => {
+      if ($event) {
+        window.localStorage.setItem('activeTab', index);
+      }
     };
 
   }]);

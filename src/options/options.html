@@ -24,34 +24,34 @@
     <!-- Do not show until settings are loaded -->
     <form class="form" name="controls.optionsForm" ng-if="commands.loaded && settings.loaded">
 
-      <uib-tabset active="0">
+      <uib-tabset active="controls.activeTab">
 
-        <uib-tab index="0">
+        <uib-tab index="0" select="onActiveTabChanged($event, 0)">
           <uib-tab-heading i18n="'tabGeneral'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.general.html'"></div>
         </uib-tab>
 
-        <uib-tab index="1">
+        <uib-tab index="1" select="onActiveTabChanged($event, 1)">
           <uib-tab-heading i18n="'tabCommands'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.commands.html'"></div>
         </uib-tab>
 
-        <uib-tab index="2">
+        <uib-tab index="2" select="onActiveTabChanged($event, 2)">
           <uib-tab-heading i18n="'tabOtherGestures'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.othergestures.html'"></div>
         </uib-tab>
 
-        <uib-tab index="3">
+        <uib-tab index="3" select="onActiveTabChanged($event, 3)">
           <uib-tab-heading i18n="'tabUserScripts'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.userscripts.html'"></div>
         </uib-tab>
 
-        <uib-tab index="4">
+        <uib-tab index="4" select="onActiveTabChanged($event, 4)">
           <uib-tab-heading i18n="'tabMorePrefs'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.moreprefs.html'"></div>
         </uib-tab>
 
-        <uib-tab index="5">
+        <uib-tab index="5" select="onActiveTabChanged($event, 5)">
           <uib-tab-heading i18n="'tabBackupRestore'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.backup.html'"></div>
         </uib-tab>
