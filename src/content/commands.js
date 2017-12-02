@@ -16,6 +16,7 @@ window.fg.module('commands', function (exports, fg) {
     'scrollDown'     : commandScrollDown,
     'scrollTop'      : commandScrollTop,
     'scrollUp'       : commandScrollUp,
+    'stop'           : commandStop,
     'userScript'     : commandUserScript
   };
 
@@ -272,6 +273,11 @@ window.fg.module('commands', function (exports, fg) {
       let scrollTo = Math.max(scrollTop - scrollAmount, 0);
       scrollYEase(scrollTo, settings.scrollDuration);
     });
+  }
+
+  // Stop loading the current document.
+  function commandStop (data) {
+    window.stop();
   }
 
   // Execute a user script.

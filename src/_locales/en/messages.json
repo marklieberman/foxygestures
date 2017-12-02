@@ -621,5 +621,8 @@
   "groupCommandsUserScripts": {
     "description": "Name of the group for user scripts.",
     "message": "User Scripts"
+  },
+  "commandStop": {
+    "message": "Stop"
   }
 }

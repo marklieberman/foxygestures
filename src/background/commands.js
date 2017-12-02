@@ -295,6 +295,16 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'stop',
+      handler: data => {
+        commands.executeInContent('stop', data);
+        // Allow the wheel or chord gesture to repeat.
+        return { repeat: true };
+      },
+      label: browser.i18n.getMessage('commandStop'),
+      group: groups.navigation
+    },
+    {
       id: 'undoClose',
       handler: commandUndoClose,
       label: browser.i18n.getMessage('commandUndoClose'),
