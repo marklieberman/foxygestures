@@ -46,6 +46,18 @@ modules.commands = (function (settings, helpers) {
   // An array of supported commands.
   const commands = [
     {
+      id: 'activateFirstTab',
+      handler: commandActivateFirstTab,
+      label: browser.i18n.getMessage('commandActivateFirstTab'),
+      group: groups.tabs
+    },
+    {
+      id: 'activateLastTab',
+      handler: commandActivateLastTab,
+      label: browser.i18n.getMessage('commandActivateLastTab'),
+      group: groups.tabs
+    },
+    {
       id: 'closeLeftTabs',
       handler: commandCloseLeftTabs,
       label: browser.i18n.getMessage('commandCloseLeftTabs'),
@@ -127,8 +139,8 @@ modules.commands = (function (settings, helpers) {
     },
     {
       id: 'nextTab',
-      handler: commandNextTab,
-      label: browser.i18n.getMessage('commandNextTab'),
+      handler: commandActivateNextTab,
+      label: browser.i18n.getMessage('commandActivateNextTab'),
       group: groups.tabs
     },
     {
@@ -209,8 +221,8 @@ modules.commands = (function (settings, helpers) {
     },
     {
       id: 'previousTab',
-      handler: commandPreviousTab,
-      label: browser.i18n.getMessage('commandPreviousTab'),
+      handler: commandActivatePreviousTab,
+      label: browser.i18n.getMessage('commandActivatePreviousTab'),
       group: groups.tabs
     },
     {
@@ -412,6 +424,70 @@ modules.commands = (function (settings, helpers) {
 
   // Command implementations -------------------------------------------------------------------------------------------
 
+  // Activate the first tab in the window.
+  function commandActivateFirstTab (data) {
+    return getCurrentWindowTabs().then(tabs => {
+      let active = tabs.find(tab => tab.active);
+      let first = tabs.find(tab => tab.index === 0);
+      if (active === first) {
+        // Already on the first tab.
+        return { repeat: true };
+      } else {
+        // Transition the gesture into the first tab using state cloning.
+        return transitionGesture(active, first, data.cloneState)
+          .then(() => browser.tabs.update(first.id, { active: true }));
+      }
+    });
+  }
+
+  // Activate the last tab in the window.
+  function commandActivateLastTab (data) {
+    return getCurrentWindowTabs().then(tabs => {
+      let active = tabs.find(tab => tab.active);
+      let last = tabs.find(tab => tab.index === (tabs.length - 1));
+      if (active === last) {
+        // Already on the last tab.
+        return { repeat: true };
+      } else {
+        // Transition the gesture into the first tab using state cloning.
+        return transitionGesture(active, last, data.cloneState)
+          .then(() => browser.tabs.update(last.id, { active: true }));
+      }
+    });
+  }
+
+  // Activate the next tab.
+  function commandActivateNextTab (data) {
+    return getCurrentWindowTabs().then(tabs => {
+      let active = tabs.find(tab => tab.active);
+      if ((active.index === (tabs.length - 1)) && !modules.settings.nextTabWrap) {
+        return { repeat: true };
+      } else {
+        // Transition the gesture into the new tab using state cloning.
+        let index = (active.index + 1) % tabs.length;
+        let next = tabs[index];
+        return transitionGesture(active, next, data.cloneState)
+          .then(() => browser.tabs.update(next.id, { active: true }));
+      }
+    });
+  }
+
+  // Activate the previous tab.
+  function commandActivatePreviousTab (data) {
+    return getCurrentWindowTabs().then(tabs => {
+      let active = tabs.find(tab => tab.active);
+      if ((active.index === 0) && !modules.settings.nextTabWrap) {
+        return { repeat: true };
+      } else {
+        // Transition the gesture into the new tab using state cloning.
+        let index = (active.index - 1) % tabs.length;
+        let previous = tabs[index < 0 ? tabs.length - 1 : index];
+        return transitionGesture(active, previous, data.cloneState)
+          .then(() => browser.tabs.update(previous.id, { active: true }));
+      }
+    });
+  }
+
   // Close tabs to the left of the active tab.
   function commandCloseLeftTabs () {
     return getCurrentWindowTabs()
@@ -493,22 +569,6 @@ modules.commands = (function (settings, helpers) {
   // Move the active tab to a new window.
   function commandMoveTabToNewWindow () {
     return getActiveTab(tab => browser.windows.create({ tabId: tab.id }));
-  }
-
-  // Activate the next tab.
-  function commandNextTab (data) {
-    return getCurrentWindowTabs().then(tabs => {
-      let active = tabs.find(tab => tab.active);
-      if ((active.index === (tabs.length - 1)) && !modules.settings.nextTabWrap) {
-        return Promise.resolve();
-      } else {
-        // Transition the gesture into the new tab using state cloning.
-        let index = (active.index + 1) % tabs.length;
-        let next = tabs[index];
-        return transitionGesture(active, next, data.cloneState)
-          .then(() => browser.tabs.update(next.id, { active: true }));
-      }
-    });
   }
 
   // Create a new empty tab.
@@ -634,22 +694,6 @@ modules.commands = (function (settings, helpers) {
     return getActiveTab(tab => browser.tabs.update({ pinned: !tab.pinned }))
       // Allow the wheel or chord gesture to repeat.
       .then(() => ({ repeat: true }));
-  }
-
-  // Activate the previous tab.
-  function commandPreviousTab (data) {
-    return getCurrentWindowTabs().then(tabs => {
-      let active = tabs.find(tab => tab.active);
-      if ((active.index === 0) && !modules.settings.nextTabWrap) {
-        return Promise.resolve();
-      } else {
-        // Transition the gesture into the new tab using state cloning.
-        let index = (active.index - 1) % tabs.length;
-        let previous = tabs[index < 0 ? tabs.length - 1 : index];
-        return transitionGesture(active, previous, data.cloneState)
-          .then(() => browser.tabs.update(previous.id, { active: true }));
-      }
-    });
   }
 
   // Reload the active tab.

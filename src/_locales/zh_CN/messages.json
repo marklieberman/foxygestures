@@ -73,7 +73,7 @@
   "commandNewWindow": {
     "message": "新建窗口"
   },
-  "commandNextTab": {
+  "commandActivateNextTab": {
     "message": "下一个标签页"
   },
   "commandOpenFrameInNewTab": {
@@ -109,7 +109,7 @@
   "commandPinUnpinTab": {
     "message": "固定/取消固定标签页"
   },
-  "commandPreviousTab": {
+  "commandActivatePreviousTab": {
     "message": "上一个标签页"
   },
   "commandReload": {

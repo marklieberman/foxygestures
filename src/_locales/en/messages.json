@@ -73,8 +73,8 @@
   "commandNewWindow": {
     "message": "New Window"
   },
-  "commandNextTab": {
-    "message": "Next Tab"
+  "commandActivateNextTab": {
+    "message": "Go to Next Tab"
   },
   "commandOpenFrameInNewTab": {
     "message": "Open Frame in New Tab"
@@ -109,8 +109,8 @@
   "commandPinUnpinTab": {
     "message": "Pin/Un-pin Tab"
   },
-  "commandPreviousTab": {
-    "message": "Previous Tab"
+  "commandActivatePreviousTab": {
+    "message": "Go to Previous Tab"
   },
   "commandReload": {
     "message": "Reload"
@@ -627,5 +627,11 @@
   },
   "commandGoHome": {
     "message": "Go Home"
+  },
+  "commandActivateFirstTab": {
+    "message": "Go to First Tab"
+  },
+  "commandActivateLastTab": {
+    "message": "Go to Last Tab"
   }
 }
