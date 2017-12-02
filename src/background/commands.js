@@ -14,40 +14,75 @@
 var modules = modules || {};
 modules.commands = (function (settings, helpers) {
 
+  // Array of groups to organize commands.
+  const groups = {
+    navigation: {
+      order: 0,
+      id: 'navigation',
+      label: browser.i18n.getMessage('groupCommandsNavigation'),
+    },
+    tabs: {
+      order: 1,
+      id: 'tabs',
+      label: browser.i18n.getMessage('groupCommandsTabs'),
+    },
+    windows: {
+      order: 2,
+      id: 'windows',
+      label: browser.i18n.getMessage('groupCommandsWindows'),
+    },
+    hybrid: {
+      order: 3,
+      id: 'hybrid',
+      label: browser.i18n.getMessage('groupCommandHybrid'),
+    },
+    other: {
+      order: 100,
+      id: 'other',
+      label: browser.i18n.getMessage('groupCommandsOther'),
+    }
+  };
+
   // An array of supported commands.
-  var commands = [
+  const commands = [
     {
       id: 'closeLeftTabs',
       handler: commandCloseLeftTabs,
-      label: browser.i18n.getMessage('commandCloseLeftTabs')
+      label: browser.i18n.getMessage('commandCloseLeftTabs'),
+      group: groups.tabs
     },
     {
       id: 'closeOtherTabs',
       handler: commandCloseOtherTabs,
-      label: browser.i18n.getMessage('commandCloseOtherTabs')
+      label: browser.i18n.getMessage('commandCloseOtherTabs'),
+      group: groups.tabs
     },
     {
       id: 'closeRightTabs',
       handler: commandCloseRightTabs,
-      label: browser.i18n.getMessage('commandCloseRightTabs')
+      label: browser.i18n.getMessage('commandCloseRightTabs'),
+      group: groups.tabs
     },
     {
       id: 'closeTab',
       handler: commandCloseTab,
       label: browser.i18n.getMessage('commandCloseTab'),
-      defaultGesture: 'DR'
+      defaultGesture: 'DR',
+      group: groups.tabs
     },
     {
       id: 'duplicateTab',
       handler: commandDuplicateTab,
       label: browser.i18n.getMessage('commandDuplicateTab'),
-      defaultGesture: 'UR'
+      defaultGesture: 'UR',
+      group: groups.tabs
     },
     {
       id: 'duplicateTabInNewPrivateWindow',
       handler: commandDuplicateTabInNewPrivateWindow,
       label: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindow'),
-      tooltip: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindowTooltip')
+      tooltip: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindowTooltip'),
+      group: groups.tabs
     },
     {
       id: 'historyBack',
@@ -57,7 +92,8 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandHistoryBack'),
-      defaultGesture: 'L'
+      defaultGesture: 'L',
+      group: groups.navigation
     },
     {
       id: 'historyForward',
@@ -67,125 +103,148 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandHistoryForward'),
-      defaultGesture: 'R'
+      defaultGesture: 'R',
+      group: groups.navigation
     },
     {
       id: 'minimize',
       handler: commandMinimize,
       label: browser.i18n.getMessage('commandMinimize'),
-      defaultGesture: 'DL'
+      defaultGesture: 'DL',
+      group: groups.windows
     },
     {
       id: 'moveTabToNewWindow',
       handler: commandMoveTabToNewWindow,
-      label: browser.i18n.getMessage('commandMoveTabToNewWindow')
+      label: browser.i18n.getMessage('commandMoveTabToNewWindow'),
+      group: groups.tabs
     },
     {
       id: 'nextTab',
       handler: commandNextTab,
-      label: browser.i18n.getMessage('commandNextTab')
+      label: browser.i18n.getMessage('commandNextTab'),
+      group: groups.tabs
     },
     {
       id: 'newTab',
       handler: commandNewTab,
-      label: browser.i18n.getMessage('commandNewTab')
+      label: browser.i18n.getMessage('commandNewTab'),
+      group: groups.tabs
     },
     {
       id: 'newWindow',
       handler: commandNewWindow,
-      label: browser.i18n.getMessage('commandNewWindow')
+      label: browser.i18n.getMessage('commandNewWindow'),
+      group: groups.windows
     },
     {
       id: 'newPrivateWindow',
       handler: commandNewPrivateWindow,
-      label: browser.i18n.getMessage('commandNewPrivateWindow')
+      label: browser.i18n.getMessage('commandNewPrivateWindow'),
+      group: groups.windows
     },
     {
       id: 'openFrameInNewTab',
       handler: commandOpenFrameInNewTab,
-      label: browser.i18n.getMessage('commandOpenFrameInNewTab')
+      label: browser.i18n.getMessage('commandOpenFrameInNewTab'),
+      group: groups.navigation
     },
     {
       id: 'openFrameInNewWindow',
       handler: commandOpenFrameInNewWindow,
-      label: browser.i18n.getMessage('commandOpenFrameInNewWindow')
+      label: browser.i18n.getMessage('commandOpenFrameInNewWindow'),
+      group: groups.navigation
     },
     {
       id: 'openLinkInNewBackgroundTab',
       handler: commandOpenLinkInNewBackgroundTab,
-      label: browser.i18n.getMessage('commandOpenLinkInNewBackgroundTab')
+      label: browser.i18n.getMessage('commandOpenLinkInNewBackgroundTab'),
+      group: groups.navigation
     },
     {
       id: 'openLinkInNewForegroundTab',
       handler: commandOpenLinkInNewForegroundTab,
-      label: browser.i18n.getMessage('commandOpenLinkInNewForegroundTab')
+      label: browser.i18n.getMessage('commandOpenLinkInNewForegroundTab'),
+      group: groups.navigation
     },
     {
       id: 'openLinkInNewWindow',
       handler: commandOpenLinkInNewWindow,
-      label: browser.i18n.getMessage('commandOpenLinkInNewWindow')
+      label: browser.i18n.getMessage('commandOpenLinkInNewWindow'),
+      group: groups.navigation
     },
     {
       id: 'openLinkInPrivateWindow',
       handler: commandOpenLinkInNewPrivateWindow,
-      label: browser.i18n.getMessage('commandOpenLinkInNewPrivateWindow')
+      label: browser.i18n.getMessage('commandOpenLinkInNewPrivateWindow'),
+      group: groups.navigation
     },
     {
       id: 'openOptions',
       handler: commandOpenOptions,
-      label: browser.i18n.getMessage('commandOpenOptions')
+      label: browser.i18n.getMessage('commandOpenOptions'),
+      group: groups.other
     },
     {
       id: 'pageDown',
       handler: data => commands.executeInContent('pageDown', data),
       label: browser.i18n.getMessage('commandPageDown'),
       tooltip: browser.i18n.getMessage('commandPageDownTooltip'),
-      defaultGesture: 'DRD'
+      defaultGesture: 'DRD',
+      group: groups.navigation
     },
     {
       id: 'pageUp',
       handler: data => commands.executeInContent('pageUp', data),
       label: browser.i18n.getMessage('commandPageUp'),
       tooltip: browser.i18n.getMessage('commandPageUpTooltip'),
-      defaultGesture: 'URU'
+      defaultGesture: 'URU',
+      group: groups.navigation
     },
     {
       id: 'previousTab',
       handler: commandPreviousTab,
-      label: browser.i18n.getMessage('commandPreviousTab')
+      label: browser.i18n.getMessage('commandPreviousTab'),
+      group: groups.tabs
     },
     {
       id: 'pinUnpinTab',
       handler: commandPinUnpinTab,
-      label: browser.i18n.getMessage('commandPinUnpinTab')
+      label: browser.i18n.getMessage('commandPinUnpinTab'),
+      group: groups.tabs
     },
     {
       id: 'reload',
       handler: commandReload,
       label: browser.i18n.getMessage('commandReload'),
-      defaultGesture: 'RDLU'
+      defaultGesture: 'RDLU',
+      group: groups.navigation
     },
     {
       id: 'reloadBypassCache',
       handler: commandReloadBypassCache,
-      label: browser.i18n.getMessage('commandReloadBypassCache')
+      label: browser.i18n.getMessage('commandReloadBypassCache'),
+      group: groups.navigation
     },
     {
       id: 'reloadFrame',
       handler: data => commands.executeInContent('reloadFrame', data),
-      label: browser.i18n.getMessage('commandReloadFrame')
+      label: browser.i18n.getMessage('commandReloadFrame'),
+      group: groups.navigation
     },
     {
       id: 'saveMediaNow',
       handler: commandSaveMediaNow,
       label: browser.i18n.getMessage('commandSaveMediaNow'),
-      tooltip: browser.i18n.getMessage('commandSaveMediaNowTooltip')
+      tooltip: browser.i18n.getMessage('commandSaveMediaNowTooltip'),
+      group: groups.other
     },
     {
       id: 'saveMediaAs',
       handler: commandSaveMediaAs,
       label: browser.i18n.getMessage('commandSaveMediaAs'),
-      tooltip: browser.i18n.getMessage('commandSaveMediaAsTooltip')
+      tooltip: browser.i18n.getMessage('commandSaveMediaAsTooltip'),
+      group: groups.other
     },
     {
       id: 'scrollBottom',
@@ -195,7 +254,8 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandScrollBottom'),
-      defaultGesture: 'DLR'
+      defaultGesture: 'DLR',
+      group: groups.navigation
     },
     {
       id: 'scrollDown',
@@ -204,7 +264,8 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       },
-      label: browser.i18n.getMessage('commandScrollDown')
+      label: browser.i18n.getMessage('commandScrollDown'),
+      group: groups.navigation
     },
     {
       id: 'scrollTop',
@@ -214,7 +275,8 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandScrollTop'),
-      defaultGesture: 'ULR'
+      defaultGesture: 'ULR',
+      group: groups.navigation
     },
     {
       id: 'scrollUp',
@@ -224,33 +286,39 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandScrollUp'),
+      group: groups.navigation
     },
     {
       id: 'showOnlyThisFrame',
       handler: commandShowOnlyThisFrame,
-      label: browser.i18n.getMessage('commandShowOnlyThisFrame')
+      label: browser.i18n.getMessage('commandShowOnlyThisFrame'),
+      group: groups.navigation
     },
     {
       id: 'undoClose',
       handler: commandUndoClose,
       label: browser.i18n.getMessage('commandUndoClose'),
-      defaultGesture: 'RLR'
+      defaultGesture: 'RLR',
+      group: groups.tabs
     },
     {
       id: 'zoomIn',
       handler: commandZoomIn,
-      label: browser.i18n.getMessage('commandZoomIn')
+      label: browser.i18n.getMessage('commandZoomIn'),
+      group: groups.tabs
     },
     {
       id: 'zoomOut',
       handler: commandZoomOut,
-      label: browser.i18n.getMessage('commandZoomOut')
+      label: browser.i18n.getMessage('commandZoomOut'),
+      group: groups.tabs
     },
     {
       id: 'zoomReset',
       handler: commandZoomReset,
       label: browser.i18n.getMessage('commandZoomReset'),
-      tooltip: browser.i18n.getMessage('commandZoomResetTooltip')
+      tooltip: browser.i18n.getMessage('commandZoomResetTooltip'),
+      group: groups.tabs
     }
   ];
 
@@ -524,13 +592,15 @@ modules.commands = (function (settings, helpers) {
   // Open the options page in a new tab.
   function commandOpenOptions (data) {
     browser.management.getSelf().then(selfInfo => {
-      let tabOptions = {};
-      tabOptions.url = selfInfo.optionsUrl;
-      tabOptions.active = true;
-      if (settings.insertRelatedTab) {
-        tabOptions.index = tab.index + 1;
-      }
-      return browser.tabs.create(tabOptions);
+      return getActiveTab(tab => {
+        let tabOptions = {};
+        tabOptions.url = selfInfo.optionsUrl;
+        tabOptions.active = true;
+        if (settings.insertRelatedTab) {
+          tabOptions.index = tab.index + 1;
+        }
+        return browser.tabs.create(tabOptions);
+      });
     });
   }
 

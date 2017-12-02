@@ -110,7 +110,25 @@ canvas.gesture-input {
 .mapping-list {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
+
+  .mapping-group {
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-bottom: 40px;
+    }
+
+    .heading {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+
+    .members {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+    }
+  }
 
   .mapping-item {
     flex: 0 0 auto;

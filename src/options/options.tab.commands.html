@@ -18,30 +18,38 @@
     </div>
 
     <!-- List of gesture mappings -->
-    <div class="mapping-list">
-      <div class="mapping-item"
-           ng-repeat="command in commands | filter:controls.searchCommands | orderBy:'label'">
+    <div class="mapping-list built-ins">
+      <div class="mapping-group"
+           ng-repeat="group in commandGroups | orderBy:'order'">
+        <div class="heading">
+          <h4>{{::group.label}}</h4>
+        </div>
+        <div class="members">
+          <div class="mapping-item"
+               ng-repeat="command in group.members | orderBy:'label'">
 
-        <label class="control-label command-label">
-          <span>
-            {{command.label}}
-            <i class="fa fa-question-circle"
-               ng-if="command.tooltip"
-               uib-tooltip="{{command.tooltip}}"></i>
-          </span>
-        </label>
+            <label class="control-label command-label">
+              <span>
+                {{command.label}}
+                <i class="fa fa-question-circle"
+                   ng-if="command.tooltip"
+                   uib-tooltip="{{command.tooltip}}"></i>
+              </span>
+            </label>
 
-        <input class="form-control mapped-gesture"
-                ng-value="getMappingForCommand(command).gesture"
-                disabled="disabled"></input>
+            <input class="form-control mapped-gesture"
+                    ng-value="getMappingForCommand(command).gesture"
+                    disabled="disabled"></input>
 
-        <canvas class="gesture-input" mg-gesture-input="" width="148" height="100"
-                settings="settings"
-                gesture="getMappingForCommand(command).gesture"
-                on-gesture="assignGestureToCommand(gesture, command)"></canvas>
+            <canvas class="gesture-input" mg-gesture-input="" width="148" height="100"
+                    settings="settings"
+                    gesture="getMappingForCommand(command).gesture"
+                    on-gesture="assignGestureToCommand(gesture, command)"></canvas>
 
-      </div><!-- .mapping-item -->
-    </div><!-- .mapping-list -->
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>

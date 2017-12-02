@@ -58,8 +58,14 @@ app.controller('OptionsTabOtherGesturesCtrl', [
           label: command.label,
           mapping: {
             command: command.id
-          }
-        })).sort((a, b) => a.label.localeCompare(b.label)),
+          },
+          group: command.group.label,
+          groupOrder: command.group.order
+        })).sort((a, b) => {
+          // Sort by group order then command label.
+          let value = a.groupOrder - b.groupOrder;
+          return (value === 0) ? a.label.localeCompare(b.label) : value;
+        }),
         // Add user scripts.
         settings.userScripts.map(userScript => ({
           id: userScript.id,
@@ -69,7 +75,8 @@ app.controller('OptionsTabOtherGesturesCtrl', [
           mapping: {
             command: 'userScript',
             userScript: userScript.id
-          }
+          },
+          group: browser.i18n.getMessage('groupCommandsUserScripts')
         })).sort((a, b) => a.label.localeCompare(b.label))
       );
     }

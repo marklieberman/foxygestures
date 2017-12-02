@@ -3,9 +3,26 @@
 // ---------------------------------------------------------------------------------------------------------------------
 app.controller('OptionsTabCommandsCtrl', [
   '$scope',
+  '$filter',
   'commands',
   'settings',
-  function ($scope, commands, settings) {
+  function ($scope, $filter, commands, settings) {
+
+    // ----- Scope watches -----
+    $scope.$watch('controls.searchCommands', (newValue) => {
+      let array = [];
+      array.$lookup = {};
+      $scope.commandGroups = $filter('filter')(commands, newValue).reduce((array, command) => {
+        let index = array.$lookup[command.group.id];
+        if (index !== undefined) {
+          array[index].members.push(command);
+        } else {
+          array.$lookup[command.group.id] = array.length;
+          array.push(angular.extend({}, command.group, { members: [ command ] }));
+        }
+        return array;
+      }, array);
+    });
 
     // Functions -------------------------------------------------------------------------------------------------------
 

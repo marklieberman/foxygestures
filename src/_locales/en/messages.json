@@ -95,13 +95,13 @@
     "message": "Open Link in New Window"
   },
   "commandPageDown": {
-    "message": "Page Down"
+    "message": "Previous Page"
   },
   "commandPageDownTooltip": {
     "message": "Decrement the page number in the URL using matching heuristics"
   },
   "commandPageUp": {
-    "message": "Page Up"
+    "message": "Next Page"
   },
   "commandPageUpTooltip": {
     "message": "Increment the page number in the URL using matching heuristics"
@@ -379,7 +379,7 @@
   },
   "optionsMorePrefsUseRelPrevNext": {
     "description": "Label for checkbox to follow rel=next attributes.",
-    "message": "Page Up and Page Down commands follow rel=next and rel=prev attributes."
+    "message": "Next Page and Previous Page commands follow rel=next and rel=prev attributes."
   },
   "optionsMorePrefsWellHelp": {
     "description": "Help text that appears in the well at the top of the more preferences tab",
@@ -597,5 +597,29 @@
   },
   "commandOpenOptions": {
     "message": "Open Foxy Gestures Options"
+  },
+  "groupCommandsNavigation": {
+    "description": "Name of the group for navigation type commands.",
+    "message": "Navigation Commands"
+  },
+  "groupCommandsTabs": {
+    "description": "Name of the group for tab type commands.",
+    "message": "Tab Commands"
+  },
+  "groupCommandsWindows": {
+    "description": "Name of the group for window type commands.",
+    "message": "Window Commands"
+  },
+  "groupCommandsHybrid": {
+    "description": "Name of the group for hybrid type commands.",
+    "message": "Hybrid Commands"
+  },
+  "groupCommandsOther": {
+    "description": "Name of the group for other commands.",
+    "message": "Other Commands"
+  },
+  "groupCommandsUserScripts": {
+    "description": "Name of the group for user scripts.",
+    "message": "User Scripts"
   }
 }
