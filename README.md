@@ -66,6 +66,11 @@ specific frame using the unique frame ID.
 
 #### Changelog
 
+Version 1.0.15
+ - Fix right-click in gestures counts towards double right-click.
+ - Fix OSX mouse event oddity causing false sticky gesture detection.
+ - Fix some missing i18n strings.
+
 Version 1.0.14
  - Added option for double right click mode OSX/Linux.
  - Added support for localization with locales to come.
