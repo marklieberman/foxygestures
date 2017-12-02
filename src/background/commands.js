@@ -131,6 +131,11 @@ modules.commands = (function (settings, helpers) {
       label: browser.i18n.getMessage('commandOpenLinkInNewPrivateWindow')
     },
     {
+      id: 'openOptions',
+      handler: commandOpenOptions,
+      label: browser.i18n.getMessage('commandOpenOptions')
+    },
+    {
       id: 'pageDown',
       handler: data => commands.executeInContent('pageDown', data),
       label: browser.i18n.getMessage('commandPageDown'),
@@ -514,6 +519,19 @@ modules.commands = (function (settings, helpers) {
     if (data.element.linkHref) {
       return browser.windows.create({ url: data.element.linkHref, incognito: true });
     }
+  }
+
+  // Open the options page in a new tab.
+  function commandOpenOptions (data) {
+    browser.management.getSelf().then(selfInfo => {
+      let tabOptions = {};
+      tabOptions.url = selfInfo.optionsUrl;
+      tabOptions.active = true;
+      if (settings.insertRelatedTab) {
+        tabOptions.index = tab.index + 1;
+      }
+      return browser.tabs.create(tabOptions);
+    });
   }
 
   // Pin or unpin the current tab.

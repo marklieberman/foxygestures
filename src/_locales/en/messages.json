@@ -594,5 +594,8 @@
   "alertBackupRestored": {
     "description": "Alert when backup data is successfully restored.",
     "message": "All settings successfully restored from backup."
+  },
+  "commandOpenOptions": {
+    "message": "Open Foxy Gestures Options"
   }
 }
