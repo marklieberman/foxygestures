@@ -624,5 +624,8 @@
   },
   "commandStop": {
     "message": "Stop"
+  },
+  "commandGoHome": {
+    "message": "Go Home"
   }
 }

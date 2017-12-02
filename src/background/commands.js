@@ -34,7 +34,7 @@ modules.commands = (function (settings, helpers) {
     hybrid: {
       order: 3,
       id: 'hybrid',
-      label: browser.i18n.getMessage('groupCommandHybrid'),
+      label: browser.i18n.getMessage('groupCommandsHybrid'),
     },
     other: {
       order: 100,
@@ -83,6 +83,12 @@ modules.commands = (function (settings, helpers) {
       label: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindow'),
       tooltip: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindowTooltip'),
       group: groups.tabs
+    },
+    {
+      id: 'goHome',
+      handler: commandGoHome,
+      label: browser.i18n.getMessage('commandGoHome'),
+      group: groups.navigation
     },
     {
       id: 'historyBack',
@@ -468,6 +474,15 @@ modules.commands = (function (settings, helpers) {
   // Duplicate the active tab in a new private window.
   function commandDuplicateTabInNewPrivateWindow () {
     return getActiveTab(tab => browser.windows.create({ url: tab.url, incognito: true }));
+  }
+
+  // Go to the first URL in the user's home page setting.
+  function commandGoHome () {
+    return browser.browserSettings.homepageOverride.get({}).then(result => {
+      let pipe = result.value.indexOf('|');
+      let homePage = (pipe >= 0) ? result.value.substring(0, pipe) : result.value;
+      return browser.tabs.update({ url: homePage });
+    });
   }
 
   // Minimize the current window.
