@@ -20,6 +20,7 @@
   },
 
   "permissions": [
+    "bookmarks",
     "browserSettings",
     "clipboardWrite",
     "cookies",

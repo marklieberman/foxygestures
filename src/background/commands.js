@@ -65,6 +65,13 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'bookmarkUrl',
+      handler: commandBookmarkUrl,
+      label: browser.i18n.getMessage('commandBookmarkUrl'),
+      tooltip: browser.i18n.getMessage('commandBookmarkUrlTooltip'),
+      group: groups.other
+    },
+    {
       id: 'closeLeftTabs',
       handler: commandCloseLeftTabs,
       label: browser.i18n.getMessage('commandCloseLeftTabs'),
@@ -493,7 +500,7 @@ modules.commands = (function (settings, helpers) {
   // Convert about:newtab or empty strings to null, otherwise return the URL.
   function notAboutNewTabUrl (url) {
     return (url && (url = url.trim()) !== 'about:newtab') ? url : null;
-   }
+  }
 
   // Command implementations -------------------------------------------------------------------------------------------
 
@@ -573,6 +580,24 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       }
     });
+  }
+
+  // Bookmark the URL in the active tab.
+  function commandBookmarkUrl (data) {
+    return browser.tabs.query({ currentWindow: true, active: true })
+      .then(tabs => {
+        let active = tabs[0];
+        return browser.bookmarks.search({ url: active.url }).then(bookmarks => {
+          if (bookmarks.length === 0) {
+            return browser.bookmarks.create({ url: active.url, title: active.title });
+          } else
+          if (bookmarks.length === 1) {
+            return browser.bookmarks.remove(bookmarks[0].id);
+          }
+        });
+      })
+      // Allow the wheel or chord gesture to repeat.
+      .then(() => ({ repeat: true }));
   }
 
   // Close tabs to the left of the active tab.

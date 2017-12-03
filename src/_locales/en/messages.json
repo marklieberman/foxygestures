@@ -657,5 +657,11 @@
   },
   "commandActivateRecentTabTooltip": {
     "message": "Go to the tab that was active before the current tab."
+  },
+  "commandBookmarkUrl": {
+    "message": "Bookmark URL"
+  },
+  "commandBookmarkUrlTooltip": {
+    "message": "The bookmark will be placed in \"Other Bookmarks\". Repeat the gesture to remove the bookmark."
   }
 }
