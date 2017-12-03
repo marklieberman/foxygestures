@@ -633,5 +633,23 @@
   },
   "commandActivateLastTab": {
     "message": "Go to Last Tab"
+  },
+  "optionsActiveTabAfterClose": {
+    "message": "Next active tab after Close Tab"
+  },
+  "optionsActiveTabAfterCloseHelp": {
+    "message": "Choose which tab will be activated after closing the current tab."
+  },
+  "optionsActiveTabAfterCloseFirefox": {
+    "message": "Let Firefox choose"
+  },
+  "optionsActiveTabAfterCloseRight": {
+    "message": "Activate the right tab"
+  },
+  "optionsActiveTabAfterCloseLeft": {
+    "message": "Activate the left tab"
+  },
+  "optionsActiveTabAfterCloseRecent": {
+    "message": "Activate the most recently active tab"
   }
 }

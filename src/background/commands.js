@@ -350,6 +350,39 @@ modules.commands = (function (settings, helpers) {
     }
   ];
 
+  // Keep track of the sequence in which tabs are activated in each window.
+  const activeTabHistory = {};
+
+  // Event listeners ---------------------------------------------------------------------------------------------------
+
+  // Remember the sequence in which tabs were activated for each window.
+  browser.tabs.onActivated.addListener(info => {
+    var sequence = activeTabHistory[info.windowId];
+    if (sequence) {
+      // Move the activated tab to the end of the sequence.
+      let index = sequence.indexOf(info.tabId);
+      if (index >= 0) {
+        sequence.splice(index, 1);
+      }
+      sequence.push(info.tabId);
+    } else {
+      // Create a new sequence for the new window.
+      sequence = [ info.tabId ];
+      activeTabHistory[info.windowId] = sequence;
+    }
+  });
+
+  // Remove closed tabs from the tab activation sequences.
+  browser.tabs.onRemoved.addListener((tabId, info) => {
+    let sequence = activeTabHistory[info.windowId];
+    if (sequence) {
+      let index = sequence.indexOf(tabId);
+      if (index >= 0) {
+        sequence.splice(index, 1);
+      }
+    }
+  });
+
   // -------------------------------------------------------------------------------------------------------------------
 
   // Find a command by ID.
@@ -415,6 +448,39 @@ modules.commands = (function (settings, helpers) {
     } else {
       return Promise.resolve();
     }
+  }
+
+  // Close the current tab and activate the given, left, or right tab with gesture transition.
+  function activateTabThenClose (data, tabs, next, active) {
+    // Determine the active tab if not provided.
+    active = active || tabs.find(tab => tab.active);
+
+    // Determine the next tab to activate: given, left, or right.
+    // Find the right/left tab with fallback to the left/right tab.
+    if (next === 'left') {
+      next = tabs.find(tab => tab.index === active.index - 1) || tabs.find(tab => tab.index === active.index + 1);
+    } else
+    if (next === 'right' || !next) {
+      next = tabs.find(tab => tab.index === active.index + 1) || tabs.find(tab => tab.index === active.index - 1);
+    }
+
+    // Activate the next tab, then close the previous tab.
+    return browser.tabs.update(next.id, { active: true })
+      .then(() => transitionGesture(null, next, data.cloneState))
+      .then(() => browser.tabs.remove(active.id));
+  }
+
+  // Get the previously active tab for a window.
+  function getRecentlyActiveTab (windowId, tabs) {
+    // The last tab in the sequence is the active tab for the window; find the second from last tab.
+    let sequence = activeTabHistory[windowId];
+    if (sequence && (sequence.length >= 2)) {
+      let id = sequence[sequence.length - 2];
+      return tabs.find(tab => tab.id === id);
+    }
+
+    // Unable to determine recently active tab.
+    return null;
   }
 
   // Convert about:newtab or empty strings to null, otherwise return the URL.
@@ -526,20 +592,35 @@ modules.commands = (function (settings, helpers) {
 
   // Close the active tab.
   function commandCloseTab (data) {
-    return getActiveTab(currentTab => {
-      if (!currentTab.pinned) {
-        // Remove the current tab and then query for the newly active tab.
-        return browser.tabs.remove(currentTab.id).then(() => {
-          return getActiveTab(tab => {
-            // Transition the gesture state to the newly active tab.
-            return transitionGesture(null, tab, data.cloneState);
-          });
-        });
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+      let active = tabs.find(tab => tab.active);
+      if (active.pinned) {
+        // Pinned tabs cannot be closed by a gesture.
+        return { repeat: true };
       }
-    })
-    // Allow the wheel or chord gesture to repeat.
-    // This covers pinned tabs where the command does nothing.
-    .then(() => ({ repeat: true }));
+      if (tabs.length === 1) {
+        // Don't care about tab being activated if the window is closing.
+        return browser.tabs.remove(active.id);
+      }
+
+      switch (modules.settings.activeTabAfterClose) {
+        case 'right':
+          // Activate the right tab before closing.
+          return activateTabThenClose(data, tabs, 'right', active);
+        case 'left':
+          // Activate the left tab before closing.
+          return activateTabThenClose(data, tabs, 'left', active);
+        case 'recent':
+          // Activately the recently active tab before closing.
+          let recent = getRecentlyActiveTab(tabs[0].windowId, tabs);
+          return activateTabThenClose(data, tabs, recent, active);
+        default:
+          // Let Firefox activate a tab, then transition to it.
+          return browser.tabs.remove(active.id)
+            .then(() => browser.tabs.query({ currentWindow: true, active: true }))
+            .then(tabs => transitionGesture(null, tabs[0], data.cloneState));
+      }
+    });
   }
 
   // Duplicate the active tab.

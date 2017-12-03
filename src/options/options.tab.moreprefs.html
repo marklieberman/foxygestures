@@ -33,6 +33,19 @@
           </div>
         </div>
 
+        <!-- Active tab after close -->
+        <div class="form-group">
+          <label class="control-label" i18n="'optionsActiveTabAfterClose'"></label>
+          <select class="form-control"
+                  ng-model="settings.activeTabAfterClose">
+            <option ng-value="'default'" i18n="'optionsActiveTabAfterCloseFirefox'"></option>
+            <option ng-value="'right'" i18n="'optionsActiveTabAfterCloseRight'"></option>
+            <option ng-value="'left'" i18n="'optionsActiveTabAfterCloseLeft'"></option>
+            <option ng-value="'recent'" i18n="'optionsActiveTabAfterCloseRecent'"></option>
+          </select>
+          <p class="help-block" i18n="'optionsActiveTabAfterCloseHelp'"></p>
+        </div>
+
         <!-- New tab default URL -->
         <div class="form-group">
           <label class="control-label" i18n="'optionsMorePrefsNewTabUrl'"></label>
