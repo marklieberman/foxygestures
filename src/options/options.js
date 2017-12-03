@@ -80,6 +80,13 @@ app.factory('settings', [
       }
 
       // Manually copy the non-enumerable data from the settings reference.
+      Object.defineProperty(service, 'reset', {
+        enumerable: false,
+        // Sync the angular settings service with the underlying settings.
+        value: () => settings.reset().then(() => angular.extend(service, settings))
+      });
+
+      // Manually copy the non-enumerable data from the settings reference.
       Object.defineProperty(service, 'templates', {
         enumerable: false,
         value: settings.getDefaultTemplates()

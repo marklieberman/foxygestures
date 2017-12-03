@@ -663,5 +663,21 @@
   },
   "commandBookmarkUrlTooltip": {
     "message": "The bookmark will be placed in \"Other Bookmarks\". Repeat the gesture to remove the bookmark."
+  },
+  "confirmResetSettings": {
+    "description": "Confirm dialog when resetting all settings back to default values",
+    "message": "Are you sure you want to reset all settings to default values?"
+  },
+  "optionsBackupResetSettings": {
+    "description": "Header for reset settings section.",
+    "message": "Reset Settings"
+  },
+  "optionsBackupResetSettingsInfo": {
+    "description": "Description of the reset settings function.",
+    "message": "All changes to settings wil be lost and values will be reset to default."
+  },
+  "optionsBackupResetSettingsButton": {
+    "description": "Label for button to reset all settings back to default.",
+    "message": "Reset settings to default"
   }
 }

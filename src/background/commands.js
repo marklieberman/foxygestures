@@ -93,14 +93,12 @@ modules.commands = (function (settings, helpers) {
       id: 'closeTab',
       handler: commandCloseTab,
       label: browser.i18n.getMessage('commandCloseTab'),
-      defaultGesture: 'DR',
       group: groups.tabs
     },
     {
       id: 'duplicateTab',
       handler: commandDuplicateTab,
       label: browser.i18n.getMessage('commandDuplicateTab'),
-      defaultGesture: 'UR',
       group: groups.tabs
     },
     {
@@ -124,7 +122,6 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandHistoryBack'),
-      defaultGesture: 'L',
       group: groups.navigation
     },
     {
@@ -135,14 +132,12 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandHistoryForward'),
-      defaultGesture: 'R',
       group: groups.navigation
     },
     {
       id: 'minimize',
       handler: commandMinimize,
       label: browser.i18n.getMessage('commandMinimize'),
-      defaultGesture: 'DL',
       group: groups.windows
     },
     {
@@ -222,7 +217,6 @@ modules.commands = (function (settings, helpers) {
       handler: data => commands.executeInContent('pageDown', data),
       label: browser.i18n.getMessage('commandPageDown'),
       tooltip: browser.i18n.getMessage('commandPageDownTooltip'),
-      defaultGesture: 'DRD',
       group: groups.navigation
     },
     {
@@ -230,7 +224,6 @@ modules.commands = (function (settings, helpers) {
       handler: data => commands.executeInContent('pageUp', data),
       label: browser.i18n.getMessage('commandPageUp'),
       tooltip: browser.i18n.getMessage('commandPageUpTooltip'),
-      defaultGesture: 'URU',
       group: groups.navigation
     },
     {
@@ -249,7 +242,6 @@ modules.commands = (function (settings, helpers) {
       id: 'reload',
       handler: commandReload,
       label: browser.i18n.getMessage('commandReload'),
-      defaultGesture: 'RDLU',
       group: groups.navigation
     },
     {
@@ -286,7 +278,6 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandScrollBottom'),
-      defaultGesture: 'DLR',
       group: groups.navigation
     },
     {
@@ -307,7 +298,6 @@ modules.commands = (function (settings, helpers) {
         return { repeat: true };
       },
       label: browser.i18n.getMessage('commandScrollTop'),
-      defaultGesture: 'ULR',
       group: groups.navigation
     },
     {
@@ -340,7 +330,6 @@ modules.commands = (function (settings, helpers) {
       id: 'undoClose',
       handler: commandUndoClose,
       label: browser.i18n.getMessage('commandUndoClose'),
-      defaultGesture: 'RLR',
       group: groups.tabs
     },
     {

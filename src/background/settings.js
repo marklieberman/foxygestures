@@ -8,13 +8,13 @@ var modules = modules || {};
 modules.settings = (function () {
 
   // Default status template snippet.
-  var STATUS_TEMPLATE =
+  const STATUS_TEMPLATE =
     '<div style="all: initial; display: block; position: fixed; bottom: 0; right: 0; z-index: 2147483647">\r\n' +
     '  <div style="all: initial; background: #fff; border: 1px solid #ccc; color: #333; font-family: sans-serif; font-size: 12px; padding: 2px" data-mg-status></div>\r\n' +
     '</div>';
 
-  // Settings for the extension.
-  var settings = {
+  // Default settings for the extension.
+  const DEFAULT_SETTINGS = {
     // Addon settings
     showStatusText: true,              // Show status text when enabled.
     statusTimeout: 2000,               // Timeout to hide the status text.
@@ -27,7 +27,20 @@ modules.settings = (function () {
     trailFidelity: 10,                 // Minimum size of gesture trial segments.
     trailWidth: 2,                     // The width of the gesture trail.
     trailColor: 'purple',              // The color of the gesture trail.
-    mouseMappings: [],                 // Array of gesture mappings.
+    mouseMappings: [                   // Array of gesture mappings.
+      { gesture: 'DR', command: 'closeTab' },
+      { gesture: 'UR', command: 'duplicateTab' },
+      { gesture: 'L', command: 'historyBack' },
+      { gesture: 'R', command: 'historyForward' },
+      { gesture: 'DL', command: 'minimize' },
+      { gesture: 'DRD', command: 'pageDown' },
+      { gesture: 'URU', command: 'pageUp' },
+      { gesture: 'RDLU', command: 'reload' },
+      { gesture: 'DLR', command: 'scrollBottom' },
+      { gesture: 'ULR', command: 'scrollTop' },
+      { gesture: 'RLR', command: 'undoClose' },
+      { gesture: 'ULD', command: 'openOptions' }
+    ],
     disableOnAlt: true,                // Disable gestures when Alt is pressed.
     disableOnShift: true,              // Disable gestures when Shift is pressed.
     canSelectStart: false,             // Allow selectstart event during gesture.
@@ -68,8 +81,11 @@ modules.settings = (function () {
     statusTemplate: STATUS_TEMPLATE
   };
 
+  // Current settings for the extension.
+  const settings = {};
+
   // Read settings from storage.
-  var loadPromiseSync = browser.storage.sync.get(settings).then(results => {
+  var loadPromiseSync = browser.storage.sync.get(DEFAULT_SETTINGS).then(results => {
     Object.keys(results).forEach(key => settings[key] = results[key]);
     return settings;
   });
@@ -118,6 +134,12 @@ modules.settings = (function () {
   Object.defineProperty(settings, 'loaded', {
     enumerable: false,
     value: allPromises.then(() => settings)
+  });
+
+  // Reset settings for the extension to default.
+  Object.defineProperty(settings, 'reset', {
+    enumerable: false,
+    value: () => browser.storage.sync.set(DEFAULT_SETTINGS)
   });
 
   // Get the default value for template settings.

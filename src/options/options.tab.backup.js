@@ -134,6 +134,13 @@ app.controller('OptionsTabBackupCtrl', [
       });
     };
 
+    // Reset all settings back to default.
+    $scope.resetSettings = () => {
+      if (window.confirm(browser.i18n.getMessage('confirmResetSettings'))) {
+        settings.reset();
+      }
+    };
+
   }]);
 
 // ---------------------------------------------------------------------------------------------------------------------

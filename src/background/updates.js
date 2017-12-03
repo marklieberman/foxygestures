@@ -23,26 +23,7 @@
 
   // Initialize the addon when first installed.
   function onInstalled (details) {
-    console.log('foxy gestures installed');
-
-    browser.storage.sync.get({
-      mouseMappings: []
-    }).then(results => {
-      // Populate the default mouse mappings.
-      if (results.mouseMappings.length === 0) {
-        console.log('install: populate default mouse mappings');
-        browser.storage.sync.set({
-          mouseMappings: modules.commands
-            // Ignore commands without a default gesture.
-            .filter(command => !!command.defaultGesture)
-            // Generate a mapping for the command.
-            .map(command => ({
-              command: command.id,
-              gesture: command.defaultGesture
-            }))
-        });
-      }
-    });
+    console.log('foxy gestures installed');  
   }
 
   // Update the settings when the addon is updated.
