@@ -651,5 +651,11 @@
   },
   "optionsActiveTabAfterCloseRecent": {
     "message": "Activate the most recently active tab"
+  },
+  "commandActivateRecentTab": {
+    "message": "Go to Recent Tab"
+  },
+  "commandActivateRecentTabTooltip": {
+    "message": "Go to the tab that was active before the current tab."
   }
 }

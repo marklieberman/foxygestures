@@ -58,6 +58,13 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'activateRecentTab',
+      handler: commandActivateRecentTab,
+      label: browser.i18n.getMessage('commandActivateRecentTab'),
+      tooltip: browser.i18n.getMessage('commandActivateRecentTabTooltip'),
+      group: groups.tabs
+    },
+    {
       id: 'closeLeftTabs',
       handler: commandCloseLeftTabs,
       label: browser.i18n.getMessage('commandCloseLeftTabs'),
@@ -550,6 +557,20 @@ modules.commands = (function (settings, helpers) {
         let previous = tabs[index < 0 ? tabs.length - 1 : index];
         return transitionGesture(active, previous, data.cloneState)
           .then(() => browser.tabs.update(previous.id, { active: true }));
+      }
+    });
+  }
+
+  // Activate the recent tab.
+  function commandActivateRecentTab (data) {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+      let active = tabs.find(tab => tab.active);
+      let recent = getRecentlyActiveTab(tabs[0].windowId, tabs);
+      if (recent) {
+        return transitionGesture(active, recent, data.cloneState)
+          .then(() => browser.tabs.update(recent.id, { active: true }));
+      } else {
+        return { repeat: true };
       }
     });
   }
