@@ -109,6 +109,12 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'fullscreen',
+      handler: commandFullscreen,
+      label: browser.i18n.getMessage('commandFullscreen'),
+      group: groups.windows
+    },
+    {
       id: 'goHome',
       handler: commandGoHome,
       label: browser.i18n.getMessage('commandGoHome'),
@@ -133,6 +139,12 @@ modules.commands = (function (settings, helpers) {
       },
       label: browser.i18n.getMessage('commandHistoryForward'),
       group: groups.navigation
+    },
+    {
+      id: 'maximize',
+      handler: commandMaximize,
+      label: browser.i18n.getMessage('commandMaximize'),
+      group: groups.windows
     },
     {
       id: 'minimize',
@@ -355,6 +367,9 @@ modules.commands = (function (settings, helpers) {
 
   // Keep track of the sequence in which tabs are activated in each window.
   const activeTabHistory = {};
+
+  // Remember the window state for each window when going fullscreen.
+  const windowStateHistory = {};
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
@@ -668,6 +683,27 @@ modules.commands = (function (settings, helpers) {
     return getActiveTab(tab => browser.windows.create({ url: tab.url, incognito: true }));
   }
 
+  // Toggle between fullscreen and last known window state.
+  // Not: There is currently no onChanged event for windows, so we are unable to determine the previous window state
+  // if the user goes fullscreen with F11.
+  function commandFullscreen () {
+    return browser.windows.getCurrent({})
+      .then(win => {
+        if (win.state !== 'fullscreen') {
+          // Remember the current state and go fullscreen.
+          windowStateHistory[win.id] = win.state;
+          return browser.windows.update(win.id, { state: 'fullscreen' });
+        } else {
+          // Try to restore the previous state of the window.
+          let oldState = windowStateHistory[win.id] || 'maximize';
+          delete windowStateHistory[win.id];
+          return browser.windows.update(win.id, { state: oldState });
+        }
+      })
+      // Allow the wheel or chord gesture to repeat.
+      .then(() => ({ repeat: true }));
+  }
+
   // Go to the first URL in the user's home page setting.
   function commandGoHome () {
     return browser.browserSettings.homepageOverride.get({}).then(result => {
@@ -675,6 +711,17 @@ modules.commands = (function (settings, helpers) {
       let homePage = (pipe >= 0) ? result.value.substring(0, pipe) : result.value;
       return browser.tabs.update({ url: homePage });
     });
+  }
+
+  // Maximzie/restore the current window.
+  function commandMaximize () {
+    return browser.windows.getCurrent()
+      .then(win => {
+        let newState = (win.state === 'maximized') ? 'normal' : 'maximized';
+        return browser.windows.update(win.id, { state: newState });
+      })
+      // Allow the wheel or chord gesture to repeat.
+      .then(() => ({ repeat: true }));
   }
 
   // Minimize the current window.

@@ -679,5 +679,11 @@
   "optionsBackupResetSettingsButton": {
     "description": "Label for button to reset all settings back to default.",
     "message": "Reset settings to default"
+  },
+  "commandMaximize": {
+    "message": "Maximize Window"
+  },
+  "commandFullscreen": {
+    "message": "Go Fullscreen"
   }
 }
