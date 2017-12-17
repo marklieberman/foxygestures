@@ -122,46 +122,46 @@
     "message": "Frame vernieuwen"
   },
   "commandSaveMediaAs": {
-    "message": "Save Media As"
+    "message": "Media opslaan als"
   },
   "commandSaveMediaAsTooltip": {
-    "message": "Save an image or HTML5 audio/video"
+    "message": "Een afbeelding of HTML5-audio/video opslaan"
   },
   "commandSaveMediaNow": {
-    "message": "Save Media Now"
+    "message": "Media nu opslaan"
   },
   "commandSaveMediaNowTooltip": {
-    "message": "Save an image or HTML5 audio/video to the downloads folder"
+    "message": "Een afbeelding of HTML5-audio/video opslaan in de downloadmap"
   },
   "commandScrollBottom": {
-    "message": "Scroll to Bottom"
+    "message": "Naar de onderkant scrollen"
   },
   "commandScrollDown": {
-    "message": "Scroll Down"
+    "message": "Naar beneden scrollen"
   },
   "commandScrollTop": {
-    "message": "Scroll to Top"
+    "message": "Naar de bovenkant scrollen"
   },
   "commandScrollUp": {
-    "message": "Scroll Up"
+    "message": "Naar boven scrollen"
   },
   "commandShowOnlyThisFrame": {
-    "message": "Show Only This Frame"
+    "message": "Enkel dit frame tonen"
   },
   "commandUndoClose": {
-    "message": "Undo Close"
+    "message": "Tabblad sluiten ongedaan maken"
   },
   "commandZoomIn": {
-    "message": "Zoom In"
+    "message": "Inzoomen"
   },
   "commandZoomOut": {
-    "message": "Zoom Out"
+    "message": "Uitzoomen"
   },
   "commandZoomReset": {
-    "message": "Reset Zoom"
+    "message": "Zoomniveau terugzetten"
   },
   "commandZoomResetTooltip": {
-    "message": "Reset tab zoom factor to default"
+    "message": "Zoomfactor van tabblad naar standaard herstellen"
   },
   "labelGesture": {
     "description": "Label for gesture input controls.",
