@@ -165,63 +165,63 @@
   },
   "labelGesture": {
     "description": "Label for gesture input controls.",
-    "message": "Gesture"
+    "message": "Gebaar"
   },
   "labelScrollDown": {
     "description": "Label for command picker dropdown in wheel gestures for scroll down.",
-    "message": "Scroll Down"
+    "message": "Naar beneden scrollen"
   },
   "labelScrollLeft": {
     "description": "Label for command picker dropdown in wheel gestures for scroll left.",
-    "message": "Scroll Left"
+    "message": "Naar links scrollen"
   },
   "labelScrollRight": {
     "description": "Label for command picker dropdown in wheel gestures for scroll right.",
-    "message": "Scroll Right"
+    "message": "Naar rechts scrollen"
   },
   "labelScrollUp": {
     "description": "Label for command picker dropdown in wheel gestures for scroll up.",
-    "message": "Scroll Up"
+    "message": "Naar boven scrollen"
   },
   "labelUserScript": {
     "description": "Label for user script controls.",
-    "message": "User Script"
+    "message": "Gebruikersscript"
   },
   "manifestDescription": {
     "description": "The description of this addon in manifest.json",
-    "message": "Mouse gestures for Firefox"
+    "message": "Muisgebaren voor Firefox"
   },
   "millisecondsAddon": {
     "description": "The word milliseconds as a bootstrap input-addon in options.",
-    "message": "milliseconds"
+    "message": "milliseconden"
   },
   "modalChordAcceptable": {
     "description": "Prompt to accept a chord in the chord gesture modal.",
-    "message": "Press OK to accept this chord gesture."
+    "message": "Druk op OK om dit akkoordgebaar te aanvaarden."
   },
   "modalChordConflict": {
     "description": "Prompt to indicate a conflict in the chord gesture modal.",
-    "message": "This chord contains or is contained within an already defined chord."
+    "message": "Dit akkoord bevat of zit vervat in een reeds gedefinieerd akkoord."
   },
   "modalChordPrompt": {
     "description": "Prompt to press a chord in the chord gesture modal.",
-    "message": "Press two or more mouse buttons simultaneously to record a chord gesture."
+    "message": "Druk tegelijk op twee of meer muisknoppen om een akkoordgebaar op te nemen."
   },
   "modalChordWaiting": {
     "description": "Placeholder text while waiting for buttons to be pressed.",
-    "message": "Waiting..."
+    "message": "Aan het wachten..."
   },
   "mouseButtonLeft": {
     "description": "Name of left mouse button",
-    "message": "Left"
+    "message": "Links"
   },
   "mouseButtonMiddle": {
     "description": "Name of middle mouse button",
-    "message": "Middle"
+    "message": "Midden"
   },
   "mouseButtonOther": {
     "description": "Name of other mouse buttons (e.g.: Button 4)",
-    "message": "Button $BUTTON$",
+    "message": "Knop $BUTTON$",
     "placeholders": {
       "name": {
         "content": "$1",
@@ -231,7 +231,7 @@
   },
   "mouseButtonRight": {
     "description": "Name of right mouse button",
-    "message": "Right"
+    "message": "Rechts"
   },
   "noCommand": {
     "description": "Placeholder for when a gesture is not assigned to a command.",
