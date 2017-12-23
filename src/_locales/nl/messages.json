@@ -235,131 +235,131 @@
   },
   "noCommand": {
     "description": "Placeholder for when a gesture is not assigned to a command.",
-    "message": "-- No Command --"
+    "message": "-- Geen opdracht --"
   },
   "optionsBackupBackupSettings": {
     "description": "Header for backup settings section.",
-    "message": "Backup Settings"
+    "message": "Back-upinstellingen"
   },
   "optionsBackupBackupSettingsButton": {
     "description": "Button text to download settings.",
-    "message": "Download settings"
+    "message": "Instellingen downloaden"
   },
   "optionsBackupBackupSettingsInfo": {
     "description": "Description of the backup settings function.",
-    "message": "Click to download a JSON file containing a backup of settings and user scripts."
+    "message": "Klik om een JSON-bestand te downloaden met een back-up van instellingen en gebruikersscripts."
   },
   "optionsBackupRestoreSettings": {
     "description": "Header for restore settings section.",
-    "message": "Restore Settings"
+    "message": "Instellingen herstellen"
   },
   "optionsBackupRestoreSettingsButton": {
     "description": "Button text to upload settings.",
-    "message": "Restore settings from file"
+    "message": "Instellingen herstellen uit bestand"
   },
   "optionsBackupRestoreSettingsInfo": {
     "description": "Description of the restore settings function.",
-    "message": "Select a backup file from which settings and user scripts will be restored."
+    "message": "Selecteer een back-upbestand waaruit instellingen en gebruikersscripts zullen hersteld worden."
   },
   "optionsCanSelectStart": {
     "description": "Checkbox to enable or disable text selection during gestures",
-    "message": "Allow text to be selected during a gesture."
+    "message": "Toelaten dat tekst geselecteerd wordt tijdens een gebaar."
   },
   "optionsCommandsWellHelp": {
     "description": "Help text that appears in the well at the top of the commands tap",
-    "message": "Perform a gesture in each box to assign the gesture for the command. Press and release the gesture button to clear the gesture."
+    "message": "Voer een gebaar uit in elk vak om een gebaar aan de opdracht toe te wijzen. Druk de gebaarknop in en laat los om het gebaar te wissen."
   },
   "optionsDisableOnAlt": {
     "description": "Label text for disable on alt checkbox.",
-    "message": "Do not start a gesture while holding the Alt key."
+    "message": "Geen gebaar starten zolang de Alt-toets ingedrukt wordt."
   },
   "optionsDisableOnShift": {
     "description": "Label text for disable on shift checkbox.",
-    "message": "Do not start a gesture while holding the Shift key."
+    "message": "Geen gebaar starten zolang de Shift-toets ingedrukt wordt."
   },
   "optionsDoubleRightClick": {
     "description": "Label text for double right-click checkbox.",
-    "message": "Double right-click to open context menu"
+    "message": "Rechtsklik tweemaal om het contextmenu te openen"
   },
   "optionsDoubleRightClickHelp": {
     "description": "Help text for double right-click checkbox.",
-    "message": "OSX and Linux display the context menu as soon as the right button is pressed. (As opposed to Windows which displays the context menu when the right button is released.) This causes a problem because the context menu is displayed before the addon can determine if a gesture has occurred. Enabling this setting will prevent the context menu from being displayed unless you perform a double right-click."
+    "message": "OSX en Linux tonen het contextmenu van zodra de rechterknop ingedrukt wordt (daar waar Windows het contextmenu toont wanneer de rechterknop losgelaten wordt). Dit veroorzaakt een probleem aangezien het contextmenu getoond wordt nog vóór de add-on kan bepalen of een gebaar uitgevoerd werd. Door deze instelling te activeren wordt voorkomen dat het contextmenu getoond wordt, tenzij tweemaal rechtsgeklikt wordt."
   },
   "optionsDrawTrails": {
     "description": "Label text for draw gesture trails checkbox.",
-    "message": "Draw gesture trails"
+    "message": "Gebaarsporen tekenen"
   },
   "optionsEnableChordGestures": {
     "description": "Label text for enable chord gestures checkbox.",
-    "message": "Enable chord gestures"
+    "message": "Akkoordgebaren activeren"
   },
   "optionsEnableChordGesturesHelp": {
     "description": "Help text for the chord gestures panel.",
-    "message": "Press two or more buttons simultaneously to perform a chord gesture."
+    "message": "Druk twee of meer knoppen tegelijk in om een akkoordgebaar uit te voeren."
   },
   "optionsEnableWheelGestures": {
     "description": "Label text for enable wheel gestures checkbox.",
-    "message": "Enable wheel gestures"
+    "message": "Wielgebaren activeren"
   },
   "optionsEnableWheelGesturesHelp": {
     "description": "Help text for the wheel gestures panel.",
-    "message": "Hold the gesture button and scroll the mouse wheel to perform a wheel gesture."
+    "message": "Houd de gebaarknop ingedrukt en draai aan het muiswiel om een wielgebaar uit te voeren."
   },
   "optionsGestureButton": {
     "description": "Label for the gesture button select.",
-    "message": "Gesture Button"
+    "message": "Gebaarknop"
   },
   "optionsGestureButtonHelp": {
     "description": "Help text for the gesture button select.",
-    "message": "The mouse button used to start a gesture."
+    "message": "De muisknop die gebruikt wordt om een gebaar te starten."
   },
   "optionsGestureTimeout": {
     "description": "Label for the gesture timeout input.",
-    "message": "Gesture Timeout"
+    "message": "Gebaaronderbreking"
   },
   "optionsGestureTimeoutHelp": {
     "description": "Help text for the gesture timeout input.",
-    "message": "Cancel a gesture if there is no movement for this many seconds. Use zero to disable."
+    "message": "Annuleer een gebaar als er geen beweging is gedurende dit aantal seconden. Zet op nul om te deactiveren."
   },
   "optionsHeadingNavigationAndScrolling": {
     "description": "Heading for navigation and scrolling preferences.",
-    "message": "Navigation and Scrolling"
+    "message": "Navigatie en scrollen"
   },
   "optionsHeadingOSXLinuxOnly": {
     "description": "Heading for the OSX and Linux only section in general options.",
-    "message": "OSX and Linux Only"
+    "message": "Enkel voor OSX en Linux"
   },
   "optionsHeadingOtherCommands": {
     "description": "Heading for other command preferences.",
-    "message": "Other Commands"
+    "message": "Andere opdrachten"
   },
   "optionsHeadingTabAndWindow": {
     "description": "Heading for tab and window preferences.",
-    "message": "Tab and Window Commands"
+    "message": "Tabblad- en vensteropdrachten"
   },
   "optionsMorePrefsInsertRelatedTab": {
     "description": "Label for the checkbox to toggle insert related tab after current behaviour.",
-    "message": "Open in New Tab family of commands insert the tab after the current tab. This setting is similar browser.tabs.insertRelatedAfterCurrent."
+    "message": "De opdrachtfamilie 'Openen in nieuw tabblad' het tabblad laten invoegen achter het huidige tabblad. Deze instelling is gelijkaardig aan browser.tabs.insertRelatedAfterCurrent."
   },
   "optionsMorePrefsNewPrivateWindowUrl": {
     "description": "Label for the default URL for new private windows.",
-    "message": "Default URL for windows opened with New Private Window command"
+    "message": "Standaard-URL voor vensters geopend met de opdracht 'Nieuw privévenster'"
   },
   "optionsMorePrefsNewTabOrWindowHelp": {
     "description": "Help text for the default URL for new tabs and windows.",
-    "message": "Leave this field empty to use the default URL about:newtab. Unplivileged about: pages like about:blank and about:home are also acceptable."
-  },
+    "message": "Laat dit veld leeg om de standaard-URL 'about:newtab' te gebruiken. Unplivileged about: pages like about:blank and about:home are also acceptable." ???
+  }, 
   "optionsMorePrefsNewTabUrl": {
     "description": "Label for the default URL for new tabs.",
-    "message": "Default URL for tabs opened with New Tab command"
+    "message": "Standaard-URL voor tabbladen geopend met de opdracht 'Nieuw tabblad'"
   },
   "optionsMorePrefsNewWindowUrl": {
     "description": "Label for the default URL for new windows.",
-    "message": "Default URL for windows opened with New Window command"
+    "message": "Standaard-URL voor vensters geopend met de opdracht 'Nieuw venster'"
   },
   "optionsMorePrefsNextTabWrap": {
     "description": "Label for the checkbox to enable tab wrapping.",
-    "message": "Next Tab and Previous Tab commands wrap from last tab to first tab."
+    "message": "Next Tab and Previous Tab commands wrap from last tab to first tab." 
   },
   "optionsMorePrefsScrollAmount": {
     "description": "Label to configure scroll up and scroll down amount.",
