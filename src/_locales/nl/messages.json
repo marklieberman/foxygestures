@@ -347,7 +347,7 @@
   },
   "optionsMorePrefsNewTabOrWindowHelp": {
     "description": "Help text for the default URL for new tabs and windows.",
-    "message": "Laat dit veld leeg om de standaard-URL 'about:newtab' te gebruiken. Unplivileged about: pages like about:blank and about:home are also acceptable." ???
+    "message": "Laat dit veld leeg om de standaard-URL 'about:newtab' te gebruiken. Niet-geprivilegieerde 'about:'-pagina's zoals 'about:blank' en 'about:home' worden ook aanvaard."
   }, 
   "optionsMorePrefsNewTabUrl": {
     "description": "Label for the default URL for new tabs.",
@@ -359,31 +359,31 @@
   },
   "optionsMorePrefsNextTabWrap": {
     "description": "Label for the checkbox to enable tab wrapping.",
-    "message": "Next Tab and Previous Tab commands wrap from last tab to first tab." 
+    "message": "De opdrachten 'Volgend tabblad' en 'Vorig tabblad' springen van het laatste tabblad terug naar het eerste tabblad en omgekeerd." 
   },
   "optionsMorePrefsScrollAmount": {
     "description": "Label to configure scroll up and scroll down amount.",
-    "message": "Amount of viewport to scroll for Scroll Up/Down commands"
+    "message": "Hoeveelheid viewport die moet gescrolld worden bij de opdrachten 'Naar boven/beneden scrollen'"
   },
   "optionsMorePrefsScrollAmountHelp": {
     "description": "Help text to configure scroll up and scroll down amount.",
-    "message": "1 vh = ¹/₁₀₀ viewport height."
+    "message": "1 vh = ¹/₁₀₀ viewporthoogte."
   },
   "optionsMorePrefsScrollDuration": {
     "description": "Label to configure scroll animation duration.",
-    "message": "Duration of the animation for the Scroll family of commands"
+    "message": "Duur van de animatie bij de familie van scrollopdrachten"
   },
   "optionsMorePrefsScrollDurationHelp": {
     "description": "Help text to configure scroll animation duration.",
-    "message": "Use zero to disable."
+    "message": "Gebruik nul om te deactiveren."
   },
   "optionsMorePrefsUseRelPrevNext": {
     "description": "Label for checkbox to follow rel=next attributes.",
-    "message": "Next Page and Previous Page commands follow rel=next and rel=prev attributes."
+    "message": "'Volgende pagina'- en 'Vorige pagina'-opdrachten volgen de 'rel=next'- en 'rel=prev'-attributen."
   },
   "optionsMorePrefsWellHelp": {
     "description": "Help text that appears in the well at the top of the more preferences tab",
-    "message": "Preferences to modify the behaviour of built-in commands and other tweaks."
+    "message": "Voorkeuren om het gedrag van ingebouwde opdrachten en andere tweaks aan te passen."
   },
   "optionsMorePrefsZoomStep": {
     "description": "Label for the amount to change zoom factor.",
