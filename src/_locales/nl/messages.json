@@ -25,7 +25,7 @@
   },
   "buttonReset": {
     "description": "Label for button or link to reset something.",
-    "message": "Reset" ???
+    "message": "Herstellen"
   },
   "buttonXSSWarningAccept": {
     "description": "Label for the button to accept the user scripts XSS warning.",
@@ -387,71 +387,71 @@
   },
   "optionsMorePrefsZoomStep": {
     "description": "Label for the amount to change zoom factor.",
-    "message": "Amount to change zoom factor for Zoom In/Out commands"
+    "message": "Hoeveelheid waarmee de zoomfactor moet aangepast worden bij 'Zoom in/out'-opdrachten"
   },
   "optionsShowStatusText": {
     "description": "Label for the checkbox to show status text.",
-    "message": "Show status text"
+    "message": "Statustekst tonen"
   },
   "optionsStatusTemplate": {
     "description": "Label for the status template field.",
-    "message": "Status Template"
+    "message": "Statussjabloon"
   },
   "optionsStatusTemplateHelp": {
     "description": "Help text for the status template field.",
-    "message": "Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text."
+    "message": "Pas het HTML-sjabloon voor de statustekst aan. De inhoud van het element met het 'data-mg-status'-attribuut zal vervangen worden door de statustekst."
   },
   "optionsStatusTimeout": {
     "description": "Label for the status timeout field.",
-    "message": "Status Timeout"
+    "message": "Statustime-out"
   },
   "optionsStatusTimeoutHelp": {
     "description": "Help text for the status timeout field.",
-    "message": "Amount of time to display the status text after a gesture."
+    "message": "Tijd dat de statustekst getoond wordt na een gebaar."
   },
   "optionsTitle": {
     "description": "Large heading at the top of the options page.",
-    "message": "Foxy Gestures Options"
+    "message": "Foxy Gestures-opties"
   },
   "optionsTrailColor": {
     "description": "Label for the input to pick trail color.",
-    "message": "Trail Color"
+    "message": "Spoorkleur"
   },
   "optionsTrailColorHelp": {
     "description": "Help text for the input to pick trail color.",
-    "message": "Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)"
+    "message": "Eender welke CSS-kleurdefinitie wordt aanvaard. bv.: blue, #336699, of rgba(64, 128, 192, 0.5)"
   },
   "optionsTrailWidth": {
     "description": "Label for the input to pick trail width.",
-    "message": "Trail Width"
+    "message": "Spoorbreedte"
   },
   "optionsUserScriptsWellHelp1": {
     "description": "Help text that appears in the well at the top of the user scripts tab",
-    "message": "Execute a custom script with a mouse gesture."
+    "message": "Een aangepast script uitvoeren met een muisgebaar."
   },
   "optionsUserScriptsWellHelp2": {
     "description": "Help text that appears in the well at the top of the user scripts tab",
-    "message": "Please read the user scripts article on the wiki before proceeding."
+    "message": "Gelieve het artikel over gebruikersscripts op de wiki te lezen vooraleer verder te gaan."
   },
   "optionsXSSWarning1": {
     "description": "XSS warning text.",
-    "message": "This is a feature intended for power users. If someone told you to copy and paste something here to enable a feature or \"hack\" something, it is a scam and will give them access to your browser."
+    "message": "Dit is een functie bedoeld voor ervaren gebruikers. Indien iemand u zei hier iets te knippen en plakken om een functie te activeren of iets te 'hacken', dan is het oplichterij en zal het hen toegang geven tot uw browser."
   },
   "optionsXSSWarning2": {
     "description": "XSS warning text.",
-    "message": "User scripts have access to all of the web extension APIs that can be used by Foxy Gestures. These APIs may be used to access browser history, download malicious JavaScript, or otherwise take over your browser. Never copy and paste a user script from an untrustworthy source."
+    "message": "Gebruikersscripts hebben toegang tot alle WebExtensions-API's die kunnen gebruikt worden door Foxy Gestures. Deze API's kunnen gebruikt worden om de browsergeschiedenis te benaderen, kwaadaardig JavaScript te downloaden, of op een andere manier uw browser over te nemen. Kopieer en plak nooit een gebruikersscript van een onbetrouwbare bron."
   },
   "optionsXSSWarningInfo": {
     "description": "XSS warning text.",
-    "message": "For more information see the following resources:"
+    "message": "Voor meer informatie, raadpleeg volgende bronnen:"
   },
   "optionsXSSWarningLink1": {
     "description": "XSS warning text.",
-    "message": "The wikipedia article on cross-site scripting."
+    "message": "Het Wikipedia-artikel over 'cross-site scripting'."
   },
   "optionsXSSWarningLink2": {
     "description": "XSS warning text.",
-    "message": "The wikipedia article on self-XSS attacks."
+    "message": "Het Wikipedia-artikel over 'self-XSS attacks'."
   },
   "percentAddon": {
     "description": "The word percent in a bootstrap input-addon in options.",
@@ -459,15 +459,15 @@
   },
   "secondsAddon": {
     "description": "The word seconds in a bootstrap input-addon in options.",
-    "message": "seconds"
+    "message": "seconden"
   },
   "statusGestureKnown": {
     "description": "Status message when a gesture is mapped to a command",
-    "message": "Gesture: $GESTURE$ ($COMMAND$)",
+    "message": "Gebaar: $GESTURE$ ($COMMAND$)",
     "placeholders": {
       "command": {
         "content": "$2",
-        "example": "New Tab"
+        "example": "Nieuw Tabblad"
       },
       "gesture": {
         "content": "$1",
@@ -477,7 +477,7 @@
   },
   "statusGestureProgress": {
     "description": "Status message during a gesture",
-    "message": "Gesture: $GESTURE$",
+    "message": "Gebaar: $GESTURE$",
     "placeholders": {
       "gesture": {
         "content": "$1",
@@ -487,7 +487,7 @@
   },
   "statusGestureUnknown": {
     "description": "Status message when a gesture is not mapped to a command",
-    "message": "Unknown Gesture: $GESTURE$",
+    "message": "Onbekend gebaar: $GESTURE$",
     "placeholders": {
       "gesture": {
         "content": "$1",
@@ -497,53 +497,53 @@
   },
   "tabBackupRestore": {
     "description": "Heading for the backup and restore tab",
-    "message": "Backup & Restore"
+    "message": "Back-up & herstel"
   },
   "tabCommands": {
     "description": "Heading for the built-in commands tab",
-    "message": "Built-in Commands"
+    "message": "Ingebouwde opdrachten"
   },
   "tabGeneral": {
     "description": "Heading for the general settings tab",
-    "message": "General Settings"
+    "message": "Algemene instellingen"
   },
   "tabMorePrefs": {
     "description": "Heading for the more preferences tab",
-    "message": "More Preferences"
+    "message": "Meer voorkeuren"
   },
   "tabOtherGestures": {
     "description": "Heading for the other gestures tab",
-    "message": "Other Gestures"
+    "message": "Andere gebaren"
   },
   "tabUserScripts": {
     "description": "Heading for the user scripts tab",
-    "message": "User Scripts"
+    "message": "Gebruikersscripts"
   },
   "tooltipRemoveUserScript": {
     "description": "Tooltip for the button to delete a user script.",
-    "message": "Remove user script"
+    "message": "Gebruikersscript verwijderen"
   },
   "userScriptNoName": {
     "description": "Label used for user scripts without a name in gesture status, etc.",
-    "message": "User Script: <No Name>"
+    "message": "Gebruikersscript: <Geen naam>"
   },
   "userScriptWithName": {
     "description": "Label used for user scripts with a name in gesture status, etc.",
-    "message": "User Script: $NAME$",
+    "message": "Gebruikersscript: $NAME$",
     "placeholders": {
       "name": {
         "content": "$1",
-        "example": "My Custom Script"
+        "example": "Mijn aangepast script"
       }
     }
   },
   "warning": {
     "description": "The word warning.",
-    "message": "Warning"
+    "message": "Waarschuwing"
   },
   "confirmReassignGesture": {
     "description": "Confirm dialog when assigning a gesture that is already mapped to a command.",
-    "message": "$GESTURE$ is already mapped to $OLD_COMMAND$. Re-assign to $NEW_COMMAND$?",
+    "message": "$GESTURE$ is reeds toegewezen aan $OLD_COMMAND$. Gebaar herkoppelen aan $NEW_COMMAND$?",
     "placeholders": {
       "gesture": {
         "content": "$1",
@@ -551,136 +551,136 @@
       },
       "old_command": {
         "content": "$2",
-        "example": "Close Tab"
+        "example": "Tabblad sluiten"
       },
       "new_command": {
         "content": "$3",
-        "example": "Save Now"
+        "example": "Nu opslaan"
       }
     }
   },
   "confirmRemoveChord": {
     "description": "Confirm dialog when removing a chord.",
-    "message": "Remove chord $CHORD$?",
+    "message": "Akkoord $CHORD$ verwijderen?",
     "placeholders": {
       "chord": {
         "content": "$1",
-        "example": "Left + Right"
+        "example": "Links + Rechts"
       }
     }
   },
   "confirmRemoveUserScript": {
     "description": "Confirm dialog when removing a user script.",
-    "message": "Remove $USER_SCRIPT$?",
+    "message": "$USER_SCRIPT$ verwijderen?",
     "placeholders": {
       "user_script": {
         "content": "$1",
-        "example": "User Script: Go Home"
+        "example": "Gebruikersscript: Ga naar startpagina"
       }
     }
   },
   "alertBackupNotRecognized": {
     "description": "Alert when backup data addon ID is missing or invalid.",
-    "message": "File not recognized; missing or wrong addon ID."
+    "message": "Bestand niet herkend; add-on-ID ontbreekt of is ongeldig."
   },
   "alertBackupInvalidVersion": {
     "description": "Alert when backup data version is missing or invalid.",
-    "message": "Invalid or unknown version number."
+    "message": "Ongeldig of onbekend versienummer."
   },
   "alertBackupCorrupt": {
     "description": "Alert when backup data settings are invalid or corrupt.",
-    "message": "Backup data is invalid or corrupt."
+    "message": "Back-upgegevens zijn ongeldig of corrupt."
   },
   "alertBackupRestored": {
     "description": "Alert when backup data is successfully restored.",
-    "message": "All settings successfully restored from backup."
+    "message": "Alle instellingen werden succesvol vanuit de back-up hersteld."
   },
   "commandOpenOptions": {
-    "message": "Open Foxy Gestures Options"
+    "message": "Foxy Gestures-opties openen"
   },
   "groupCommandsNavigation": {
     "description": "Name of the group for navigation type commands.",
-    "message": "Navigation Commands"
+    "message": "Navigatieopdrachten"
   },
   "groupCommandsTabs": {
     "description": "Name of the group for tab type commands.",
-    "message": "Tab Commands"
+    "message": "Tabbladopdrachten"
   },
   "groupCommandsWindows": {
     "description": "Name of the group for window type commands.",
-    "message": "Window Commands"
+    "message": "Vensteropdrachten"
   },
   "groupCommandsHybrid": {
     "description": "Name of the group for hybrid type commands.",
-    "message": "Hybrid Commands"
+    "message": "Hybride opdrachten"
   },
   "groupCommandsOther": {
     "description": "Name of the group for other commands.",
-    "message": "Other Commands"
+    "message": "Andere opdrachten"
   },
   "groupCommandsUserScripts": {
     "description": "Name of the group for user scripts.",
-    "message": "User Scripts"
+    "message": "Gebruikersscripts"
   },
   "commandStop": {
     "message": "Stop"
   },
   "commandGoHome": {
-    "message": "Go Home"
+    "message": "Ga naar startpagina"
   },
   "commandActivateFirstTab": {
-    "message": "Go to First Tab"
+    "message": "Ga naar eerste tabblad"
   },
   "commandActivateLastTab": {
-    "message": "Go to Last Tab"
+    "message": "Ga naar laatste tabblad"
   },
   "optionsActiveTabAfterClose": {
-    "message": "Next active tab after Close Tab"
+    "message": "Volgende actieve tabblad na sluiten van tabblad"
   },
   "optionsActiveTabAfterCloseHelp": {
-    "message": "Choose which tab will be activated after closing the current tab."
+    "message": "Tabblad kiezen dat zal geactiveerd worden na het sluiten van het huidige tabblad."
   },
   "optionsActiveTabAfterCloseFirefox": {
-    "message": "Let Firefox choose"
+    "message": "Laat Firefox kiezen"
   },
   "optionsActiveTabAfterCloseRight": {
-    "message": "Activate the right tab"
+    "message": "Het tabblad aan de rechterzijde activeren"
   },
   "optionsActiveTabAfterCloseLeft": {
-    "message": "Activate the left tab"
+    "message": "Het tabblad aan de linkerzijde activeren"
   },
   "optionsActiveTabAfterCloseRecent": {
-    "message": "Activate the most recently active tab"
+    "message": "Het recentst actieve tabblad activeren"
   },
   "commandActivateRecentTab": {
-    "message": "Go to Recent Tab"
+    "message": "Ga naar recente tabblad"
   },
   "commandActivateRecentTabTooltip": {
-    "message": "Go to the tab that was active before the current tab."
+    "message": "Ga naar tabblad dat actief was vóór het huidige tabblad."
   },
   "commandBookmarkUrl": {
-    "message": "Bookmark URL"
+    "message": "Bladwijzer maken voor deze pagina"
   },
   "commandBookmarkUrlTooltip": {
-    "message": "The bookmark will be placed in \"Other Bookmarks\". Repeat the gesture to remove the bookmark."
+    "message": "De bladwijzer zal onder 'Andere bladwijzers' geplaatst worden. Herhaal het gebaar om de bladwijzer te verwijderen."
   },
   "confirmResetSettings": {
     "description": "Confirm dialog when resetting all settings back to default values",
-    "message": "Are you sure you want to reset all settings to default values?"
+    "message": "Bent u zeker dat u alle instellingen naar hun standaardwaarden wil herstellen?"
   },
   "optionsBackupResetSettings": {
     "description": "Header for reset settings section.",
-    "message": "Reset Settings"
+    "message": "Instellingen herstellen"
   "optionsBackupResetSettingsInfo": {
     "description": "Description of the reset settings function.",
-    "message": "All changes to settings wil be lost and values will be reset to default."
+    "message": "Alle wijzigingen aan instellingen zullen verloren gaan en de waarden zullen naar de standaard teruggezet worden."
   },
   "optionsBackupResetSettingsButton": {
     "description": "Label for button to reset all settings back to default.",
-    "message": "Reset settings to default" Zie ook vertalingen gemarkeerd met ???
+    "message": "Instellingen herstellen naar de standaard"
   },
   "commandMaximize": {
-    "message": "Maximize Window"
+    "message": "Venster maximaliseren"
   },
   "commandFullscreen": {
 "m
