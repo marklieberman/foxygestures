@@ -347,7 +347,7 @@
   },
   "optionsMorePrefsNewTabOrWindowHelp": {
     "description": "Help text for the default URL for new tabs and windows.",
-    "message": "Leave this field empty to use the default URL about:newtab. Unplivileged about: pages like about:blank and about:home are also acceptable."
+    "message": "Leave this field empty to use the default URL about:newtab. Unprivileged about: pages like about:blank and about:home are also acceptable."
   },
   "optionsMorePrefsNewTabUrl": {
     "description": "Label for the default URL for new tabs.",
