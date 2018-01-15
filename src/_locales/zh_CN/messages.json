@@ -277,14 +277,6 @@
     "description": "Label text for disable on shift checkbox.",
     "message": "按住 Shift 键时不开始手势。"
   },
-  "optionsDoubleRightClick": {
-    "description": "Label text for double right-click checkbox.",
-    "message": "双击右键打开上下文菜单"
-  },
-  "optionsDoubleRightClickHelp": {
-    "description": "Help text for double right-click checkbox.",
-    "message": "OSX 及 Linux 上只要按下右键就会显示上下文菜单。这与右键松开时才显示上下文菜单的 Windows 不同。这会导致一个问题，上下文菜单会在本扩展确定手势是否发生之前显示。启用此设置将禁止显示上下文菜单，除非您双击鼠标右键。"
-  },
   "optionsDrawTrails": {
     "description": "Label text for draw gesture trails checkbox.",
     "message": "绘制手势轨迹"

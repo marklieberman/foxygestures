@@ -81,11 +81,6 @@ window.fg.module('mouseEvents', function (exports, fg) {
     deadTimeMillis: 300
   }, 'sync');
 
-  const localSettings = fg.helpers.initModuleSettings({
-    doubleRightClick: false,
-    doubleRightMillis: 600
-  }, 'local');
-
   if (state.isNested) {
     // Notify the parent script instance that a nested frame has loaded.
     postTo(window.parent, 'loadFrame', { id: exports.scriptFrameId });
@@ -257,25 +252,6 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('contextmenu', function (event) {
-    // Require a double right click on OSX/Linux when enabled. If more than 'doubleRightMillis' has elapsed since the
-    // previous contextmenu event, consider this a single click and supress the context menu.
-    if (localSettings.doubleRightClick && (settings.gestureButton === BUTTON.RIGHT)) {
-      let now = Date.now();
-      let isDoubleClick = (now - state.lastContextMenu) <= localSettings.doubleRightMillis;
-      state.lastContextMenu = now;
-      if (isDoubleClick) {
-        // Allow the context menu but cancel any active gesture state. Some people hold the mouse button and release
-        // it to select an item. If these users leave the context menu and the gesture state isn't cancelled, a gesture
-        // is drawn.
-        exports.abortGesture();
-      } else {
-        // Prevent the context menu on a single click.
-        event.preventDefault();
-        event.stopPropagation();
-        return;
-      }
-    }
-
     // Disable the context menu event after a gesture.
     if (!state.contextMenu ||
       (state.gestureState !== GESTURE_STATE.NONE) &&

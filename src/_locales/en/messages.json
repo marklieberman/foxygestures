@@ -277,14 +277,6 @@
     "description": "Label text for disable on shift checkbox.",
     "message": "Do not start a gesture while holding the Shift key."
   },
-  "optionsDoubleRightClick": {
-    "description": "Label text for double right-click checkbox.",
-    "message": "Double right-click to open context menu"
-  },
-  "optionsDoubleRightClickHelp": {
-    "description": "Help text for double right-click checkbox.",
-    "message": "OSX and Linux display the context menu as soon as the right button is pressed. (As opposed to Windows which displays the context menu when the right button is released.) This causes a problem because the context menu is displayed before the addon can determine if a gesture has occurred. Enabling this setting will prevent the context menu from being displayed unless you perform a double right-click."
-  },
   "optionsDrawTrails": {
     "description": "Label text for draw gesture trails checkbox.",
     "message": "Draw gesture trails"
