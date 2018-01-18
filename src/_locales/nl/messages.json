@@ -671,6 +671,7 @@
   "optionsBackupResetSettings": {
     "description": "Header for reset settings section.",
     "message": "Instellingen herstellen"
+  },
   "optionsBackupResetSettingsInfo": {
     "description": "Description of the reset settings function.",
     "message": "Alle wijzigingen aan instellingen zullen verloren gaan en de waarden zullen naar de standaard teruggezet worden."
