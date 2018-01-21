@@ -96,6 +96,12 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'closeWindow',
+      handler: commandCloseWindow,
+      label: browser.i18n.getMessage('commandCloseWindow'),
+      group: groups.windows
+    },
+    {
       id: 'duplicateTab',
       handler: commandDuplicateTab,
       label: browser.i18n.getMessage('commandDuplicateTab'),
@@ -671,6 +677,11 @@ modules.commands = (function (settings, helpers) {
             .then(tabs => transitionGesture(null, tabs[0], data.cloneState));
       }
     });
+  }
+
+  // Close the current window,
+  function commandCloseWindow () {
+    return browser.windows.getCurrent().then(window => browser.windows.remove(window.id));
   }
 
   // Duplicate the active tab.
