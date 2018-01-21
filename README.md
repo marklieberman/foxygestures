@@ -21,21 +21,6 @@ parsed but content does not have to be loaded. This limitation also applies to
 frames within the website. This is an inherent limitation of web extensions
 at the moment, because there is no API to get mouse events from browser chrome.
 
-##### OSX/Linux Gesture Button Limitation
-
-In OSX and Linux, the context menu is shown on mouse down. (Context menu on
-mouse up is the default for Windows.) When FireGestures is installed on OSX/Linux,
-it changes the context menu to be shown on mouse up. Web extensions cannot
-replicate this functionality. Due to the issue described in
-[#4](https://github.com/marklieberman/foxygestures/issues/4) right-button
-gestures work poorly in OSX/Linux.
-
-An option to use a modifier key to start or ignore gestures is being developed.
-If you want to see a proper solution to this issue, please support
-[this Bugzilla entry](https://bugzilla.mozilla.org/show_bug.cgi?id=1360278).
-Update: the bug was accepted and is awaiting a user contributed patch. If you
-are available to help write this patch please contact me.
-
 #### Working Principle
 
 This extension hooks into DOM mouse events. However, each frame in a website
@@ -64,7 +49,31 @@ that require access to the live DOM, _mouseEvents.js_ assigns a unique
 identifier to each frame in which it loads. Messages may be addressed to a
 specific frame using the unique frame ID.
 
+##### OSX/Linux Gesture Button Limitation
+
+Note: this issue is resolved from FF58 and FG1.1.0 due to API changes landing in Firefox. ~~In OSX and Linux, the context menu is shown on mouse down. (Context menu on
+mouse up is the default for Windows.) When FireGestures is installed on OSX/Linux,
+it changes the context menu to be shown on mouse up. Web extensions cannot
+replicate this functionality. Due to the issue described in
+[#4](https://github.com/marklieberman/foxygestures/issues/4) right-button
+gestures work poorly in OSX/Linux.~~
+
 #### Changelog
+
+Version 1.1.0
+ - Fix for OSX/Linux context menu issue due to API landing in FF58.
+ - Added command to open Foxy Gestures options.
+ - Added stop command.
+ - Added home command.
+ - Added got to first/last tab commands.
+ - Added setting to select active tab (left/right/recent) after close tab command.
+ - Added go to recent tab command.
+ - Added bookmark/unbookmark URL command.
+ - Added maximize and fullscreen commands.
+ - Added button to reset settings.
+ - Added close window command.
+ - Added view page/frame source commands.
+ - Re-enabled support for gestures on about:blank.
 
 Version 1.0.15
  - Fix right-click in gestures counts towards double right-click.
