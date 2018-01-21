@@ -95,13 +95,13 @@
     "message": "新建窗口打开链接"
   },
   "commandPageDown": {
-    "message": "向前翻页"
+    "message": "上一页"
   },
   "commandPageDownTooltip": {
     "message": "使用启发式方法匹配并减少网址中的页码"
   },
   "commandPageUp": {
-    "message": "向后翻页"
+    "message": "下一页"
   },
   "commandPageUpTooltip": {
     "message": "使用启发式方法匹配并增加网址中的页码"
@@ -371,7 +371,7 @@
   },
   "optionsMorePrefsUseRelPrevNext": {
     "description": "Label for checkbox to follow rel=next attributes.",
-    "message": "向前翻页与向后翻页命令遵守 rel=next 和 rel=prev 属性。"
+    "message": "上一页和下一页命令遵守 rel=next 和 rel=prev 属性。"
   },
   "optionsMorePrefsWellHelp": {
     "description": "Help text that appears in the well at the top of the more preferences tab",
@@ -586,5 +586,108 @@
   "alertBackupRestored": {
     "description": "Alert when backup data is successfully restored.",
     "message": "成功从备份还原所有设置。"
+  },
+  "commandOpenOptions": {
+    "message": "打开 Foxy Gestures 选项"
+  },
+  "groupCommandsNavigation": {
+    "description": "Name of the group for navigation type commands.",
+    "message": "导航命令"
+  },
+  "groupCommandsTabs": {
+    "description": "Name of the group for tab type commands.",
+    "message": "标签页命令"
+  },
+  "groupCommandsWindows": {
+    "description": "Name of the group for window type commands.",
+    "message": "窗口命令"
+  },
+  "groupCommandsHybrid": {
+    "description": "Name of the group for hybrid type commands.",
+    "message": "混合命令"
+  },
+  "groupCommandsOther": {
+    "description": "Name of the group for other commands.",
+    "message": "其他命令"
+  },
+  "groupCommandsUserScripts": {
+    "description": "Name of the group for user scripts.",
+    "message": "用户脚本"
+  },
+  "commandStop": {
+    "message": "停止"
+  },
+  "commandGoHome": {
+    "message": "转至首页"
+  },
+  "commandActivateFirstTab": {
+    "message": "转至第一个标签页"
+  },
+  "commandActivateLastTab": {
+    "message": "转至最后一个标签页"
+  },
+  "optionsActiveTabAfterClose": {
+    "message": "关闭标签页后的活动标签页"
+  },
+  "optionsActiveTabAfterCloseHelp": {
+    "message": "关闭当前标签页后激活哪个标签页。"
+  },
+  "optionsActiveTabAfterCloseFirefox": {
+    "message": "由 Firefox 选择"
+  },
+  "optionsActiveTabAfterCloseRight": {
+    "message": "激活右侧标签页"
+  },
+  "optionsActiveTabAfterCloseLeft": {
+    "message": "激活左侧标签页"
+  },
+  "optionsActiveTabAfterCloseRecent": {
+    "message": "激活最后使用的标签页"
+  },
+  "commandActivateRecentTab": {
+    "message": "转至最近的标签页"
+  },
+  "commandActivateRecentTabTooltip": {
+    "message": "转至激活当前标签页前活动的标签页。"
+  },
+  "commandBookmarkUrl": {
+    "message": "书签 URL"
+  },
+  "commandBookmarkUrlTooltip": {
+    "message": "该书签将放在“其他书签”文件夹中。重复该手势则移除该书签。"
+  },
+  "confirmResetSettings": {
+    "description": "Confirm dialog when resetting all settings back to default values",
+    "message": "您确定要重置所有设置为默认设置吗？"
+  },
+  "optionsBackupResetSettings": {
+    "description": "Header for reset settings section.",
+    "message": "重置设置"
+  },
+  "optionsBackupResetSettingsInfo": {
+    "description": "Description of the reset settings function.",
+    "message": "所有设置都将重置为默认值，以前进行的更改将丢失。"
+  },
+  "optionsBackupResetSettingsButton": {
+    "description": "Label for button to reset all settings back to default.",
+    "message": "重置设置为默认值"
+  },
+  "commandMaximize": {
+    "message": "最大化窗口"
+  },
+  "commandFullscreen": {
+    "message": "转入全屏"
+  },
+  "commandCloseWindow": {
+    "message": "关闭窗口"
+  },
+  "commandViewFrameSource": {
+    "message": "查看框架源代码"
+  },
+  "commandViewPageSource": {
+    "message": "查看页面源代码"
+  },
+  "commandViewSourceTooltip": {
+    "message": "使用此命令查看源代码时不附有 POST 数据。"
   }
 }
