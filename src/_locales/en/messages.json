@@ -680,5 +680,14 @@
   },
   "commandCloseWindow": {
     "message": "Close Window"
+  },
+  "commandViewFrameSource": {
+    "message": "View Frame Source"
+  },
+  "commandViewPageSource": {
+    "message": "View Page Source"
+  },
+  "commandViewSourceTooltip": {
+    "message": "POST data is not preserved when viewing source with this command."
   }
 }

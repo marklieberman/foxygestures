@@ -351,6 +351,20 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'viewFrameSource',
+      handler: commandViewFrameSource,
+      label: browser.i18n.getMessage('commandViewFrameSource'),
+      tooltip: browser.i18n.getMessage('commandViewSourceTooltip'),
+      group: groups.other
+    },
+    {
+      id: 'viewPageSource',
+      handler: commandViewPageSource,
+      label: browser.i18n.getMessage('commandViewPageSource'),
+      tooltip: browser.i18n.getMessage('commandViewSourceTooltip'),
+      group: groups.other
+    },
+    {
       id: 'zoomIn',
       handler: commandZoomIn,
       label: browser.i18n.getMessage('commandZoomIn'),
@@ -919,6 +933,42 @@ modules.commands = (function (settings, helpers) {
     if (data.context.nested && data.context.frameUrl) {
       return getActiveTab(tab => browser.tabs.update(tab.id, { url: data.context.frameUrl }));
     }
+  }
+
+  // View the source of a page.
+  function commandViewFrameSource (data) {
+    let promise = Promise.resolve();
+
+    if (data.context.frameUrl) {
+      promise = getActiveTab(tab => {
+        let tabOptions = {};
+        tabOptions.url = 'view-source:' + data.context.frameUrl;
+        tabOptions.active = true;
+        tabOptions.openerTabId = tab.id;
+        // Preserve the container when opening a new tab from a link/frame.
+        tabOptions.cookieStoreId = tab.cookieStoreId;
+        if (settings.insertRelatedTab) {
+          tabOptions.index = tab.index + 1;
+        }
+        return browser.tabs.create(tabOptions);
+      });
+    }
+  }
+
+  // View the source of a frame.
+  function commandViewPageSource (data) {
+    return getActiveTab(tab => {
+      let tabOptions = {};
+      tabOptions.url = 'view-source:' + tab.url;
+      tabOptions.active = true;
+      tabOptions.openerTabId = tab.id;
+      // Preserve the container when opening a new tab from a link/frame.
+      tabOptions.cookieStoreId = tab.cookieStoreId;
+      if (settings.insertRelatedTab) {
+        tabOptions.index = tab.index + 1;
+      }
+      return browser.tabs.create(tabOptions);
+    });
   }
 
   // Restore the most recently closed tab or window.
