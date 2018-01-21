@@ -1,0 +1,689 @@
+{
+  "buttonAddChord": {
+    "description": "Button text to add a chord.",
+    "message": "Akkoord toevoegen"
+  },
+  "buttonAddUserScript": {
+    "description": "Label for the button to add a user script",
+    "message": "Gebruikersscript toevoegen"
+  },
+  "buttonCancel": {
+    "description": "Label for cancel buttons",
+    "message": "Annuleren"
+  },
+  "buttonFewerOptions": {
+    "description": "Label for button or link to hide additional options.",
+    "message": "Minder opties"
+  },
+  "buttonMoreOptions": {
+    "description": "Label for button or link to show additional options.",
+    "message": "Meer opties"
+  },
+  "buttonOK": {
+    "description": "Label for OK buttons",
+    "message": "OK"
+  },
+  "buttonReset": {
+    "description": "Label for button or link to reset something.",
+    "message": "Herstellen"
+  },
+  "buttonXSSWarningAccept": {
+    "description": "Label for the button to accept the user scripts XSS warning.",
+    "message": "Ik aanvaard de risico's"
+  },
+  "commandCloseLeftTabs": {
+    "message": "Tabbladen aan de linkerkant sluiten"
+  },
+  "commandCloseOtherTabs": {
+    "message": "Overige tabbladen sluiten"
+  },
+  "commandCloseRightTabs": {
+    "message": "Tabbladen aan de rechterkant sluiten"
+  },
+  "commandCloseTab": {
+    "message": "Tabblad sluiten"
+  },
+  "commandDuplicateTab": {
+    "message": "Tabblad dupliceren"
+  },
+  "commandDuplicateTabInNewPrivateWindow": {
+    "message": "Tabblad dupliceren in nieuw privévenster"
+  },
+  "commandDuplicateTabInNewPrivateWindowTooltip": {
+    "message": "De geschiedenis van het gedupliceerde tabblad wordt niet behouden in het privévenster"
+  },
+  "commandHistoryBack": {
+    "message": "Een pagina terug gaan"
+  },
+  "commandHistoryForward": {
+    "message": "Een pagina vooruit gaan"
+  },
+  "commandMinimize": {
+    "message": "Venster minimaliseren"
+  },
+  "commandMoveTabToNewWindow": {
+    "message": "Tabblad verplaatsen naar nieuw venster"
+  },
+  "commandNewPrivateWindow": {
+    "message": "Nieuw privévenster"
+  },
+  "commandNewTab": {
+    "message": "Nieuw tabblad"
+  },
+  "commandNewWindow": {
+    "message": "Nieuw venster"
+  },
+  "commandActivateNextTab": {
+    "message": "Ga naar volgend tabblad"
+  },
+  "commandOpenFrameInNewTab": {
+    "message": "Frame openen in nieuw tabblad"
+  },
+  "commandOpenFrameInNewWindow": {
+    "message": "Frame openen in nieuw venster"
+  },
+  "commandOpenLinkInNewBackgroundTab": {
+    "message": "Link openen in nieuw achtergrondtabblad"
+  },
+  "commandOpenLinkInNewForegroundTab": {
+    "message": "Link openen in nieuw voorgrondtabblad"
+  },
+  "commandOpenLinkInNewPrivateWindow": {
+    "message": "Link openen in nieuw privévenster"
+  },
+  "commandOpenLinkInNewWindow": {
+    "message": "Link openen in nieuw venster"
+  },
+  "commandPageDown": {
+    "message": "Vorige pagina"
+  },
+  "commandPageDownTooltip": {
+    "message": "Paginanummer in URL verlagen via vergelijkingsheuristieken"
+  },
+  "commandPageUp": {
+    "message": "Volgende pagina"
+  },
+  "commandPageUpTooltip": {
+    "message": "Paginanummer in URL verhogen via vergelijkingsheuristieken"
+  },
+  "commandPinUnpinTab": {
+    "message": "Tabblad vastmaken/losmaken"
+  },
+  "commandActivatePreviousTab": {
+    "message": "Ga naar vorig tabblad"
+  },
+  "commandReload": {
+    "message": "Vernieuwen"
+  },
+  "commandReloadBypassCache": {
+    "message": "Vernieuwen (buffer uitschakelen)"
+  },
+  "commandReloadFrame": {
+    "message": "Frame vernieuwen"
+  },
+  "commandSaveMediaAs": {
+    "message": "Media opslaan als"
+  },
+  "commandSaveMediaAsTooltip": {
+    "message": "Een afbeelding of HTML5-audio/video opslaan"
+  },
+  "commandSaveMediaNow": {
+    "message": "Media nu opslaan"
+  },
+  "commandSaveMediaNowTooltip": {
+    "message": "Een afbeelding of HTML5-audio/video opslaan in de downloadmap"
+  },
+  "commandScrollBottom": {
+    "message": "Naar de onderkant scrollen"
+  },
+  "commandScrollDown": {
+    "message": "Naar beneden scrollen"
+  },
+  "commandScrollTop": {
+    "message": "Naar de bovenkant scrollen"
+  },
+  "commandScrollUp": {
+    "message": "Naar boven scrollen"
+  },
+  "commandShowOnlyThisFrame": {
+    "message": "Enkel dit frame tonen"
+  },
+  "commandUndoClose": {
+    "message": "Tabblad sluiten ongedaan maken"
+  },
+  "commandZoomIn": {
+    "message": "Inzoomen"
+  },
+  "commandZoomOut": {
+    "message": "Uitzoomen"
+  },
+  "commandZoomReset": {
+    "message": "Zoomniveau terugzetten"
+  },
+  "commandZoomResetTooltip": {
+    "message": "Zoomfactor van tabblad naar standaard herstellen"
+  },
+  "labelGesture": {
+    "description": "Label for gesture input controls.",
+    "message": "Gebaar"
+  },
+  "labelScrollDown": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll down.",
+    "message": "Naar beneden scrollen"
+  },
+  "labelScrollLeft": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll left.",
+    "message": "Naar links scrollen"
+  },
+  "labelScrollRight": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll right.",
+    "message": "Naar rechts scrollen"
+  },
+  "labelScrollUp": {
+    "description": "Label for command picker dropdown in wheel gestures for scroll up.",
+    "message": "Naar boven scrollen"
+  },
+  "labelUserScript": {
+    "description": "Label for user script controls.",
+    "message": "Gebruikersscript"
+  },
+  "manifestDescription": {
+    "description": "The description of this addon in manifest.json",
+    "message": "Muisgebaren voor Firefox"
+  },
+  "millisecondsAddon": {
+    "description": "The word milliseconds as a bootstrap input-addon in options.",
+    "message": "milliseconden"
+  },
+  "modalChordAcceptable": {
+    "description": "Prompt to accept a chord in the chord gesture modal.",
+    "message": "Druk op OK om dit akkoordgebaar te aanvaarden."
+  },
+  "modalChordConflict": {
+    "description": "Prompt to indicate a conflict in the chord gesture modal.",
+    "message": "Dit akkoord bevat of zit vervat in een reeds gedefinieerd akkoord."
+  },
+  "modalChordPrompt": {
+    "description": "Prompt to press a chord in the chord gesture modal.",
+    "message": "Druk tegelijk op twee of meer muisknoppen om een akkoordgebaar op te nemen."
+  },
+  "modalChordWaiting": {
+    "description": "Placeholder text while waiting for buttons to be pressed.",
+    "message": "Aan het wachten..."
+  },
+  "mouseButtonLeft": {
+    "description": "Name of left mouse button",
+    "message": "Links"
+  },
+  "mouseButtonMiddle": {
+    "description": "Name of middle mouse button",
+    "message": "Midden"
+  },
+  "mouseButtonOther": {
+    "description": "Name of other mouse buttons (e.g.: Button 4)",
+    "message": "Knop $BUTTON$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "4"
+      }
+    }
+  },
+  "mouseButtonRight": {
+    "description": "Name of right mouse button",
+    "message": "Rechts"
+  },
+  "noCommand": {
+    "description": "Placeholder for when a gesture is not assigned to a command.",
+    "message": "-- Geen opdracht --"
+  },
+  "optionsBackupBackupSettings": {
+    "description": "Header for backup settings section.",
+    "message": "Back-upinstellingen"
+  },
+  "optionsBackupBackupSettingsButton": {
+    "description": "Button text to download settings.",
+    "message": "Instellingen downloaden"
+  },
+  "optionsBackupBackupSettingsInfo": {
+    "description": "Description of the backup settings function.",
+    "message": "Klik om een JSON-bestand te downloaden met een back-up van instellingen en gebruikersscripts."
+  },
+  "optionsBackupRestoreSettings": {
+    "description": "Header for restore settings section.",
+    "message": "Instellingen herstellen"
+  },
+  "optionsBackupRestoreSettingsButton": {
+    "description": "Button text to upload settings.",
+    "message": "Instellingen herstellen uit bestand"
+  },
+  "optionsBackupRestoreSettingsInfo": {
+    "description": "Description of the restore settings function.",
+    "message": "Selecteer een back-upbestand waaruit instellingen en gebruikersscripts zullen hersteld worden."
+  },
+  "optionsCanSelectStart": {
+    "description": "Checkbox to enable or disable text selection during gestures",
+    "message": "Toelaten dat tekst geselecteerd wordt tijdens een gebaar."
+  },
+  "optionsCommandsWellHelp": {
+    "description": "Help text that appears in the well at the top of the commands tap",
+    "message": "Voer een gebaar uit in elk vak om een gebaar aan de opdracht toe te wijzen. Druk de gebaarknop in en laat los om het gebaar te wissen."
+  },
+  "optionsDisableOnAlt": {
+    "description": "Label text for disable on alt checkbox.",
+    "message": "Geen gebaar starten zolang de Alt-toets ingedrukt wordt."
+  },
+  "optionsDisableOnShift": {
+    "description": "Label text for disable on shift checkbox.",
+    "message": "Geen gebaar starten zolang de Shift-toets ingedrukt wordt."
+  },
+  "optionsDoubleRightClick": {
+    "description": "Label text for double right-click checkbox.",
+    "message": "Rechtsklik tweemaal om het contextmenu te openen"
+  },
+  "optionsDoubleRightClickHelp": {
+    "description": "Help text for double right-click checkbox.",
+    "message": "OSX en Linux tonen het contextmenu van zodra de rechterknop ingedrukt wordt (daar waar Windows het contextmenu toont wanneer de rechterknop losgelaten wordt). Dit veroorzaakt een probleem aangezien het contextmenu getoond wordt nog vóór de add-on kan bepalen of een gebaar uitgevoerd werd. Door deze instelling te activeren wordt voorkomen dat het contextmenu getoond wordt, tenzij tweemaal rechtsgeklikt wordt."
+  },
+  "optionsDrawTrails": {
+    "description": "Label text for draw gesture trails checkbox.",
+    "message": "Gebaarsporen tekenen"
+  },
+  "optionsEnableChordGestures": {
+    "description": "Label text for enable chord gestures checkbox.",
+    "message": "Akkoordgebaren activeren"
+  },
+  "optionsEnableChordGesturesHelp": {
+    "description": "Help text for the chord gestures panel.",
+    "message": "Druk twee of meer knoppen tegelijk in om een akkoordgebaar uit te voeren."
+  },
+  "optionsEnableWheelGestures": {
+    "description": "Label text for enable wheel gestures checkbox.",
+    "message": "Wielgebaren activeren"
+  },
+  "optionsEnableWheelGesturesHelp": {
+    "description": "Help text for the wheel gestures panel.",
+    "message": "Houd de gebaarknop ingedrukt en draai aan het muiswiel om een wielgebaar uit te voeren."
+  },
+  "optionsGestureButton": {
+    "description": "Label for the gesture button select.",
+    "message": "Gebaarknop"
+  },
+  "optionsGestureButtonHelp": {
+    "description": "Help text for the gesture button select.",
+    "message": "De muisknop die gebruikt wordt om een gebaar te starten."
+  },
+  "optionsGestureTimeout": {
+    "description": "Label for the gesture timeout input.",
+    "message": "Gebaaronderbreking"
+  },
+  "optionsGestureTimeoutHelp": {
+    "description": "Help text for the gesture timeout input.",
+    "message": "Annuleer een gebaar als er geen beweging is gedurende dit aantal seconden. Zet op nul om te deactiveren."
+  },
+  "optionsHeadingNavigationAndScrolling": {
+    "description": "Heading for navigation and scrolling preferences.",
+    "message": "Navigatie en scrollen"
+  },
+  "optionsHeadingOSXLinuxOnly": {
+    "description": "Heading for the OSX and Linux only section in general options.",
+    "message": "Enkel voor OSX en Linux"
+  },
+  "optionsHeadingOtherCommands": {
+    "description": "Heading for other command preferences.",
+    "message": "Andere opdrachten"
+  },
+  "optionsHeadingTabAndWindow": {
+    "description": "Heading for tab and window preferences.",
+    "message": "Tabblad- en vensteropdrachten"
+  },
+  "optionsMorePrefsInsertRelatedTab": {
+    "description": "Label for the checkbox to toggle insert related tab after current behaviour.",
+    "message": "De opdrachtfamilie 'Openen in nieuw tabblad' het tabblad laten invoegen achter het huidige tabblad. Deze instelling is gelijkaardig aan browser.tabs.insertRelatedAfterCurrent."
+  },
+  "optionsMorePrefsNewPrivateWindowUrl": {
+    "description": "Label for the default URL for new private windows.",
+    "message": "Standaard-URL voor vensters geopend met de opdracht 'Nieuw privévenster'"
+  },
+  "optionsMorePrefsNewTabOrWindowHelp": {
+    "description": "Help text for the default URL for new tabs and windows.",
+    "message": "Laat dit veld leeg om de standaard-URL 'about:newtab' te gebruiken. Niet-geprivilegieerde 'about:'-pagina's zoals 'about:blank' en 'about:home' worden ook aanvaard."
+  }, 
+  "optionsMorePrefsNewTabUrl": {
+    "description": "Label for the default URL for new tabs.",
+    "message": "Standaard-URL voor tabbladen geopend met de opdracht 'Nieuw tabblad'"
+  },
+  "optionsMorePrefsNewWindowUrl": {
+    "description": "Label for the default URL for new windows.",
+    "message": "Standaard-URL voor vensters geopend met de opdracht 'Nieuw venster'"
+  },
+  "optionsMorePrefsNextTabWrap": {
+    "description": "Label for the checkbox to enable tab wrapping.",
+    "message": "De opdrachten 'Volgend tabblad' en 'Vorig tabblad' springen van het laatste tabblad terug naar het eerste tabblad en omgekeerd." 
+  },
+  "optionsMorePrefsScrollAmount": {
+    "description": "Label to configure scroll up and scroll down amount.",
+    "message": "Hoeveelheid viewport die moet gescrolld worden bij de opdrachten 'Naar boven/beneden scrollen'"
+  },
+  "optionsMorePrefsScrollAmountHelp": {
+    "description": "Help text to configure scroll up and scroll down amount.",
+    "message": "1 vh = ¹/₁₀₀ viewporthoogte."
+  },
+  "optionsMorePrefsScrollDuration": {
+    "description": "Label to configure scroll animation duration.",
+    "message": "Duur van de animatie bij de familie van scrollopdrachten"
+  },
+  "optionsMorePrefsScrollDurationHelp": {
+    "description": "Help text to configure scroll animation duration.",
+    "message": "Gebruik nul om te deactiveren."
+  },
+  "optionsMorePrefsUseRelPrevNext": {
+    "description": "Label for checkbox to follow rel=next attributes.",
+    "message": "'Volgende pagina'- en 'Vorige pagina'-opdrachten volgen de 'rel=next'- en 'rel=prev'-attributen."
+  },
+  "optionsMorePrefsWellHelp": {
+    "description": "Help text that appears in the well at the top of the more preferences tab",
+    "message": "Voorkeuren om het gedrag van ingebouwde opdrachten en andere tweaks aan te passen."
+  },
+  "optionsMorePrefsZoomStep": {
+    "description": "Label for the amount to change zoom factor.",
+    "message": "Hoeveelheid waarmee de zoomfactor moet aangepast worden bij 'Zoom in/out'-opdrachten"
+  },
+  "optionsShowStatusText": {
+    "description": "Label for the checkbox to show status text.",
+    "message": "Statustekst tonen"
+  },
+  "optionsStatusTemplate": {
+    "description": "Label for the status template field.",
+    "message": "Statussjabloon"
+  },
+  "optionsStatusTemplateHelp": {
+    "description": "Help text for the status template field.",
+    "message": "Pas het HTML-sjabloon voor de statustekst aan. De inhoud van het element met het 'data-mg-status'-attribuut zal vervangen worden door de statustekst."
+  },
+  "optionsStatusTimeout": {
+    "description": "Label for the status timeout field.",
+    "message": "Statustime-out"
+  },
+  "optionsStatusTimeoutHelp": {
+    "description": "Help text for the status timeout field.",
+    "message": "Tijd dat de statustekst getoond wordt na een gebaar."
+  },
+  "optionsTitle": {
+    "description": "Large heading at the top of the options page.",
+    "message": "Foxy Gestures-opties"
+  },
+  "optionsTrailColor": {
+    "description": "Label for the input to pick trail color.",
+    "message": "Spoorkleur"
+  },
+  "optionsTrailColorHelp": {
+    "description": "Help text for the input to pick trail color.",
+    "message": "Eender welke CSS-kleurdefinitie wordt aanvaard. bv.: blue, #336699, of rgba(64, 128, 192, 0.5)"
+  },
+  "optionsTrailWidth": {
+    "description": "Label for the input to pick trail width.",
+    "message": "Spoorbreedte"
+  },
+  "optionsUserScriptsWellHelp1": {
+    "description": "Help text that appears in the well at the top of the user scripts tab",
+    "message": "Een aangepast script uitvoeren met een muisgebaar."
+  },
+  "optionsUserScriptsWellHelp2": {
+    "description": "Help text that appears in the well at the top of the user scripts tab",
+    "message": "Gelieve het artikel over gebruikersscripts op de wiki te lezen vooraleer verder te gaan."
+  },
+  "optionsXSSWarning1": {
+    "description": "XSS warning text.",
+    "message": "Dit is een functie bedoeld voor ervaren gebruikers. Indien iemand u zei hier iets te knippen en plakken om een functie te activeren of iets te 'hacken', dan is het oplichterij en zal het hen toegang geven tot uw browser."
+  },
+  "optionsXSSWarning2": {
+    "description": "XSS warning text.",
+    "message": "Gebruikersscripts hebben toegang tot alle WebExtensions-API's die kunnen gebruikt worden door Foxy Gestures. Deze API's kunnen gebruikt worden om de browsergeschiedenis te benaderen, kwaadaardig JavaScript te downloaden, of op een andere manier uw browser over te nemen. Kopieer en plak nooit een gebruikersscript van een onbetrouwbare bron."
+  },
+  "optionsXSSWarningInfo": {
+    "description": "XSS warning text.",
+    "message": "Voor meer informatie, raadpleeg volgende bronnen:"
+  },
+  "optionsXSSWarningLink1": {
+    "description": "XSS warning text.",
+    "message": "Het Wikipedia-artikel over 'cross-site scripting'."
+  },
+  "optionsXSSWarningLink2": {
+    "description": "XSS warning text.",
+    "message": "Het Wikipedia-artikel over 'self-XSS attacks'."
+  },
+  "percentAddon": {
+    "description": "The word percent in a bootstrap input-addon in options.",
+    "message": "percent"
+  },
+  "secondsAddon": {
+    "description": "The word seconds in a bootstrap input-addon in options.",
+    "message": "seconden"
+  },
+  "statusGestureKnown": {
+    "description": "Status message when a gesture is mapped to a command",
+    "message": "Gebaar: $GESTURE$ ($COMMAND$)",
+    "placeholders": {
+      "command": {
+        "content": "$2",
+        "example": "Nieuw Tabblad"
+      },
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+  "statusGestureProgress": {
+    "description": "Status message during a gesture",
+    "message": "Gebaar: $GESTURE$",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+  "statusGestureUnknown": {
+    "description": "Status message when a gesture is not mapped to a command",
+    "message": "Onbekend gebaar: $GESTURE$",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "LR"
+      }
+    }
+  },
+  "tabBackupRestore": {
+    "description": "Heading for the backup and restore tab",
+    "message": "Back-up & herstel"
+  },
+  "tabCommands": {
+    "description": "Heading for the built-in commands tab",
+    "message": "Ingebouwde opdrachten"
+  },
+  "tabGeneral": {
+    "description": "Heading for the general settings tab",
+    "message": "Algemene instellingen"
+  },
+  "tabMorePrefs": {
+    "description": "Heading for the more preferences tab",
+    "message": "Meer voorkeuren"
+  },
+  "tabOtherGestures": {
+    "description": "Heading for the other gestures tab",
+    "message": "Andere gebaren"
+  },
+  "tabUserScripts": {
+    "description": "Heading for the user scripts tab",
+    "message": "Gebruikersscripts"
+  },
+  "tooltipRemoveUserScript": {
+    "description": "Tooltip for the button to delete a user script.",
+    "message": "Gebruikersscript verwijderen"
+  },
+  "userScriptNoName": {
+    "description": "Label used for user scripts without a name in gesture status, etc.",
+    "message": "Gebruikersscript: <Geen naam>"
+  },
+  "userScriptWithName": {
+    "description": "Label used for user scripts with a name in gesture status, etc.",
+    "message": "Gebruikersscript: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "Mijn aangepast script"
+      }
+    }
+  },
+  "warning": {
+    "description": "The word warning.",
+    "message": "Waarschuwing"
+  },
+  "confirmReassignGesture": {
+    "description": "Confirm dialog when assigning a gesture that is already mapped to a command.",
+    "message": "$GESTURE$ is reeds toegewezen aan $OLD_COMMAND$. Gebaar herkoppelen aan $NEW_COMMAND$?",
+    "placeholders": {
+      "gesture": {
+        "content": "$1",
+        "example": "DR"
+      },
+      "old_command": {
+        "content": "$2",
+        "example": "Tabblad sluiten"
+      },
+      "new_command": {
+        "content": "$3",
+        "example": "Nu opslaan"
+      }
+    }
+  },
+  "confirmRemoveChord": {
+    "description": "Confirm dialog when removing a chord.",
+    "message": "Akkoord $CHORD$ verwijderen?",
+    "placeholders": {
+      "chord": {
+        "content": "$1",
+        "example": "Links + Rechts"
+      }
+    }
+  },
+  "confirmRemoveUserScript": {
+    "description": "Confirm dialog when removing a user script.",
+    "message": "$USER_SCRIPT$ verwijderen?",
+    "placeholders": {
+      "user_script": {
+        "content": "$1",
+        "example": "Gebruikersscript: Ga naar startpagina"
+      }
+    }
+  },
+  "alertBackupNotRecognized": {
+    "description": "Alert when backup data addon ID is missing or invalid.",
+    "message": "Bestand niet herkend; add-on-ID ontbreekt of is ongeldig."
+  },
+  "alertBackupInvalidVersion": {
+    "description": "Alert when backup data version is missing or invalid.",
+    "message": "Ongeldig of onbekend versienummer."
+  },
+  "alertBackupCorrupt": {
+    "description": "Alert when backup data settings are invalid or corrupt.",
+    "message": "Back-upgegevens zijn ongeldig of corrupt."
+  },
+  "alertBackupRestored": {
+    "description": "Alert when backup data is successfully restored.",
+    "message": "Alle instellingen werden succesvol vanuit de back-up hersteld."
+  },
+  "commandOpenOptions": {
+    "message": "Foxy Gestures-opties openen"
+  },
+  "groupCommandsNavigation": {
+    "description": "Name of the group for navigation type commands.",
+    "message": "Navigatieopdrachten"
+  },
+  "groupCommandsTabs": {
+    "description": "Name of the group for tab type commands.",
+    "message": "Tabbladopdrachten"
+  },
+  "groupCommandsWindows": {
+    "description": "Name of the group for window type commands.",
+    "message": "Vensteropdrachten"
+  },
+  "groupCommandsHybrid": {
+    "description": "Name of the group for hybrid type commands.",
+    "message": "Hybride opdrachten"
+  },
+  "groupCommandsOther": {
+    "description": "Name of the group for other commands.",
+    "message": "Andere opdrachten"
+  },
+  "groupCommandsUserScripts": {
+    "description": "Name of the group for user scripts.",
+    "message": "Gebruikersscripts"
+  },
+  "commandStop": {
+    "message": "Stop"
+  },
+  "commandGoHome": {
+    "message": "Ga naar startpagina"
+  },
+  "commandActivateFirstTab": {
+    "message": "Ga naar eerste tabblad"
+  },
+  "commandActivateLastTab": {
+    "message": "Ga naar laatste tabblad"
+  },
+  "optionsActiveTabAfterClose": {
+    "message": "Volgende actieve tabblad na sluiten van tabblad"
+  },
+  "optionsActiveTabAfterCloseHelp": {
+    "message": "Tabblad kiezen dat zal geactiveerd worden na het sluiten van het huidige tabblad."
+  },
+  "optionsActiveTabAfterCloseFirefox": {
+    "message": "Laat Firefox kiezen"
+  },
+  "optionsActiveTabAfterCloseRight": {
+    "message": "Het tabblad aan de rechterzijde activeren"
+  },
+  "optionsActiveTabAfterCloseLeft": {
+    "message": "Het tabblad aan de linkerzijde activeren"
+  },
+  "optionsActiveTabAfterCloseRecent": {
+    "message": "Het recentst actieve tabblad activeren"
+  },
+  "commandActivateRecentTab": {
+    "message": "Ga naar recente tabblad"
+  },
+  "commandActivateRecentTabTooltip": {
+    "message": "Ga naar tabblad dat actief was vóór het huidige tabblad."
+  },
+  "commandBookmarkUrl": {
+    "message": "Bladwijzer maken voor deze pagina"
+  },
+  "commandBookmarkUrlTooltip": {
+    "message": "De bladwijzer zal onder 'Andere bladwijzers' geplaatst worden. Herhaal het gebaar om de bladwijzer te verwijderen."
+  },
+  "confirmResetSettings": {
+    "description": "Confirm dialog when resetting all settings back to default values",
+    "message": "Bent u zeker dat u alle instellingen naar hun standaardwaarden wil herstellen?"
+  },
+  "optionsBackupResetSettings": {
+    "description": "Header for reset settings section.",
+    "message": "Instellingen herstellen"
+  },
+  "optionsBackupResetSettingsInfo": {
+    "description": "Description of the reset settings function.",
+    "message": "Alle wijzigingen aan instellingen zullen verloren gaan en de waarden zullen naar de standaard teruggezet worden."
+  },
+  "optionsBackupResetSettingsButton": {
+    "description": "Label for button to reset all settings back to default.",
+    "message": "Instellingen herstellen naar de standaard"
+  },
+  "commandMaximize": {
+    "message": "Venster maximaliseren"
+  },
+  "commandFullscreen": {
+"m
+  }
+}
