@@ -1,12 +1,16 @@
-var gulp   = require('gulp'),
-    jshint = require('gulp-jshint'),
-    sass   = require('gulp-sass'),
-    zip    = require('gulp-zip');
+var gulp     = require('gulp'),
+    jshint   = require('gulp-jshint'),
+    jsonlint = require("gulp-jsonlint");
+    sass     = require('gulp-sass'),
+    zip      = require('gulp-zip');
 
 var sources = {
   js: [
     'src/**/*.js',
     '!**/lib/**'
+  ],
+  json: [
+    'src/_locales/**/*.json'
   ],
   sass: [
     'src/options/options.scss'
@@ -34,6 +38,12 @@ gulp.task('lint', function () {
   return gulp.src(sources.js)
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
+});
+
+gulp.task('jsonlint', function () {
+  return gulp.src(sources.json)
+    .pipe(jsonlint())
+    .pipe(jsonlint.reporter());
 });
 
 gulp.task('dist', [ 'sass' ], function () {

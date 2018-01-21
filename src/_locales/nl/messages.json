@@ -348,7 +348,7 @@
   "optionsMorePrefsNewTabOrWindowHelp": {
     "description": "Help text for the default URL for new tabs and windows.",
     "message": "Laat dit veld leeg om de standaard-URL 'about:newtab' te gebruiken. Niet-geprivilegieerde 'about:'-pagina's zoals 'about:blank' en 'about:home' worden ook aanvaard."
-  }, 
+  },
   "optionsMorePrefsNewTabUrl": {
     "description": "Label for the default URL for new tabs.",
     "message": "Standaard-URL voor tabbladen geopend met de opdracht 'Nieuw tabblad'"
@@ -359,7 +359,7 @@
   },
   "optionsMorePrefsNextTabWrap": {
     "description": "Label for the checkbox to enable tab wrapping.",
-    "message": "De opdrachten 'Volgend tabblad' en 'Vorig tabblad' springen van het laatste tabblad terug naar het eerste tabblad en omgekeerd." 
+    "message": "De opdrachten 'Volgend tabblad' en 'Vorig tabblad' springen van het laatste tabblad terug naar het eerste tabblad en omgekeerd."
   },
   "optionsMorePrefsScrollAmount": {
     "description": "Label to configure scroll up and scroll down amount.",
@@ -682,8 +682,5 @@
   },
   "commandMaximize": {
     "message": "Venster maximaliseren"
-  },
-  "commandFullscreen": {
-"m
   }
 }
