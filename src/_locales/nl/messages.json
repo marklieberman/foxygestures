@@ -273,18 +273,6 @@
     "description": "Label text for disable on alt checkbox.",
     "message": "Geen gebaar starten zolang de Alt-toets ingedrukt wordt."
   },
-  "optionsDisableOnShift": {
-    "description": "Label text for disable on shift checkbox.",
-    "message": "Geen gebaar starten zolang de Shift-toets ingedrukt wordt."
-  },
-  "optionsDoubleRightClick": {
-    "description": "Label text for double right-click checkbox.",
-    "message": "Rechtsklik tweemaal om het contextmenu te openen"
-  },
-  "optionsDoubleRightClickHelp": {
-    "description": "Help text for double right-click checkbox.",
-    "message": "OSX en Linux tonen het contextmenu van zodra de rechterknop ingedrukt wordt (daar waar Windows het contextmenu toont wanneer de rechterknop losgelaten wordt). Dit veroorzaakt een probleem aangezien het contextmenu getoond wordt nog vóór de add-on kan bepalen of een gebaar uitgevoerd werd. Door deze instelling te activeren wordt voorkomen dat het contextmenu getoond wordt, tenzij tweemaal rechtsgeklikt wordt."
-  },
   "optionsDrawTrails": {
     "description": "Label text for draw gesture trails checkbox.",
     "message": "Gebaarsporen tekenen"
@@ -682,5 +670,20 @@
   },
   "commandMaximize": {
     "message": "Venster maximaliseren"
+  },
+  "commandFullscreen": {
+    "message": "Volledig scherm tonen"
+  },
+  "commandCloseWindow": {
+    "message": "Venster sluiten"
+  },
+  "commandViewFrameSource": {
+    "message": "Framebron weergeven"
+  },
+  "commandViewPageSource": {
+    "message": "Paginabron weergeven"
+  },
+  "commandViewSourceTooltip": {
+    "message": "POST-data blijven niet bewaard bij het bekijken van de bron via deze opdracht."
   }
-}
+ }
