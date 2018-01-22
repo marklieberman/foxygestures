@@ -273,6 +273,10 @@
     "description": "Label text for disable on alt checkbox.",
     "message": "Geen gebaar starten zolang de Alt-toets ingedrukt wordt."
   },
+  "optionsDisableOnShift": {
+    "description": "Label text for disable on shift checkbox.",
+    "message": "Geen gebaar starten zolang de Shift-toets ingedrukt wordt."
+  },
   "optionsDrawTrails": {
     "description": "Label text for draw gesture trails checkbox.",
     "message": "Gebaarsporen tekenen"
@@ -686,4 +690,4 @@
   "commandViewSourceTooltip": {
     "message": "POST-data blijven niet bewaard bij het bekijken van de bron via deze opdracht."
   }
- }
+}
