@@ -24,7 +24,7 @@ app.controller('OptionsTabBackupCtrl', [
         let dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonData);
 
         // Prompt the user to download the backup.
-        let a = window.document.createElement('a');
+        let a = document.createElement('a');
         a.href = dataUrl;
         a.download = backupData.fileName;
         document.body.appendChild(a);
