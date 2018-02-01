@@ -641,7 +641,7 @@ modules.commands = (function (settings, helpers) {
   function commandCloseOtherTabs () {
     return getCurrentWindowTabs()
       .then(tabs => {
-        return browser.tabs.remove(tabs.filter(tab => !tab.active).map(tab => tab.id));
+        return browser.tabs.remove(tabs.filter(tab => !tab.active && !tab.pinned).map(tab => tab.id));
       })
       // Allow the wheel or chord gesture to repeat.
       .then(() => ({ repeat: true }));
