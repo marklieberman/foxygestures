@@ -689,5 +689,11 @@
   },
   "commandViewSourceTooltip": {
     "message": "POST data is not preserved when viewing source with this command."
+  },
+  "commandReloadAllTabs": {
+    "message": "Reload All Tabs"
+  },
+  "commandReloadAllTabsTooltip": {
+    "message": "Reload all tabs in the current window"
   }
 }

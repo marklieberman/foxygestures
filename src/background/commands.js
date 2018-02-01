@@ -231,6 +231,13 @@ modules.commands = (function (settings, helpers) {
       group: groups.other
     },
     {
+      id: 'reloadAllTabs',
+      handler: commandReloadAllTabs,
+      label: browser.i18n.getMessage('commandReloadAllTabs'),
+      tooltip: browser.i18n.getMessage('commandReloadAllTabsTooltip'),
+      group: groups.tabs
+    },
+    {
       id: 'pageDown',
       handler: data => commands.executeInContent('pageDown', data),
       label: browser.i18n.getMessage('commandPageDown'),
@@ -874,6 +881,14 @@ modules.commands = (function (settings, helpers) {
         }
         return browser.tabs.create(tabOptions);
       });
+    });
+  }
+
+  // Reload all tabs in the current window.
+  function commandReloadAllTabs () {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+      tabs.forEach(tab => browser.tabs.reload(tab.id));
+      return { repeat: true };
     });
   }
 
