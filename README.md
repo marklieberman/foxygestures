@@ -11,9 +11,7 @@ FireGestures is a very mature plugin with a huge number of features. Although I 
 #### Limitations
 
 As a web extension, this add-on will never be as powerful as FireGestures.
-This extension does not integrate into about:home, view-source:, etc. Nor will
-it work on addons.mozilla.com, since web extensions are forbidden from
-interacting with the add-on store.
+This extension does not integrate into about:home, view-source:, etc. Out of the box it also will not work on certain Mozilla sites (among them addons.mozilla.org) as web extensions are by default not executed on them (set `privacy.resistFingerprinting.block_mozAddonManager` to `true` to disable that behaviour).
 
 More importantly, the __mouse gestures will not work until the document body of
 the website you are visiting has parsed__. In other words, the DOM must be
