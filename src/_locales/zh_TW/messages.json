@@ -1,0 +1,693 @@
+{
+    "buttonAddChord": {
+        "description": "Button text to add a chord.",
+        "message": "新增和弦"
+    },
+    "buttonAddUserScript": {
+        "description": "Label for the button to add a user script",
+        "message": "新增自訂腳本"
+    },
+    "buttonCancel": {
+        "description": "Label for cancel buttons",
+        "message": "取消"
+    },
+    "buttonFewerOptions": {
+        "description": "Label for button or link to hide additional options.",
+        "message": "更少選項"
+    },
+    "buttonMoreOptions": {
+        "description": "Label for button or link to show additional options.",
+        "message": "更多選項"
+    },
+    "buttonOK": {
+        "description": "Label for OK buttons",
+        "message": "確定"
+    },
+    "buttonReset": {
+        "description": "Label for button or link to reset something.",
+        "message": "重設"
+    },
+    "buttonXSSWarningAccept": {
+        "description": "Label for the button to accept the user scripts XSS warning.",
+        "message": "我已了解此風險"
+    },
+    "commandCloseLeftTabs": {
+        "message": "關閉左側分頁"
+    },
+    "commandCloseOtherTabs": {
+        "message": "關閉其他分頁"
+    },
+    "commandCloseRightTabs": {
+        "message": "關閉右側分頁"
+    },
+    "commandCloseTab": {
+        "message": "關閉分頁"
+    },
+    "commandDuplicateTab": {
+        "message": "新增分頁副本"
+    },
+    "commandDuplicateTabInNewPrivateWindow": {
+        "message": "新增隱私瀏覽視窗來開啟分頁副本"
+    },
+    "commandDuplicateTabInNewPrivateWindowTooltip": {
+        "message": "隱私瀏覽視窗中的分頁副本不會保留瀏覽記錄"
+    },
+    "commandHistoryBack": {
+        "message": "回到上一頁"
+    },
+    "commandHistoryForward": {
+        "message": "前進下一頁"
+    },
+    "commandMinimize": {
+        "message": "最小化視窗"
+    },
+    "commandMoveTabToNewWindow": {
+        "message": "分頁移動到新視窗"
+    },
+    "commandNewPrivateWindow": {
+        "message": "新增隱私瀏覽視窗"
+    },
+    "commandNewTab": {
+        "message": "新增分頁"
+    },
+    "commandNewWindow": {
+        "message": "新增視窗"
+    },
+    "commandActivateNextTab": {
+        "message": "下一個分頁"
+    },
+    "commandOpenFrameInNewTab": {
+        "message": "於新分頁開啟框架"
+    },
+    "commandOpenFrameInNewWindow": {
+        "message": "於新視窗開啟框架"
+    },
+    "commandOpenLinkInNewBackgroundTab": {
+        "message": "於背景分頁開啟連結"
+    },
+    "commandOpenLinkInNewForegroundTab": {
+        "message": "於前景分頁開啟連結"
+    },
+    "commandOpenLinkInNewPrivateWindow": {
+        "message": "於隱私瀏覽視窗開啟連結"
+    },
+    "commandOpenLinkInNewWindow": {
+        "message": "新增視窗開啟連結"
+    },
+    "commandPageDown": {
+        "message": "上一頁"
+    },
+    "commandPageDownTooltip": {
+        "message": "使用啟發式方法匹配並減少網址中的頁碼"
+    },
+    "commandPageUp": {
+        "message": "下一頁"
+    },
+    "commandPageUpTooltip": {
+        "message": "使用啟發式方法匹配並增加網址中的頁碼"
+    },
+    "commandPinUnpinTab": {
+        "message": "固定/取消固定分頁"
+    },
+    "commandActivatePreviousTab": {
+        "message": "上一個分頁"
+    },
+    "commandReload": {
+        "message": "重新載入"
+    },
+    "commandReloadBypassCache": {
+        "message": "重新載入 (繞過快取)"
+    },
+    "commandReloadFrame": {
+        "message": "重新載入框架"
+    },
+    "commandSaveMediaAs": {
+        "message": "媒體另存為"
+    },
+    "commandSaveMediaAsTooltip": {
+        "message": "保存一個圖像或 HTML5 影音"
+    },
+    "commandSaveMediaNow": {
+        "message": "立即保存媒體"
+    },
+    "commandSaveMediaNowTooltip": {
+        "message": "保存一個圖像或 HTML5 影音到下載文件夾"
+    },
+    "commandScrollBottom": {
+        "message": "捲動到底"
+    },
+    "commandScrollDown": {
+        "message": "向下捲動"
+    },
+    "commandScrollTop": {
+        "message": "捲動到頂"
+    },
+    "commandScrollUp": {
+        "message": "向上捲動"
+    },
+    "commandShowOnlyThisFrame": {
+        "message": "只顯示此框架"
+    },
+    "commandUndoClose": {
+        "message": "撤銷關閉"
+    },
+    "commandZoomIn": {
+        "message": "放大"
+    },
+    "commandZoomOut": {
+        "message": "縮小"
+    },
+    "commandZoomReset": {
+        "message": "重設縮放"
+    },
+    "commandZoomResetTooltip": {
+        "message": "重設分頁縮放級別到預設"
+    },
+    "labelGesture": {
+        "description": "Label for gesture input controls.",
+        "message": "手勢"
+    },
+    "labelScrollDown": {
+        "description": "Label for command picker dropdown in wheel gestures for scroll down.",
+        "message": "向下捲動"
+    },
+    "labelScrollLeft": {
+        "description": "Label for command picker dropdown in wheel gestures for scroll left.",
+        "message": "向左捲動"
+    },
+    "labelScrollRight": {
+        "description": "Label for command picker dropdown in wheel gestures for scroll right.",
+        "message": "向右捲動"
+    },
+    "labelScrollUp": {
+        "description": "Label for command picker dropdown in wheel gestures for scroll up.",
+        "message": "向上捲動"
+    },
+    "labelUserScript": {
+        "description": "Label for user script controls.",
+        "message": "自訂腳本"
+    },
+    "manifestDescription": {
+        "description": "The description of this addon in manifest.json",
+        "message": "適用於 Firefox 的滑鼠手勢"
+    },
+    "millisecondsAddon": {
+        "description": "The word milliseconds as a bootstrap input-addon in options.",
+        "message": "毫秒"
+    },
+    "modalChordAcceptable": {
+        "description": "Prompt to accept a chord in the chord gesture modal.",
+        "message": "按確定接受這個和弦手勢。"
+    },
+    "modalChordConflict": {
+        "description": "Prompt to indicate a conflict in the chord gesture modal.",
+        "message": "這個和弦已存在。"
+    },
+    "modalChordPrompt": {
+        "description": "Prompt to press a chord in the chord gesture modal.",
+        "message": "同時按下兩個或以上的滑鼠按鈕來錄製和鉉手勢。"
+    },
+    "modalChordWaiting": {
+        "description": "Placeholder text while waiting for buttons to be pressed.",
+        "message": "正在等待..."
+    },
+    "mouseButtonLeft": {
+        "description": "Name of left mouse button",
+        "message": "左"
+    },
+    "mouseButtonMiddle": {
+        "description": "Name of middle mouse button",
+        "message": "中"
+    },
+    "mouseButtonOther": {
+        "description": "Name of other mouse buttons (e.g.: Button 4)",
+        "message": "按鈕 $BUTTON$",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "4"
+            }
+        }
+    },
+    "mouseButtonRight": {
+        "description": "Name of right mouse button",
+        "message": "右"
+    },
+    "noCommand": {
+        "description": "Placeholder for when a gesture is not assigned to a command.",
+        "message": "-- 無命令 --"
+    },
+    "optionsBackupBackupSettings": {
+        "description": "Header for backup settings section.",
+        "message": "備份設定"
+    },
+    "optionsBackupBackupSettingsButton": {
+        "description": "Button text to download settings.",
+        "message": "下載設定"
+    },
+    "optionsBackupBackupSettingsInfo": {
+        "description": "Description of the backup settings function.",
+        "message": "點擊下載包含設定備份及自訂腳本的一個 JSON 文件。"
+    },
+    "optionsBackupRestoreSettings": {
+        "description": "Header for restore settings section.",
+        "message": "還原設定"
+    },
+    "optionsBackupRestoreSettingsButton": {
+        "description": "Button text to upload settings.",
+        "message": "從文件還原設定"
+    },
+    "optionsBackupRestoreSettingsInfo": {
+        "description": "Description of the restore settings function.",
+        "message": "選擇包含設定及自訂腳本的備份文件來還原它們。"
+    },
+    "optionsCanSelectStart": {
+        "description": "Checkbox to enable or disable text selection during gestures",
+        "message": "允許手勢期間選取文字。"
+    },
+    "optionsCommandsWellHelp": {
+        "description": "Help text that appears in the well at the top of the commands tap",
+        "message": "在框中畫手勢來分配。按下並鬆開手勢按鈕則清除手勢。"
+    },
+    "optionsDisableOnAlt": {
+        "description": "Label text for disable on alt checkbox.",
+        "message": "按住 Alt 鍵時禁用手勢。"
+    },
+    "optionsDisableOnShift": {
+        "description": "Label text for disable on shift checkbox.",
+        "message": "按住 Shift 鍵時禁用手勢。"
+    },
+    "optionsDrawTrails": {
+        "description": "Label text for draw gesture trails checkbox.",
+        "message": "繪製手勢軌跡"
+    },
+    "optionsEnableChordGestures": {
+        "description": "Label text for enable chord gestures checkbox.",
+        "message": "啟用和弦手勢"
+    },
+    "optionsEnableChordGesturesHelp": {
+        "description": "Help text for the chord gestures panel.",
+        "message": "同時按下兩個或以上的滑鼠按鈕來執行和鉉手勢"
+    },
+    "optionsEnableWheelGestures": {
+        "description": "Label text for enable wheel gestures checkbox.",
+        "message": "啟用滾輪手勢"
+    },
+    "optionsEnableWheelGesturesHelp": {
+        "description": "Help text for the wheel gestures panel.",
+        "message": "按住手勢按鈕並捲動滑鼠滾輪執行滾輪手勢"
+    },
+    "optionsGestureButton": {
+        "description": "Label for the gesture button select.",
+        "message": "手勢按鈕"
+    },
+    "optionsGestureButtonHelp": {
+        "description": "Help text for the gesture button select.",
+        "message": "用來開始一次手勢的滑鼠按鈕。"
+    },
+    "optionsGestureTimeout": {
+        "description": "Label for the gesture timeout input.",
+        "message": "手勢超時"
+    },
+    "optionsGestureTimeoutHelp": {
+        "description": "Help text for the gesture timeout input.",
+        "message": "超過此時間未移動則取消手勢。0 則禁用。"
+    },
+    "optionsHeadingNavigationAndScrolling": {
+        "description": "Heading for navigation and scrolling preferences.",
+        "message": "導航與捲動"
+    },
+    "optionsHeadingOSXLinuxOnly": {
+        "description": "Heading for the OSX and Linux only section in general options.",
+        "message": "僅 macOS 和 Linux"
+    },
+    "optionsHeadingOtherCommands": {
+        "description": "Heading for other command preferences.",
+        "message": "其他命令"
+    },
+    "optionsHeadingTabAndWindow": {
+        "description": "Heading for tab and window preferences.",
+        "message": "分頁和視窗命令"
+    },
+    "optionsMorePrefsInsertRelatedTab": {
+        "description": "Label for the checkbox to toggle insert related tab after current behaviour.",
+        "message": "將新增分頁系列命令開啟的分頁放在當前分頁後面。這與 browser.tabs.insertRelatedAfterCurrent 設定類似。"
+    },
+    "optionsMorePrefsNewPrivateWindowUrl": {
+        "description": "Label for the default URL for new private windows.",
+        "message": "新增隱私瀏覽視窗命令開啟的視窗的預設網址"
+    },
+    "optionsMorePrefsNewTabOrWindowHelp": {
+        "description": "Help text for the default URL for new tabs and windows.",
+        "message": "留空此欄使用預設的 about:newtab。非特殊的如 about:blank 和 about:home 也可接受。"
+    },
+    "optionsMorePrefsNewTabUrl": {
+        "description": "Label for the default URL for new tabs.",
+        "message": "新增分頁命令開啟的分頁的預設網址"
+    },
+    "optionsMorePrefsNewWindowUrl": {
+        "description": "Label for the default URL for new windows.",
+        "message": "新增視窗命令開啟的視窗的預設網址"
+    },
+    "optionsMorePrefsNextTabWrap": {
+        "description": "Label for the checkbox to enable tab wrapping.",
+        "message": "下一個與上一個分頁命令循環切換分頁。"
+    },
+    "optionsMorePrefsScrollAmount": {
+        "description": "Label to configure scroll up and scroll down amount.",
+        "message": "向上/向下捲動命令捲動多大視界"
+    },
+    "optionsMorePrefsScrollAmountHelp": {
+        "description": "Help text to configure scroll up and scroll down amount.",
+        "message": "1 vh = ¹/₁₀₀ 視界高度。"
+    },
+    "optionsMorePrefsScrollDuration": {
+        "description": "Label to configure scroll animation duration.",
+        "message": "捲動命令的動畫持續時間"
+    },
+    "optionsMorePrefsScrollDurationHelp": {
+        "description": "Help text to configure scroll animation duration.",
+        "message": "0 則禁用。"
+    },
+    "optionsMorePrefsUseRelPrevNext": {
+        "description": "Label for checkbox to follow rel=next attributes.",
+        "message": "上一頁和下一頁命令遵守 rel=next 和 rel=prev 屬性。"
+    },
+    "optionsMorePrefsWellHelp": {
+        "description": "Help text that appears in the well at the top of the more preferences tab",
+        "message": "修改內建命令及其他方面的舉動的偏好設定。"
+    },
+    "optionsMorePrefsZoomStep": {
+        "description": "Label for the amount to change zoom factor.",
+        "message": "放大/縮小命令的調整幅度"
+    },
+    "optionsShowStatusText": {
+        "description": "Label for the checkbox to show status text.",
+        "message": "顯示狀態文字"
+    },
+    "optionsStatusTemplate": {
+        "description": "Label for the status template field.",
+        "message": "狀態範本"
+    },
+    "optionsStatusTemplateHelp": {
+        "description": "Help text for the status template field.",
+        "message": "編輯狀態文字的 HTML 模板。有 data-mg-status 屬性的元素的內容將被替換為狀態文字。"
+    },
+    "optionsStatusTimeout": {
+        "description": "Label for the status timeout field.",
+        "message": "狀態逾時"
+    },
+    "optionsStatusTimeoutHelp": {
+        "description": "Help text for the status timeout field.",
+        "message": "手勢後顯示多久狀態文字。"
+    },
+    "optionsTitle": {
+        "description": "Large heading at the top of the options page.",
+        "message": "Foxy Gestures 選項"
+    },
+    "optionsTrailColor": {
+        "description": "Label for the input to pick trail color.",
+        "message": "軌跡顏色"
+    },
+    "optionsTrailColorHelp": {
+        "description": "Help text for the input to pick trail color.",
+        "message": "接受各種 CSS 顏色定義。例如：blue、#336699、rgba(64, 128, 192, 0.5)"
+    },
+    "optionsTrailWidth": {
+        "description": "Label for the input to pick trail width.",
+        "message": "軌跡寬度"
+    },
+    "optionsUserScriptsWellHelp1": {
+        "description": "Help text that appears in the well at the top of the user scripts tab",
+        "message": "用滑鼠手勢執行自訂腳本。"
+    },
+    "optionsUserScriptsWellHelp2": {
+        "description": "Help text that appears in the well at the top of the user scripts tab",
+        "message": "使用前請閱讀文章了解自訂腳本（英文）。"
+    },
+    "optionsXSSWarning1": {
+        "description": "XSS warning text.",
+        "message": "此功能是為進階用戶準備。如果您看到某篇文章說如何操作來製成某項功能，並且並不了解其代碼的目的，請審慎使用，惡意代碼可能危及您的系統安全。"
+    },
+    "optionsXSSWarning2": {
+        "description": "XSS warning text.",
+        "message": "自訂腳本有權訪問 Foxy Gestures 可使用的 WebExtensions API。這些 API 可以訪問瀏覽器瀏覽記錄、下載惡意腳本，或以其他方式操控您的瀏覽器。切勿複製黏貼不可靠來源提供的自訂腳本。"
+    },
+    "optionsXSSWarningInfo": {
+        "description": "XSS warning text.",
+        "message": "有關的更多訊息詳見下列資源："
+    },
+    "optionsXSSWarningLink1": {
+        "description": "XSS warning text.",
+        "message": "有關跨站腳本的維基百科條目（英文）。"
+    },
+    "optionsXSSWarningLink2": {
+        "description": "XSS warning text.",
+        "message": "有關 self-XSS 的維基百科條目（英文）。"
+    },
+    "percentAddon": {
+        "description": "The word percent in a bootstrap input-addon in options.",
+        "message": "%"
+    },
+    "secondsAddon": {
+        "description": "The word seconds in a bootstrap input-addon in options.",
+        "message": "秒"
+    },
+    "statusGestureKnown": {
+        "description": "Status message when a gesture is mapped to a command",
+        "message": "手勢：$GESTURE$ ($COMMAND$)",
+        "placeholders": {
+            "command": {
+                "content": "$2",
+                "example": "New Tab"
+            },
+            "gesture": {
+                "content": "$1",
+                "example": "LR"
+            }
+        }
+    },
+    "statusGestureProgress": {
+        "description": "Status message during a gesture",
+        "message": "手勢：$GESTURE$",
+        "placeholders": {
+            "gesture": {
+                "content": "$1",
+                "example": "LR"
+            }
+        }
+    },
+    "statusGestureUnknown": {
+        "description": "Status message when a gesture is not mapped to a command",
+        "message": "未知手勢：$GESTURE$",
+        "placeholders": {
+            "gesture": {
+                "content": "$1",
+                "example": "LR"
+            }
+        }
+    },
+    "tabBackupRestore": {
+        "description": "Heading for the backup and restore tab",
+        "message": "備份和還原"
+    },
+    "tabCommands": {
+        "description": "Heading for the built-in commands tab",
+        "message": "內建命令"
+    },
+    "tabGeneral": {
+        "description": "Heading for the general settings tab",
+        "message": "一般設定"
+    },
+    "tabMorePrefs": {
+        "description": "Heading for the more preferences tab",
+        "message": "細節偏好"
+    },
+    "tabOtherGestures": {
+        "description": "Heading for the other gestures tab",
+        "message": "其他手勢"
+    },
+    "tabUserScripts": {
+        "description": "Heading for the user scripts tab",
+        "message": "自訂腳本"
+    },
+    "tooltipRemoveUserScript": {
+        "description": "Tooltip for the button to delete a user script.",
+        "message": "移除自訂腳本"
+    },
+    "userScriptNoName": {
+        "description": "Label used for user scripts without a name in gesture status, etc.",
+        "message": "自訂腳本：<無名稱>"
+    },
+    "userScriptWithName": {
+        "description": "Label used for user scripts with a name in gesture status, etc.",
+        "message": "自訂腳本：$NAME$",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "My Custom Script"
+            }
+        }
+    },
+    "warning": {
+        "description": "The word warning.",
+        "message": "警告"
+    },
+    "confirmReassignGesture": {
+        "description": "Confirm dialog when assigning a gesture that is already mapped to a command.",
+        "message": "$GESTURE$ 已經映射到 $OLD_COMMAND$。重新分配給 $NEW_COMMAND$？",
+        "placeholders": {
+            "gesture": {
+                "content": "$1",
+                "example": "DR"
+            },
+            "old_command": {
+                "content": "$2",
+                "example": "Close Tab"
+            },
+            "new_command": {
+                "content": "$3",
+                "example": "Save Now"
+            }
+        }
+    },
+    "confirmRemoveChord": {
+        "description": "Confirm dialog when removing a chord.",
+        "message": "移除和鉉 $CHORD$？",
+        "placeholders": {
+            "chord": {
+                "content": "$1",
+                "example": "Left + Right"
+            }
+        }
+    },
+    "confirmRemoveUserScript": {
+        "description": "Confirm dialog when removing a user script.",
+        "message": "移除 $USER_SCRIPT$？",
+        "placeholders": {
+            "user_script": {
+                "content": "$1",
+                "example": "User Script: Go Home"
+            }
+        }
+    },
+    "alertBackupNotRecognized": {
+        "description": "Alert when backup data addon ID is missing or invalid.",
+        "message": "無法識別文件，附加組件 ID 缺失或有誤。"
+    },
+    "alertBackupInvalidVersion": {
+        "description": "Alert when backup data version is missing or invalid.",
+        "message": "無效或未知的版本號。"
+    },
+    "alertBackupCorrupt": {
+        "description": "Alert when backup data settings are invalid or corrupt.",
+        "message": "備份資料無效或已損壞。"
+    },
+    "alertBackupRestored": {
+        "description": "Alert when backup data is successfully restored.",
+        "message": "成功從備份還原所有設定。"
+    },
+    "commandOpenOptions": {
+        "message": "開啟 Foxy Gestures 選項"
+    },
+    "groupCommandsNavigation": {
+        "description": "Name of the group for navigation type commands.",
+        "message": "導航命令"
+    },
+    "groupCommandsTabs": {
+        "description": "Name of the group for tab type commands.",
+        "message": "分頁命令"
+    },
+    "groupCommandsWindows": {
+        "description": "Name of the group for window type commands.",
+        "message": "視窗命令"
+    },
+    "groupCommandsHybrid": {
+        "description": "Name of the group for hybrid type commands.",
+        "message": "混合命令"
+    },
+    "groupCommandsOther": {
+        "description": "Name of the group for other commands.",
+        "message": "其他命令"
+    },
+    "groupCommandsUserScripts": {
+        "description": "Name of the group for user scripts.",
+        "message": "自訂腳本"
+    },
+    "commandStop": {
+        "message": "停止"
+    },
+    "commandGoHome": {
+        "message": "跳至首頁"
+    },
+    "commandActivateFirstTab": {
+        "message": "跳至第一個分頁"
+    },
+    "commandActivateLastTab": {
+        "message": "跳至最後一個分頁"
+    },
+    "optionsActiveTabAfterClose": {
+        "message": "關閉分頁後的活動分頁"
+    },
+    "optionsActiveTabAfterCloseHelp": {
+        "message": "關閉當前分頁後前往哪個分頁。"
+    },
+    "optionsActiveTabAfterCloseFirefox": {
+        "message": "由 Firefox 選擇"
+    },
+    "optionsActiveTabAfterCloseRight": {
+        "message": "前往右側分頁"
+    },
+    "optionsActiveTabAfterCloseLeft": {
+        "message": "前往左側分頁"
+    },
+    "optionsActiveTabAfterCloseRecent": {
+        "message": "前往最後使用的分頁"
+    },
+    "commandActivateRecentTab": {
+        "message": "轉至最新的分頁"
+    },
+    "commandActivateRecentTabTooltip": {
+        "message": "轉至啟動當前分頁前活動的分頁。"
+    },
+    "commandBookmarkUrl": {
+        "message": "書籤 URL"
+    },
+    "commandBookmarkUrlTooltip": {
+        "message": "該書籤將放在“其他書籤”文件夾中。重複該手勢則移除該書籤。"
+    },
+    "confirmResetSettings": {
+        "description": "Confirm dialog when resetting all settings back to default values",
+        "message": "您確定要重設所有設定為預設設定嗎？"
+    },
+    "optionsBackupResetSettings": {
+        "description": "Header for reset settings section.",
+        "message": "重設設定"
+    },
+    "optionsBackupResetSettingsInfo": {
+        "description": "Description of the reset settings function.",
+        "message": "所有設定都將重設為預設值，以前進行的更改將丟失。"
+    },
+    "optionsBackupResetSettingsButton": {
+        "description": "Label for button to reset all settings back to default.",
+        "message": "重設設定為預設值"
+    },
+    "commandMaximize": {
+        "message": "最大化視窗"
+    },
+    "commandFullscreen": {
+        "message": "轉入全螢幕"
+    },
+    "commandCloseWindow": {
+        "message": "關閉視窗"
+    },
+    "commandViewFrameSource": {
+        "message": "檢視框架原始碼"
+    },
+    "commandViewPageSource": {
+        "message": "檢視頁面原始碼"
+    },
+    "commandViewSourceTooltip": {
+        "message": "使用此命令檢視原始碼時不附有 POST 資料。"
+    }
+}
