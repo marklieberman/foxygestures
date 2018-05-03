@@ -1,0 +1,21 @@
+<form class="modal-ask-permission">
+  <p class="well">
+    <i class="fa fa-2x fa-exclamation-triangle"></i>
+    <span i18n="'modalAskPermissionPrompt'"></span>
+  </p>
+
+  <div class="ask-permission"
+       ng-repeat="permission in permissions">
+    <a ng-href="{{details[permission].link}}" target="_blank">{{permission}}</a>: {{details[permission].summary}}
+  </div>
+
+  <div class="form-group actions">
+    <button class="btn btn-default"
+            ng-click="$dismiss(false)"
+            i18n="'buttonCancel'"></button>
+    <button class="btn btn-primary"
+            ng-disabled="controls.error"
+            ng-click="requestPermissions()"
+            i18n="'modalAskPermissionRequest'"></button>
+  </div>
+</form>

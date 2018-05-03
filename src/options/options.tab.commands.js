@@ -94,21 +94,34 @@ app.controller('OptionsTabCommandsCtrl', [
         return;
       }
 
-      // Prompt when re-assigning a gesture.
-      if (!$scope.promptIfGestureInUse(gesture, command.label, mapping => mapping.command === command.id)) {
-        // Assignment cancelled.
-        return;
-      }
+      // Assign the gesture only if permissions are granted.
+      $scope.showAskPermissionModal(command.permissions || [])
+        .then(granted => {
+          if (granted) {
+            // Prompt when re-assigning a gesture.
+            if (!$scope.promptIfGestureInUse(gesture, command.label, mapping => mapping.command === command.id)) {
+              // Assignment cancelled.
+              return;
+            }
 
-      // Remove the old mappings for this command.
-      $scope.removeMappingForGesture(gesture);
-      $scope.removeMappingForCommand(command);
+            // Remove the old mappings for this command.
+            $scope.removeMappingForGesture(gesture);
+            $scope.removeMappingForCommand(command);
 
-      // Insert the new mapping for this gesture.
-      settings.mouseMappings.push({
-        command: command.id,
-        gesture: gesture
-      });
+            // Insert the new mapping for this gesture.
+            settings.mouseMappings.push({
+              command: command.id,
+              gesture: gesture
+            });
+          } else {
+            // Remove the mapping for this command.
+            $scope.removeMappingForCommand(command);
+          }
+        });
+    };
+
+    $scope.getPermissionTooltip = (permissions) => {
+      return browser.i18n.getMessage('tooltipRequiresPermissions', permissions.join(', '));
     };
 
   }]);

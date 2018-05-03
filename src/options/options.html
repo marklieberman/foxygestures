@@ -46,7 +46,7 @@
           <div ng-include="'/options/options.tab.userscripts.html'"></div>
         </uib-tab>
 
-        <uib-tab index="4" select="onActiveTabChanged($event, 4)">
+        <uib-tab index="4" select="onActiveTabChanged($event, 4) || updateOptionalPermissions()">
           <uib-tab-heading i18n="'tabMorePrefs'"></uib-tab-heading>
           <div ng-include="'/options/options.tab.moreprefs.html'"></div>
         </uib-tab>
@@ -78,6 +78,7 @@
     <script src="options.tab.commands.js"></script>
     <script src="options.tab.userscripts.js"></script>
     <script src="options.tab.othergestures.js"></script>
+    <script src="options.tab.moreprefs.js"></script>
     <script src="options.tab.backup.js"></script>
 
   </body>

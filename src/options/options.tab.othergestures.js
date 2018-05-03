@@ -6,7 +6,8 @@ app.controller('OptionsTabOtherGesturesCtrl', [
   'commands',
   'settings',
   '$uibModal',
-  function ($scope, commands, settings, $uibModal) {
+  '$timeout',
+  function ($scope, commands, settings, $uibModal, $timeout) {
 
     // ----- Scope variables -----
     $scope.mappables = [];
@@ -33,6 +34,8 @@ app.controller('OptionsTabOtherGesturesCtrl', [
     $scope.updateChordMappings = updateChordMappings;
     $scope.addChordMapping = addChordMapping;
     $scope.removeChordMapping = removeChordMapping;
+    $scope.assignMappingToWheel = assignMappingToWheel;
+    $scope.assignMappingToChord = assignMappingToChord;
 
     // ----- Event handlers -----
     $scope.$on('reset', () => {
@@ -138,6 +141,45 @@ app.controller('OptionsTabOtherGesturesCtrl', [
       ) {
         settings.chordMappings = settings.chordMappings.filter(mapping => mapping !== chordMapping);
       }
+    }
+
+    // Assign a command mapping to a wheel gesture.
+    function assignMappingToWheel (key) {
+      let mapping = $scope.controls.wheelMappings[key].mapping;
+      let command = new Optional(mapping)
+        .map(value => commands.findById(value.command))
+        .orElse($scope.noCommand);
+
+      $scope.showAskPermissionModal(command.permissions || []).then(granted => {
+        if (granted) {
+          // Apply the change.
+          settings.wheelMappings[key] = $scope.controls.wheelMappings[key].mapping;
+        } else {
+          // Revert the change.
+          $scope.controls.wheelMappings[key] = new Optional($scope.mappables
+            .find(mappable => angular.equals(mappable.mapping, settings.wheelMappings[key]))
+          ).orElse($scope.noCommand);
+        }
+      });
+    }
+
+    // Assign a command mapping to a chord gesture.
+    function assignMappingToChord (index) {
+      let command = new Optional($scope.controls.chordMappings[index].mapping)
+        .map(value => commands.findById(value.command))
+        .orElse($scope.noCommand);
+
+      $scope.showAskPermissionModal(command.permissions || []).then(granted => {
+        if (granted) {
+          // Apply the change.
+          settings.chordMappings[index].mapping = $scope.controls.chordMappings[index].mapping;
+        } else {
+          // Revert the change.
+          $scope.controls.chordMappings[index] = new Optional($scope.mappables
+            .find(mappable => angular.equals(mappable.mapping, settings.chordMappings[index].mapping))
+          ).orElse($scope.noCommand.mapping);
+        }
+      });
     }
 
   }]);

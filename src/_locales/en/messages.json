@@ -695,5 +695,77 @@
   },
   "commandReloadAllTabsTooltip": {
     "message": "Reload all tabs in the current window"
+  },
+  "tooltipRequiresPermissions": {
+    "description": "Tooltip for commands that require additional permissions.",
+    "message": "Requires optional permissions for: $PERMISSION_LIST$.",
+    "placeholders": {
+      "permission_list": {
+        "content": "$1",
+        "example": "bookmarks"
+      }
+    }
+  },
+  "modalAskPermissionPrompt": {
+    "description": "Prompt that appears at the top of the ask permission modal.",
+    "message": "Foxy Gestures requires the following permissions to enable this command."
+  },
+  "modalAskPermissionRequest": {
+    "description": "Label for the button in the model to request optional permissions.",
+    "message": "Request permissions"
+  },
+  "optionalPermissionBookmarksSummary": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "The WebExtensions bookmarks API lets an extension interact with and manipulate the browser's bookmarking system. You can use it to bookmark pages, retrieve existing bookmarks, and edit, remove, and organize bookmarks."
+  },
+  "optionalPermissionBookmarksLink": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/bookmarks"
+  },
+  "optionalPermissionClipboardWriteSummary": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "The clipboard API enables an extension to copy items to the system clipboard. Currently the API only supports copying images, but it's intended to support copying text and HTML in the future."
+  },
+  "optionalPermissionClipboardWriteLink": {
+    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/clipboard"
+  },
+  "optionalPermissionDownloadsSummary": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "Enables extensions to interact with the browser's download manager. You can use this API module to download files, cancel, pause, resume downloads, and show downloaded files in the file manager."
+  },
+  "optionalPermissionDownloadsLink": {
+    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/downloads"
+  },
+  "optionsHeadingOptionalPermissions": {
+    "description": "Heading for optional permissions management.",
+    "message": "Optional Permissions"
+  },
+  "optionsRequestOptionalPermissionHelp": {
+    "description": "Help text to describe buttons that request optional permissions.",
+    "message": "Optional permissions are requested automatically when assigning a command to a gesture. However, you can use these buttons to request permissions for use in user scripts."
+  },
+  "optionsRevokeOptionalPermissionHelp": {
+    "description": "Help text to describe buttons that revoke optional permissions.",
+    "message": "You may revoke permissions to prevent access to the related API. All commands that require the permission will be un-mapped when the permission is revoked. This is useful if you are upgrading from a previous version where the permission was not optional."
+  },
+  "labelRequestPermission": {
+    "description": "Help text to describe the buttons that request optional permissions.",
+    "message": "Request \"$PERMISSION$\"",
+    "placeholders": {
+      "permission": {
+        "content": "$1",
+        "example": "bookmarks"
+      }
+    }
+  },
+  "labelRevokePermission": {
+    "description": "Help text to describe the buttons that revoke optional permissions.",
+    "message": "Revoke \"$PERMISSION$\"",
+    "placeholders": {
+      "permission": {
+        "content": "$1",
+        "example": "bookmarks"
+      }
+    }
   }
 }

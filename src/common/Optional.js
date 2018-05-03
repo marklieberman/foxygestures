@@ -52,6 +52,9 @@ class Optional {
   }
 
   orElse (orElse) {
+    if (this.isPresent()) {
+      return this.value;
+    } else
     if (typeof orElse === 'function') {
       return orElse();
     } else {

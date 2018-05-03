@@ -69,7 +69,8 @@ modules.commands = (function (settings, helpers) {
       handler: commandBookmarkUrl,
       label: browser.i18n.getMessage('commandBookmarkUrl'),
       tooltip: browser.i18n.getMessage('commandBookmarkUrlTooltip'),
-      group: groups.other
+      group: groups.other,
+      permissions: [ 'bookmarks' ]
     },
     {
       id: 'closeLeftTabs',
@@ -286,14 +287,16 @@ modules.commands = (function (settings, helpers) {
       handler: commandSaveMediaNow,
       label: browser.i18n.getMessage('commandSaveMediaNow'),
       tooltip: browser.i18n.getMessage('commandSaveMediaNowTooltip'),
-      group: groups.other
+      group: groups.other,
+      permissions: [ 'downloads' ]
     },
     {
       id: 'saveMediaAs',
       handler: commandSaveMediaAs,
       label: browser.i18n.getMessage('commandSaveMediaAs'),
       tooltip: browser.i18n.getMessage('commandSaveMediaAsTooltip'),
-      group: groups.other
+      group: groups.other,
+      permissions: [ 'downloads' ]
     },
     {
       id: 'scrollBottom',

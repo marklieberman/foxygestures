@@ -20,14 +20,17 @@
   },
 
   "permissions": [
-    "bookmarks",
     "browserSettings",
-    "clipboardWrite",
     "cookies",
-    "downloads",
     "sessions",
     "storage",
     "tabs"
+  ],
+
+  "optional_permissions": [
+    "bookmarks",
+    "clipboardWrite",
+    "downloads"
   ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",

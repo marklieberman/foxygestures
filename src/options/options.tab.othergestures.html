@@ -22,28 +22,28 @@
           <select class="form-control"
                   ng-options="item as item.label group by item.group for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.up"
-                  ng-change="settings.wheelMappings.up = controls.wheelMappings.up.mapping"></select>
+                  ng-change="assignMappingToWheel('up')"></select>
         </div>
         <div class="form-group">
           <label class="control-label" i18n="'labelScrollDown'"></label>
           <select class="form-control"
                   ng-options="item as item.label group by item.group for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.down"
-                  ng-change="settings.wheelMappings.down = controls.wheelMappings.down.mapping"></select>
+                  ng-change="assignMappingToWheel('down')"></select>
         </div>
         <div class="form-group">
           <label class="control-label" i18n="'labelScrollLeft'"></label>
           <select class="form-control"
                   ng-options="item as item.label group by item.group for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.left"
-                  ng-change="settings.wheelMappings.left = controls.wheelMappings.left.mapping"></select>
+                  ng-change="assignMappingToWheel('left')"></select>
         </div>
         <div class="form-group">
           <label class="control-label" i18n="'labelScrollRight'"></label>
-          <select class="form-control"
+          <select class="form-control" id="wheelRightMapping"
                   ng-options="item as item.label group by item.group for item in mappables track by item.id"
                   ng-model="controls.wheelMappings.right"
-                  ng-change="settings.wheelMappings.right = controls.wheelMappings.right.mapping"></select>
+                  ng-change="assignMappingToWheel('right')"></select>
         </div>
       </fieldset>
     </div>
@@ -71,7 +71,7 @@
             <select class="form-control"
                     ng-options="item as item.label group by item.group for item in mappables track by item.id"
                     ng-model="controls.chordMappings[chordMapping.index]"
-                    ng-change="chordMapping.mapping = controls.chordMappings[chordMapping.index].mapping"></select>
+                    ng-change="assignMappingToChord(chordMapping.index)"></select>
             <span class="input-group-btn">
               <button class="btn btn-default" type="button"
                       uib-tooltip="Remove Chord" tooltip-placement="left"

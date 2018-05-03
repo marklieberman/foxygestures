@@ -83,8 +83,8 @@ body {
   line-height: 12px;
   text-align: center;
 
-  i {
-    margin-left: 5px;
+  span.info-icons {
+    white-space: nowrap;
   }
 }
 
@@ -173,6 +173,12 @@ canvas.gesture-input {
     font-size: 26px;
     font-weight: bold;
     text-align: center;
+  }
+}
+
+.modal-ask-permission {
+  .ask-permission {
+    text-align: justify;
   }
 }
 

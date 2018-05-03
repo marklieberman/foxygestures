@@ -127,7 +127,7 @@ app.directive('i18n', [
             element[0][setter] = browser.i18n.getMessage(args);
           } else
           if (angular.isArray(args)) {
-            let message = args.unshift();
+            let message = args.shift();
             element[0][setter] = browser.i18n.getMessage(message, args);
           }
         });
@@ -138,14 +138,21 @@ app.directive('i18n', [
 // ---------------------------------------------------------------------------------------------------------------------
 app.controller('OptionsCtrl', [
   '$scope',
+  '$q',
   '$controller',
+  '$uibModal',
   'commands',
   'settings',
-  function ($scope, $controller, commands, settings) {
+  function ($scope, $q, $controller, $uibModal, commands, settings) {
 
     // ----- Scope variables -----
     $scope.commands = commands;
     $scope.settings = settings;
+    $scope.optionalPermissions = {
+      'bookmarks': false,
+      'clipboardWrite': false,
+      'downloads': false
+    };
     $scope.controls = {
       // Restore the previously active tab.
       activeTab: Number(window.localStorage.getItem('activeTab') || 0)
@@ -176,6 +183,12 @@ app.controller('OptionsCtrl', [
       settings: settings
     });
 
+    $controller('OptionsTabMorePrefsCtrl', {
+      $scope: $scope,
+      commands: commands,
+      settings: settings
+    });
+
     $controller('OptionsTabBackupCtrl', {
       $scope: $scope,
       settings: settings
@@ -188,6 +201,7 @@ app.controller('OptionsCtrl', [
       $scope.$broadcast('reset');
       $scope.$broadcast('redraw');
       $scope.startWatchingSettings();
+      $scope.updateOptionalPermissions();
     });
 
     // Functions -------------------------------------------------------------------------------------------------------
@@ -212,7 +226,80 @@ app.controller('OptionsCtrl', [
       }
     };
 
+    // Update the status of optional permissions.
+    $scope.updateOptionalPermissions = () => {
+      return Object.keys($scope.optionalPermissions)
+        .reduce((promise, permission) => {
+          return promise.then(browser.permissions.contains({ permissions: [ permission ] })
+            .then(granted => {
+              $scope.$apply(() => {
+                $scope.optionalPermissions[permission] = granted;
+              });
+            }));
+        }, $q.when());
+    };
+
+    // Show a modal to request additional permissions.
+    $scope.showAskPermissionModal = (permissions) => {
+      // Filter already granted permissions.
+      permissions = permissions.filter(permission => {
+        return !$scope.optionalPermissions[permission];
+      });
+
+      if (permissions.length) {
+        // Ask for new permissions.
+        return $uibModal.open({
+          controller: 'ModalAskPermissionCtrl',
+          templateUrl: 'modal.askPermission.html',
+          backdrop: 'static',
+          resolve: {
+            permissions: () => { return permissions; }
+          }
+        }).result.catch(err => {
+          // Treat errors or dismissal as not granted.
+          return false;
+        });
+      } else {
+        // All permission are already granted.
+        return $q.when(true);
+      }
+    };
+
   }]);
+
+// ---------------------------------------------------------------------------------------------------------------------
+app.controller('ModalAskPermissionCtrl', [
+  '$scope',
+  'permissions',
+  function ($scope, permissions) {
+
+    // ----- Scope variables -----
+    $scope.permissions = permissions;
+    $scope.details = {
+      'bookmarks': {
+        summary: browser.i18n.getMessage('optionalPermissionBookmarksSummary'),
+        link: browser.i18n.getMessage('optionalPermissionBookmarksLink')
+      },
+      'clipboardWrite': {
+        summary: browser.i18n.getMessage('optionalPermissionClipboardWriteSummary'),
+        link: browser.i18n.getMessage('optionalPermissionClipboardWriteLink')
+      },
+      'downloads': {
+        summary: browser.i18n.getMessage('optionalPermissionDownloadsSummary'),
+        link: browser.i18n.getMessage('optionalPermissionDownloadsLink')
+      }
+    };
+
+    // Functions -------------------------------------------------------------------------------------------------------
+
+    // Request the additional permissions. This must be called from an input handler.
+    $scope.requestPermissions = () => {
+      return browser.permissions.request({ permissions: permissions })
+        .then(granted => $scope.$apply(() => $scope.$close(granted)));
+    };
+
+  }]);
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Define the array index as a non-enumerable property of each item in an arrray.
