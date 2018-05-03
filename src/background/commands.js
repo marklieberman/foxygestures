@@ -97,6 +97,18 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'closeTabActivateLeft',
+      handler: commandCloseTabActivateLeft,
+      label: browser.i18n.getMessage('commandCloseTabActivateLeft'),
+      group: groups.tabs
+    },
+    {
+      id: 'closeTabActivateRight',
+      handler: commandCloseTabActivateRight,
+      label: browser.i18n.getMessage('commandCloseTabActivateRight'),
+      group: groups.tabs
+    },
+    {
       id: 'closeWindow',
       handler: commandCloseWindow,
       label: browser.i18n.getMessage('commandCloseWindow'),
@@ -531,6 +543,39 @@ modules.commands = (function (settings, helpers) {
     return null;
   }
 
+  // Close the current tab and activate the left, right, recent, or Firefox's choice of tab.
+  function closeTabTransition (data, direction) {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+      let active = tabs.find(tab => tab.active);
+      if (active.pinned) {
+        // Pinned tabs cannot be closed by a gesture.
+        return { repeat: true };
+      }
+      if (tabs.length === 1) {
+        // Don't care about tab being activated if the window is closing.
+        return browser.tabs.remove(active.id);
+      }
+
+      switch (direction) {
+        case 'right':
+          // Activate the right tab before closing.
+          return activateTabThenClose(data, tabs, 'right', active);
+        case 'left':
+          // Activate the left tab before closing.
+          return activateTabThenClose(data, tabs, 'left', active);
+        case 'recent':
+          // Activately the recently active tab before closing.
+          let recent = getRecentlyActiveTab(tabs[0].windowId, tabs);
+          return activateTabThenClose(data, tabs, recent, active);
+        default:
+          // Let Firefox activate a tab, then transition to it.
+          return browser.tabs.remove(active.id)
+            .then(() => browser.tabs.query({ currentWindow: true, active: true }))
+            .then(tabs => transitionGesture(null, tabs[0], data.cloneState));
+      }
+    });
+  }
+
   // Convert about:newtab or empty strings to null, otherwise return the URL.
   function notAboutNewTabUrl (url) {
     return (url && (url = url.trim()) !== 'about:newtab') ? url : null;
@@ -672,35 +717,17 @@ modules.commands = (function (settings, helpers) {
 
   // Close the active tab.
   function commandCloseTab (data) {
-    return browser.tabs.query({ currentWindow: true }).then(tabs => {
-      let active = tabs.find(tab => tab.active);
-      if (active.pinned) {
-        // Pinned tabs cannot be closed by a gesture.
-        return { repeat: true };
-      }
-      if (tabs.length === 1) {
-        // Don't care about tab being activated if the window is closing.
-        return browser.tabs.remove(active.id);
-      }
+    return closeTabTransition(data, modules.settings.activeTabAfterClose);
+  }
 
-      switch (modules.settings.activeTabAfterClose) {
-        case 'right':
-          // Activate the right tab before closing.
-          return activateTabThenClose(data, tabs, 'right', active);
-        case 'left':
-          // Activate the left tab before closing.
-          return activateTabThenClose(data, tabs, 'left', active);
-        case 'recent':
-          // Activately the recently active tab before closing.
-          let recent = getRecentlyActiveTab(tabs[0].windowId, tabs);
-          return activateTabThenClose(data, tabs, recent, active);
-        default:
-          // Let Firefox activate a tab, then transition to it.
-          return browser.tabs.remove(active.id)
-            .then(() => browser.tabs.query({ currentWindow: true, active: true }))
-            .then(tabs => transitionGesture(null, tabs[0], data.cloneState));
-      }
-    });
+  // Close the current tab and activate the tab to the left.
+  function commandCloseTabActivateLeft (data) {
+    return closeTabTransition(data, 'left');
+  }
+
+  // Close the current tab and activate the tab to the left.
+  function commandCloseTabActivateRight (data) {
+    return closeTabTransition(data, 'right');
   }
 
   // Close the current window,
