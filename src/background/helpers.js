@@ -74,7 +74,7 @@ modules.helpers = (function (module) {
   // mime type is known, select the extension automatically.
   module.suggestFilename = (mediaInfo) => {
     // Extract the filename from the URL.
-    let match = /\/([^\/?#]+)($|\?|#)/i.exec(mediaInfo.source);
+    let match = /\/([^\/?#]+)($|\?|#)/i.exec(decodeURI(mediaInfo.source));
     if (match && match[1]) {
       // Try to determine if the filename has an extension.
       let filename = match[1];
