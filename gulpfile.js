@@ -21,10 +21,11 @@ var sources = {
   ]
 };
 
-gulp.task('default', [ 'lint', 'sass', 'watch' ]);
+gulp.task('default', [ 'lint', 'jsonlint', 'sass', 'watch' ]);
 
 gulp.task('watch', [ 'sass' ], function () {
   gulp.watch(sources.js, [ 'lint' ]);
+  gulp.watch(sources.json, [ 'jsonlint' ]);
   gulp.watch(sources.sass, [ 'sass' ]);
 });
 
