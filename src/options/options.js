@@ -230,12 +230,10 @@ app.controller('OptionsCtrl', [
     $scope.updateOptionalPermissions = () => {
       return Object.keys($scope.optionalPermissions)
         .reduce((promise, permission) => {
-          return promise.then(browser.permissions.contains({ permissions: [ permission ] })
-            .then(granted => {
-              $scope.$apply(() => {
-                $scope.optionalPermissions[permission] = granted;
-              });
-            }));
+          return promise.then(() => browser.permissions.contains({ permissions: [ permission ] })
+            .then(granted => $scope.$apply(() => {
+              $scope.optionalPermissions[permission] = granted;
+            })));
         }, $q.when());
     };
 
@@ -255,10 +253,11 @@ app.controller('OptionsCtrl', [
           resolve: {
             permissions: () => { return permissions; }
           }
-        }).result.catch(err => {
+        }).result
+          // Update the optional permissions.
+          .then(granted => $scope.updateOptionalPermissions().then(() => granted))
           // Treat errors or dismissal as not granted.
-          return false;
-        });
+          .catch(err => false);
       } else {
         // All permission are already granted.
         return $q.when(true);
