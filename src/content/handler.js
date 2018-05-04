@@ -96,7 +96,6 @@ window.fg.extend('mouseEvents', function (exports, fg) {
         case 'mg-gotContentResolve':
           // Async content work handlers post their results using this message.
           if (state.getContentResolve) {
-            console.log(event.data);
             state.getContentResolve(event.data.data);
             state.getContentResolve = null;
           }
