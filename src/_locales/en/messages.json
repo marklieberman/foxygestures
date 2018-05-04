@@ -779,6 +779,11 @@
   },
   "commandParentDirectoryTooltip": {
     "message": "Go to parent directory or domain"
+  },
+  "commandOpenLinksInSelection": {
+    "message": "Open Links in Selection"
+  },
+  "commandOpenLinksInSelectionTooltip": {
+    "message": "Opens any links that are contained within a selection in background tabs."
   }
-
 }

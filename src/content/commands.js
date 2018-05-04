@@ -23,6 +23,7 @@ window.fg.module('commands', function (exports, fg) {
 
   // Settings for this module.
   var settings = fg.helpers.initModuleSettings({
+    insertRelatedTab: true,
     scrollDuration: 1000,
     scrollAmount: 100,
     useRelPrevNext: true

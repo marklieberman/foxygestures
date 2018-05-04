@@ -103,9 +103,6 @@ window.fg.module('mouseEvents', function (exports, fg) {
         case 'mg-unloadFrame':
           onUnloadFrame(event.data.data, event.source);
           break;
-        case 'mg-getCanvasImage':
-          exports.onGetCanvasImage(event.data.data);
-          break;
 
         // Messages that may bubble up from nested frames and require applyFrameOffset() to be applied.
         case 'mg-mousedown':
@@ -138,6 +135,14 @@ window.fg.module('mouseEvents', function (exports, fg) {
           break;
         case 'mg-contextmenu':
           onContextMenu(event.data.data);
+          break;
+
+        // Async content work handlers for nested frames.
+        case 'mg-getCanvasImage':
+          exports.onGetCanvasImage(event.data.data);
+          break;
+        case 'mg-getSelectedLinks':
+          exports.onGetSelectedLinks(event.data.data);
           break;
       }
     }
@@ -693,47 +698,67 @@ window.fg.module('mouseEvents', function (exports, fg) {
     }
   }
 
-  // Get the image data from a canvas.
-  // In the top level frame this function returns a promise. If the canves is located in the top frame, the promise is
-  // resolved immedaitely. Otherwise, a reference to the resolve function is stored in state.canvasImageResolve and the
-  // nested frames are queried. The resolver is later invoked when a nested frame locates the canvas and posts a
-  // mg-gotCanvasImage message back to the top frame.
-  exports.onGetCanvasImage = function (data) {
-    // Except to find the canvas in the origin frame.
+  // Setup a promise to be resolved with data from a possibly nested frame. Then recursively broadcast a message to
+  // invoke handler in the origin frame. The first argument to handler() is a resolver to be invoked with a result.
+  function broadcastContentWork (data, work, handler) {
+    // Expect to find the canvas in the origin frame.
     if (data.context.originFrameId === exports.scriptFrameId) {
+      let result = false;
+      handler(value => {
+        // Either resolve immediately or post up to the top frame.
+        if (state.isNested) {
+          postTo(window.top, 'gotContentResolve', value);
+        } else {
+          result = Promise.resolve(value);
+        }
+      });
+      return result;
+    } else
+    if (state.isNested) {
+      // The originFrameId didn't match so keep searching the hierarchy of frames.
+      exports.broadcast(work, data);
+    } else {
+      // This case is only reached in the top frame when the originFrameId doesn't match.
+      // Return a promise that is resolved when any nested frame locates the canvas.
+      return new Promise((resolve, reject) => {
+        // Store a reference to the resolver function for later.
+        state.getContentResolve = resolve;
+        exports.broadcast(work, data);
+      });
+    }
+  }
+
+  // Get the image data from a canvas.
+  exports.onGetCanvasImage = function (data) {
+    return broadcastContentWork(data, 'getCanvasImage', resolve => {
       // Locate the referenced canvas.
       let canvas = document.querySelector('canvas[data-fg-ref="' + data.element.mediaSource + '"]');
       if (canvas) {
         // Replace the canvas reference with actual image data.
         data.element.mediaSource = canvas.toDataURL();
         data.element.mediaType = 'image/png';
-
-        // Either resolve immediately or post up to the top frame.
-        if (state.isNested) {
-          postTo(window.top, 'gotCanvasImage', data);
-        } else {
-          return Promise.resolve(data);
-        }
+        resolve(data);
       } else {
         // Canvas cannot be located.
         data.element.mediaSource = null;
         data.element.mediaType = null;
-        return Promise.resolve(data);
+        resolve(data);
       }
-    } else
-    if (state.isNested) {
-      // The originFrameId didn't match so keep searching the hierarchy of frames.
-      exports.broadcast('getCanvasImage', data);
-      return;
-    } else {
-      // This case is only reached in the top frame when the originFrameId doesn't match.
-      // Return a promise that is resolved when any nested frame locates the canvas.
-      return new Promise((resolve, reject) => {
-        // Store a reference to the resolver function for later.
-        state.canvasImageResolve = resolve;
-        exports.broadcast('getCanvasImage', data);
-      });
-    }
+    });
+  };
+
+  // Get all links in the selection.
+  exports.onGetSelectedLinks = function (data) {
+    return broadcastContentWork(data, 'getSelectedLinks', resolve => {
+      // Find all the selected links in the frame with href attributes.
+      let selection = window.getSelection();
+      let links = Array.from(document.getElementsByTagName('a'))
+        .filter(a => !!a.href && selection.containsNode(a, true))
+        .map(a => a.href);
+
+      // Discard duplicate links in the selection.
+      resolve(Array.from(links.reduce((set, href) => set.add(href), new Set())));
+    });
   };
 
 });

@@ -35,7 +35,8 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     disableGestures: false,                     // Disable gesture handlers when true.
     timeoutHandle: null,                        // Gesture timeout interval handle.
     noMovementTicks: 0,                         // Number of 100ms ticks without movement.
-    canvasImageResolve: null                    // Promise to resolve a getCanvasImage query.
+    getContentResolve: null                     // Promise to resolve a async work in the content.
+
   });
 
   // Settings for this module.
@@ -76,8 +77,12 @@ window.fg.extend('mouseEvents', function (exports, fg) {
         // Update the status text.
         fg.ui.status(message.data);
         break;
+
+      // Async content work handlers for the top frame.
       case 'mg-getCanvasImage':
         return exports.onGetCanvasImage(message.data);
+      case 'mg-getSelectedLinks':
+        return exports.onGetSelectedLinks(message.data);
     }
     return false;
   });
@@ -88,14 +93,14 @@ window.fg.extend('mouseEvents', function (exports, fg) {
         case 'mg-status':
           fg.ui.status(event.data.data);
           break;
-        case 'mg-gotCanvasImage':
-          if (state.canvasImageResolve) {
-            // Resolve the canvas image data query.
-            state.canvasImageResolve(event.data.data);
-            state.canvasImageResolve = null;
+        case 'mg-gotContentResolve':
+          // Async content work handlers post their results using this message.
+          if (state.getContentResolve) {
+            console.log(event.data);
+            state.getContentResolve(event.data.data);
+            state.getContentResolve = null;
           }
           break;
-
       }
     }
   });

@@ -238,6 +238,13 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'openLinksInSelection',
+      handler: commandOpenLinksInSelection,
+      label: browser.i18n.getMessage('commandOpenLinksInSelection'),
+      tooltip: browser.i18n.getMessage('commandOpenLinksInSelectionTooltip'),
+      group: groups.navigation
+    },
+    {
       id: 'openOptions',
       handler: commandOpenOptions,
       label: browser.i18n.getMessage('commandOpenOptions'),
@@ -851,13 +858,13 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Open a link in a new background tab.
-  function commandOpenLinkInNewBackgroundTab (data) {
+  function commandOpenLinkInNewBackgroundTab (data, url) {
     let promise = Promise.resolve();
 
-    if (data.element.linkHref) {
+    if (url || data.element.linkHref) {
       promise = getActiveTab(tab => {
         let tabOptions = {};
-        tabOptions.url = data.element.linkHref;
+        tabOptions.url = url || data.element.linkHref;
         tabOptions.active = false;
         tabOptions.openerTabId = tab.id;
         // Preserve the container when opening a new tab from a link/frame.
@@ -904,6 +911,27 @@ modules.commands = (function (settings, helpers) {
     if (data.element.linkHref) {
       return browser.windows.create({ url: data.element.linkHref, incognito: true });
     }
+  }
+
+  // Open all links in the selection in background tabs.
+  function commandOpenLinksInSelection (data) {
+    // Get the links that appear in the selection.
+    return browser.tabs.sendMessage(data.sender.tab.id, {
+      topic: 'mg-getSelectedLinks',
+      data
+    }).then(links => {
+      // When insertRelatedTab is true, new tabs are placed adjacent to the current tab.
+      // Reversing the array opens the tabs in the same order as the links appear in the DOM.
+      if (settings.insertRelatedTab) {
+        links.reverse();
+      }
+
+      // Open each link in a background tab.
+      links.forEach(link => commandOpenLinkInNewBackgroundTab(data, link));
+
+      // Allow the wheel or chord gesture to repeat.
+      return { repeat: true };
+    });
   }
 
   // Open the options page in a new tab.
