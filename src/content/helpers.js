@@ -36,6 +36,9 @@ window.fg.extend = function (module, extender) {
  */
 window.fg.module('helpers', function (exports) {
 
+  // A monotonically increasing value used to identify elements with data-fg-ref attribute.
+  var dataFgRef = 1;
+
   // Keep the given settings hash up-to-date when storage changes.
   exports.initModuleSettings = (settings, area) => {
     // Update default values from storage.
@@ -169,9 +172,17 @@ window.fg.module('helpers', function (exports) {
       }
     } else
     if (element instanceof window.HTMLCanvasElement) {
+      // Get or create a unqiue reference to identify this canvas.
+      let elementRef = element.getAttribute('data-fg-ref');
+      if (!elementRef) {
+        elementRef = dataFgRef++;
+        element.setAttribute('data-fg-ref', elementRef);
+      }
+
+      // The background scripts can asynchronously get the data later.
       return {
-        source: element.toDataURL(),
-        type: 'image/png'
+        source: elementRef,
+        type: 'canvasRef'
       };
     } else {
       // TODO Search up to DOM hierarchy for a CSS background image.

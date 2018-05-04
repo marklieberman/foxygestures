@@ -10,6 +10,9 @@
     "browser": true,
     "chrome": true,
 
+    "Blob": true,
+    "URL": true,
+
     "modules": true,
     "MouseDeltaAccumulator": true,
     "Optional": true,

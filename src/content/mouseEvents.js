@@ -103,6 +103,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
         case 'mg-unloadFrame':
           onUnloadFrame(event.data.data, event.source);
           break;
+        case 'mg-getCanvasImage':
+          exports.onGetCanvasImage(event.data.data);
+          break;
 
         // Messages that may bubble up from nested frames and require applyFrameOffset() to be applied.
         case 'mg-mousedown':
@@ -148,8 +151,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   });
 
   window.addEventListener('mousedown', function (event) {
-    // Ignore untrusted events and events when Alt is pressed.
-    if (shouldIgnoreEvent(event)) { return; }
+    // Ignore untrusted events, events while Alt/Shift are pressed, and events that need not be handled.
+    if (shouldIgnoreEvent(event) || ignoreButtonNotUsedByGesture(event)) { return; }
 
     // Record the original mouse event.
     state.mouseDown = event;
@@ -170,8 +173,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, true);
 
   window.addEventListener('mouseup', function (event) {
-    // Ignore untrusted events and events when Alt is pressed.
-    if (shouldIgnoreEvent(event)) { return; }
+    // Ignore untrusted events, events while Alt/Shift are pressed, and events that need not be handled.
+    if (shouldIgnoreEvent(event) || ignoreButtonNotUsedByGesture(event)) { return; }
 
     // Prevent handling of mouseup events during a gesture.
     if (state.gestureState &&
@@ -299,6 +302,14 @@ window.fg.module('mouseEvents', function (exports, fg) {
       (settings.disableOnAlt && event.altKey) || (settings.disableOnShift && event.shiftKey) ||
       // Ignore events during unload.
       state.isUnloading
+    );
+  }
+
+  // True if the event does not need to be handled because no enabled gesture type can handle it, otherwise false.
+  function ignoreButtonNotUsedByGesture (event) {
+    return (
+      // Ignore the non-gesture button if chord gestures are disabled.
+      !settings.chordGestures && (event.button !== settings.gestureButton)
     );
   }
 
@@ -464,9 +475,6 @@ window.fg.module('mouseEvents', function (exports, fg) {
       if (mediaInfo) {
         data.element.mediaSource = mediaInfo.source;
         data.element.mediaType = mediaInfo.type;
-
-        // TODO Deprecated; remove this in 1.1.x.
-        data.element.mediaInfo = mediaInfo;
       }
 
       // Collect information about the enclosing link if present.
@@ -684,5 +692,48 @@ window.fg.module('mouseEvents', function (exports, fg) {
       });
     }
   }
+
+  // Get the image data from a canvas.
+  // In the top level frame this function returns a promise. If the canves is located in the top frame, the promise is
+  // resolved immedaitely. Otherwise, a reference to the resolve function is stored in state.canvasImageResolve and the
+  // nested frames are queried. The resolver is later invoked when a nested frame locates the canvas and posts a
+  // mg-gotCanvasImage message back to the top frame.
+  exports.onGetCanvasImage = function (data) {
+    // Except to find the canvas in the origin frame.
+    if (data.context.originFrameId === exports.scriptFrameId) {
+      // Locate the referenced canvas.
+      let canvas = document.querySelector('canvas[data-fg-ref="' + data.element.mediaSource + '"]');
+      if (canvas) {
+        // Replace the canvas reference with actual image data.
+        data.element.mediaSource = canvas.toDataURL();
+        data.element.mediaType = 'image/png';
+
+        // Either resolve immediately or post up to the top frame.
+        if (state.isNested) {
+          postTo(window.top, 'gotCanvasImage', data);
+        } else {
+          return Promise.resolve(data);
+        }
+      } else {
+        // Canvas cannot be located.
+        data.element.mediaSource = null;
+        data.element.mediaType = null;
+        return Promise.resolve(data);
+      }
+    } else
+    if (state.isNested) {
+      // The originFrameId didn't match so keep searching the hierarchy of frames.
+      exports.broadcast('getCanvasImage', data);
+      return;
+    } else {
+      // This case is only reached in the top frame when the originFrameId doesn't match.
+      // Return a promise that is resolved when any nested frame locates the canvas.
+      return new Promise((resolve, reject) => {
+        // Store a reference to the resolver function for later.
+        state.canvasImageResolve = resolve;
+        exports.broadcast('getCanvasImage', data);
+      });
+    }
+  };
 
 });

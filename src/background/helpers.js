@@ -72,16 +72,21 @@ modules.helpers = (function (module) {
 
   // Attempt to determine the filename from a media URL. If the media source does not contain a file extension but the
   // mime type is known, select the extension automatically.
-  module.suggestFilename = (mediaInfo) => {
+  module.suggestFilename = (mediaSource, mediaType) => {
+    // Data URIs do not have a file name so just default to 'data.jpg'.
+    if (mediaSource.startsWith('data:') && mediaType === 'image/png') {
+      return 'data.png';
+    }
+
     // Extract the filename from the URL.
-    let match = /\/([^\/?#]+)($|\?|#)/i.exec(decodeURI(mediaInfo.source));
+    let match = /\/([^\/?#]+)($|\?|#)/i.exec(decodeURI(mediaSource));
     if (match && match[1]) {
       // Try to determine if the filename has an extension.
       let filename = match[1];
       let dot = filename.indexOf('.');
       if ((dot === -1) || ((dot >= 0) && (dot < (filename.length - 4)))) {
         // Try to guess the extension from the type.
-        return filename + (mimeToExtensionMap[mediaInfo.type] || '');
+        return filename + (mimeToExtensionMap[mediaType] || '');
       } else {
         // Filename seems to have an extension
         return filename;
@@ -92,6 +97,7 @@ modules.helpers = (function (module) {
     return null;
   };
 
+  // Get a string that describes a chord combination.
   module.getChordPreview = (chord) => {
     return (chord || [])
       .map(button => {
@@ -104,6 +110,25 @@ modules.helpers = (function (module) {
         }
       })
       .join(' + ');
+  };
+
+  // Convert a data URI to a Blob.
+  // See: https://stackoverflow.com/a/12300351
+  module.dataURItoBlob = (dataURI) => {
+    // Convert base64 to raw binary data held in a string.
+    var byteString = window.atob(dataURI.split(',')[1]);
+
+    // Separate out the mime component.
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // Write the bytes of the string to an ArrayBuffer.
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
   };
 
   return module;

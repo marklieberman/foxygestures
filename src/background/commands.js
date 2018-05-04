@@ -940,14 +940,35 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Save the media URL of the element under the gesture.
-  function commandSaveMediaNow (data) {
-    let promise = Promise.resolve();
+  function commandSaveMediaNow (data, saveAs) {
+    let promise = Promise.resolve(data);
+    if (data.element.mediaSource) {
+      // Due to the performance impact of capturing canvas data it is no longer collected a priori.
+      // Instead the canvas element is tagged with a data-fg-ref attribute so it can be located later.
+      if (data.element.mediaType === 'canvasRef') {
+        // Replace the canvas reference with the canvas data.
+        promise = browser.tabs.sendMessage(data.sender.tab.id, {
+          topic: 'mg-getCanvasImage',
+          data
+        });
+      }
 
-    let mediaInfo = data.element.mediaInfo;
-    if (mediaInfo) {
-      promise = browser.downloads.download({
-        url: mediaInfo.source,
-        filename: helpers.suggestFilename(mediaInfo)
+      promise = promise.then(data => {
+        if (data.element.mediaSource) {
+          // Convert data URLs to blob as a workaround for:
+          // https://bugzilla.mozilla.org/show_bug.cgi?id=1318564
+          let url = data.element.mediaSource;
+          if (url.startsWith('data:')) {
+            url = URL.createObjectURL(helpers.dataURItoBlob(url));
+          }
+
+          // Start the download.
+          return browser.downloads.download({
+            url,
+            filename: helpers.suggestFilename(data.element.mediaSource, data.element.mediaType),
+            saveAs
+          });
+        }
       });
     }
 
@@ -958,19 +979,7 @@ modules.commands = (function (settings, helpers) {
   // Save the media URL of the element under the gesture.
   // Prompt for the location to save the file.
   function commandSaveMediaAs (data) {
-    let promise = Promise.resolve();
-
-    let mediaInfo = data.element.mediaInfo;
-    if (mediaInfo) {
-      promise = browser.downloads.download({
-        url: mediaInfo.source,
-        filename: helpers.suggestFilename(mediaInfo),
-        saveAs: true
-      });
-    }
-
-    // Allow the wheel or chord gesture to repeat.
-    return promise.then(() => ({ repeat: true }));
+    return commandSaveMediaNow(data, true);
   }
 
   // Navigate to the URL of the frame.

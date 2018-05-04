@@ -34,7 +34,8 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     gestureDetector: new UDLRGestureDetector(), // Mouse gesture implementation for UDLR gestures.
     disableGestures: false,                     // Disable gesture handlers when true.
     timeoutHandle: null,                        // Gesture timeout interval handle.
-    noMovementTicks: 0                          // Number of 100ms ticks without movement.
+    noMovementTicks: 0,                         // Number of 100ms ticks without movement.
+    canvasImageResolve: null                    // Promise to resolve a getCanvasImage query.
   });
 
   // Settings for this module.
@@ -75,6 +76,8 @@ window.fg.extend('mouseEvents', function (exports, fg) {
         // Update the status text.
         fg.ui.status(message.data);
         break;
+      case 'mg-getCanvasImage':
+        return exports.onGetCanvasImage(message.data);
     }
     return false;
   });
@@ -85,6 +88,14 @@ window.fg.extend('mouseEvents', function (exports, fg) {
         case 'mg-status':
           fg.ui.status(event.data.data);
           break;
+        case 'mg-gotCanvasImage':
+          if (state.canvasImageResolve) {
+            // Resolve the canvas image data query.
+            state.canvasImageResolve(event.data.data);
+            state.canvasImageResolve = null;
+          }
+          break;
+
       }
     }
   });
