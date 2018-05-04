@@ -20,8 +20,20 @@ modules.helpers = (function (module) {
 
   // MIME type to extension map.
   // Not an exhaustive list but contains most common mime types.
+  // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
   // See: https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats
   var mimeToExtensionMap = {
+    // Document
+    'text/plain': '.txt',
+    'text/html': '.html',
+    'text/css' : '.css',
+    'text/javascript' : '.js',
+    // Image
+    'image/png' : '.png',
+    'image/jpeg' : '.jpg',
+    'image/gif' : '.gif',
+    'image/bmp' : '.bmp',
+    'image/webp' : '.webp',
     // Video
     'video/mp4': '.mp4',
     'video/ogg': '.ogg',
@@ -30,10 +42,13 @@ modules.helpers = (function (module) {
     'audio/flac': '.flac',
     'audio/x-flac': '.flac',
     'audio/ogg': '.ogg',
+    'audio/midi': '.midi',
     'audio/mpeg': '.mp3',
     'audio/wav': '.wav',
     'audio/wave': '.wav',
-    'audio/webm': '.webm'
+    'audio/webm': '.webm',
+    // Other
+    'application/octet-stream': '.bin'
   };
 
   // Parse the version strings used by this addon.
@@ -73,9 +88,14 @@ modules.helpers = (function (module) {
   // Attempt to determine the filename from a media URL. If the media source does not contain a file extension but the
   // mime type is known, select the extension automatically.
   module.suggestFilename = (mediaSource, mediaType) => {
-    // Data URIs do not have a file name so just default to 'data.jpg'.
-    if (mediaSource.startsWith('data:') && mediaType === 'image/png') {
-      return 'data.png';
+    // Data URIs do not have a file name so try generate a name like 'data.ext' using mime type.
+    if (mediaSource.startsWith('data:')) {
+      // Extract the mime type if present.
+      let encodingStart = mediaSource.indexOf(';');
+      let dataStart = mediaSource.indexOf(',');
+      let mimeEnd = (encodingStart > 0 && (encodingStart < dataStart)) ? encodingStart : dataStart;
+      let mime = mediaSource.substring(5, mimeEnd);
+      return (mime === '') ? 'data.txt' : 'data' + (mimeToExtensionMap[mime] || '.bin');
     }
 
     // Extract the filename from the URL.
