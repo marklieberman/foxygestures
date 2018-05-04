@@ -7,17 +7,18 @@ window.fg.module('commands', function (exports, fg) {
 
   // Hash of handler functions for supported commands.
   var commandHandlers = {
-    'historyBack'    : commandHistoryBack,
-    'historyForward' : commandHistoryForward,
-    'pageUp'         : commandPageUp,
-    'pageDown'       : commandPageDown,
-    'reloadFrame'    : commandReloadFrame,
-    'scrollBottom'   : commandScrollBottom,
-    'scrollDown'     : commandScrollDown,
-    'scrollTop'      : commandScrollTop,
-    'scrollUp'       : commandScrollUp,
-    'stop'           : commandStop,
-    'userScript'     : commandUserScript
+    'historyBack': commandHistoryBack,
+    'historyForward': commandHistoryForward,
+    'pageUp': commandPageUp,
+    'pageDown': commandPageDown,
+    'parentDirectory': commandParentDirectory,
+    'reloadFrame': commandReloadFrame,
+    'scrollBottom': commandScrollBottom,
+    'scrollDown': commandScrollDown,
+    'scrollTop': commandScrollTop,
+    'scrollUp': commandScrollUp,
+    'stop': commandStop,
+    'userScript': commandUserScript
   };
 
   // Settings for this module.
@@ -231,6 +232,23 @@ window.fg.module('commands', function (exports, fg) {
     if (!(settings.useRelPrevNext && goRelNextPrev(false))) {
       // Clamp page down at zero.
       alterPageNumber(p => (p > 0) ? (p - 1) : 0);
+    }
+  }
+
+  // Go to the parent directory or domain.
+  function commandParentDirectory (data) {
+    if (window.location.pathname === '/') {
+      // Remove one subdomain, but try to detect when only the TLD remains.
+      let domainParts = window.location.hostname.split('.').slice(1);
+      if ((domainParts.length === 1) || ((domainParts.length === 2) && (domainParts[0] === 'co'))) {
+        // Suspected TLD so don't go up.
+        return;
+      } else {
+        window.location.hostname = domainParts.join('.');
+      }
+    } else {
+      // Go up one directory.
+      window.location.href = (window.location.href.endsWith('/') ? '..' : './');
     }
   }
 

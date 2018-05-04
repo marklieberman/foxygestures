@@ -98,13 +98,13 @@
     "message": "Previous Page"
   },
   "commandPageDownTooltip": {
-    "message": "Decrement the page number in the URL using matching heuristics"
+    "message": "Decrement the page number in the URL or follow the \"previous\" link/button using matching heuristics."
   },
   "commandPageUp": {
     "message": "Next Page"
   },
   "commandPageUpTooltip": {
-    "message": "Increment the page number in the URL using matching heuristics"
+    "message": "Increment the page number in the URL or follow the \"next\" link/button using matching heuristics."
   },
   "commandPinUnpinTab": {
     "message": "Pin/Un-pin Tab"
@@ -773,5 +773,12 @@
   },
   "commandCloseTabActivateRight": {
     "message": "Close Tab and Activate Right"
+  },
+  "commandParentDirectory": {
+    "message": "Parent Directory"
+  },
+  "commandParentDirectoryTooltip": {
+    "message": "Go to parent directory or domain"
   }
+
 }

@@ -265,6 +265,13 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'parentDirectory',
+      handler: data => commands.executeInContent('parentDirectory', data),
+      label: browser.i18n.getMessage('commandParentDirectory'),
+      tooltip: browser.i18n.getMessage('commandParentDirectoryTooltip'),
+      group: groups.navigation
+    },
+    {
       id: 'previousTab',
       handler: commandActivatePreviousTab,
       label: browser.i18n.getMessage('commandActivatePreviousTab'),
