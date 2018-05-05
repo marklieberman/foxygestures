@@ -418,10 +418,15 @@ window.fg.module('mouseEvents', function (exports, fg) {
     // Find the element containing the source window.
     var frame = allFrames.find(frame => frame.contentWindow === source);
     if (!!frame) {
+      let style = window.getComputedStyle(frame);
       state.nestedFrames.push({
         scriptFrameId: data.id,
         source: source,
-        element: frame
+        element: frame,
+        // Record properties that can affect the offset calculation.
+        // Padding introduces an offset when drawing the trails.
+        paddingTop: parseFloat(style.paddingTop) || 0,
+        paddingLeft: parseFloat(style.paddingLeft) || 0,
       });
 
       // Report some frame attributes back to the script in the nested frame.
@@ -515,8 +520,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
     var tuple = state.nestedFrames.find(tuple => tuple.source === source);
     if (!!tuple) {
       var bounds = tuple.element.getBoundingClientRect();
-      data.x += bounds.x;
-      data.y += bounds.y;
+      data.x += bounds.x + tuple.paddingLeft;
+      data.y += bounds.y + tuple.paddingTop;
     }
   }
 
