@@ -186,17 +186,23 @@ window.fg.module('commands', function (exports, fg) {
     return document.scrollingElement;
   }
 
-  // Bubble the scroll command up the frame hierachy if the frame cannot scroll.
+  // Bubble the scroll command up the frame hierachy if the frame cannot scroll. The following bubble logic is
+  // attempting to copy native Firefox behaviour. One notable difference is that Firefox scrolls from the active
+  // element when you press Page Up/Down. Mouse gestures always activate the element below the mouse on mousedown
+  // which causes scroll commands to always focus and scroll iframes.
   function bubblingScrollTarget (data, command, handler) {
-    let scrollingNode = getInitialScrollTarget(data);
-    if (!handler(scrollingNode)) {
-      // Failed to find an acceptable scrolling node.
-      // If this is a scrolling=no iframe, try to scroll in the parent frame.
-      let state = fg.mouseEvents.state;
-      if (state.isNested && (state.frameScrolling === 'no')) {
-        // Set the initialScrollFrameId so that getInitialScrollTarget() in the parent window will target the frame.
-        data.initialScrollFrameId = fg.mouseEvents.scriptFrameId;
-        postTo(window.parent, command, data);
+    if (!handler(getInitialScrollTarget(data))) {
+      // Failed to find an acceptable scrolling node in this frame.
+      if (fg.mouseEvents.state.isNested) {
+        // Bubble up if scrolling is disabled...
+        if ((fg.mouseEvents.state.frameScrolling === 'no') ||
+          // ..or the frame does not have scroll bars.
+          (document.scrollingElement.scrollHeight <= document.scrollingElement.clientHeight)
+        ) {
+          // Set the initialScrollFrameId so that getInitialScrollTarget() in the parent window will target the frame.
+          data.initialScrollFrameId = fg.mouseEvents.scriptFrameId;
+          postTo(window.parent, command, data);
+        }
       }
     }
   }
