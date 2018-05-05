@@ -476,7 +476,7 @@ modules.commands = (function (settings, helpers) {
 
     data.command = command;
     return browser.tabs.sendMessage(data.sender.tab.id, {
-      topic: 'mg-delegateCommand',
+      topic: 'mg-contentCommand',
       data: data
     });
   };

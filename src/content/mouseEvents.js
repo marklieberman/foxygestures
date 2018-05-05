@@ -59,6 +59,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
   const state = (exports.state = {
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
+    frameScrolling: null,              // Scrolling attribute for this frame.
     isUnloading: false,                // Is the page is unloading?
     gestureState: GESTURE_STATE.NONE,  // Gesture state machine state.
     chordButtons: [],                  // Buttons in the chord gesture.
@@ -102,6 +103,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
           break;
         case 'mg-unloadFrame':
           onUnloadFrame(event.data.data, event.source);
+          break;
+        case 'mg-frameInfo':
+          onFrameInfo(event.data.data, event.source);
           break;
 
         // Messages that may bubble up from nested frames and require applyFrameOffset() to be applied.
@@ -415,8 +419,14 @@ window.fg.module('mouseEvents', function (exports, fg) {
     var frame = allFrames.find(frame => frame.contentWindow === source);
     if (!!frame) {
       state.nestedFrames.push({
+        scriptFrameId: data.id,
         source: source,
         element: frame
+      });
+
+      // Report some frame attributes back to the script in the nested frame.
+      postTo(source, 'frameInfo', {
+        frameScrolling: frame.getAttribute('scrolling')
       });
     }
   }
@@ -429,6 +439,12 @@ window.fg.module('mouseEvents', function (exports, fg) {
     if (index >= 0) {
       state.nestedFrames.splice(index, 1);
     }
+  }
+
+  // The parent script will report some frame attributes to the nested frame.
+  function onFrameInfo (data, source) {
+    // The scolling attribute is useful for scroll commands.
+    state.frameScrolling = data.frameScrolling;
   }
 
   // Get the relevant parts of the mouse event as an object.

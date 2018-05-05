@@ -31,26 +31,35 @@ window.fg.module('commands', function (exports, fg) {
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
-  browser.runtime.onMessage.addListener(onMessage);
-
-  function onMessage (message, sender) {
+  browser.runtime.onMessage.addListener((message, sender) => {
     switch (message.topic) {
-      case 'mg-delegateCommand':
+      case 'mg-contentCommand':
         // Execute a command on behalf of the background script.
-        return onDelegateCommand(message.data);
+        // Check if the command should be handled by this frame.
+        if (fg.mouseEvents.scriptFrameId === message.data.context.targetFrameId) {
+          // Execute the delegated command in this frame.
+          return commandHandlers[message.data.command](message.data);
+        }
     }
     return false;
-  }
+  });
 
-  // Execute the delegated command or pass it down the frame hierachy.
-  function onDelegateCommand (data, sender) {
-    // Check if the command should be handled by this frame.
-    if (fg.mouseEvents.scriptFrameId === data.context.targetFrameId) {
-      // Execute the delegated command in this frame.
-      return commandHandlers[data.command](data);
+  window.addEventListener('message', event => {
+    switch (event.data.topic) {
+      case 'mg-commandScrollBottom':
+        commandScrollBottom(event.data.data);
+        break;
+      case 'mg-commandScrollDown':
+        commandScrollDown(event.data.data);
+        break;
+      case 'mg-commandScrollTop':
+        commandScrollTop(event.data.data);
+        break;
+      case 'mg-commandScrollUp':
+        commandScrollUp(event.data.data);
+        break;
     }
-    return false;
-  }
+  });
 
   // -------------------------------------------------------------------------------------------------------------------
 
@@ -151,6 +160,79 @@ window.fg.module('commands', function (exports, fg) {
     return false;
   }
 
+  // Get a target from which the search for a scrollable element can begin. Returns in order: a nested frame
+  // identified in data.initialScrollFrameId, the mouseDown target, or the document.scrollingElement.
+  function getInitialScrollTarget (data) {
+    let state = fg.mouseEvents.state;
+    if (data.initialScrollFrameId) {
+      // Command was referred up the hierachy.
+      // Look for a scrollable node begining from the parent of the nested iframe.
+      let nestedFrame = state.nestedFrames.find(tuple => tuple.scriptFrameId === data.initialScrollFrameId);
+      if (nestedFrame) {
+        return nestedFrame.element.parentNode;
+      }
+    } else
+    if (state.mouseDown) {
+      // Can only be present for non-referred commands.
+      // Use the mouseDown target if available.
+      return state.mouseDown.target;
+    }
+
+    // Default to the document scrolling element.
+    return document.scrollingElement;
+  }
+
+  // Bubble the scroll command up the frame hierachy if the frame cannot scroll.
+  function bubblingScrollTarget (data, command, handler) {
+    let scrollingNode = getInitialScrollTarget(data);
+    if (!handler(scrollingNode)) {
+      // Failed to find an acceptable scrolling node.
+      // If this is a scrolling=no iframe, try to scroll in the parent frame.
+      let state = fg.mouseEvents.state;
+      if (state.isNested && (state.frameScrolling === 'no')) {
+        // Set the initialScrollFrameId so that getInitialScrollTarget() in the parent window will target the frame.
+        data.initialScrollFrameId = fg.mouseEvents.scriptFrameId;
+        postTo(window.parent, command, data);
+      }
+    }
+  }
+
+  // Find the first scrollable node or ancestor that isn't at the top.
+  function findScrollingUpNode (node) {
+    let state = fg.mouseEvents.state;
+    while (node) {
+      // Node must not be scrolled to the top.
+      if ((node.scrollTop > 0) &&
+        // Node must not have overflow:hidden style.
+        (window.getComputedStyle(node).overflowY !== 'hidden') &&
+        // Node must not be HTML and have scrolling=no attribute.
+        ((node.tagName !== 'HTML') || (state.frameScrolling !== 'no'))
+      ) {
+        return node;
+      }
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  // Find the first scrollable node or ancestor that isn't at the bottom.
+  function findScrollingDownNode (node) {
+    let state = fg.mouseEvents.state;
+    while (node) {
+      // Node must not be scrolled to the bottom.
+      if ((node.scrollTop < node.scrollTopMax) &&
+        // Node must not have overflow:hidden style.
+        (window.getComputedStyle(node).overflowY !== 'hidden') &&
+        // Node must not be HTML and have scrolling=no attribute.
+        ((node.tagName !== 'HTML') || (state.frameScrolling !== 'no'))
+      ) {
+        return node;
+      }
+      node = node.parentNode;
+    }
+    return null;
+  }
+
   // Function adapted from:
   // https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
   function easeOutQuad (time, initial, change, duration) {
@@ -158,9 +240,9 @@ window.fg.module('commands', function (exports, fg) {
   }
 
   // Smoothly scroll the window to the given offset using requestAnimationFrame().
-  function scrollYEase (scrollTo, duration) {
+  function scrollYEase (node, scrollTo, duration) {
     let start = window.performance.now();
-    let initial = window.scrollY;
+    let initial = typeof node.scrollY !== 'undefined' ? node.scrollY : node.scrollTop ;
     let change = scrollTo - initial;
     return new Promise((resolve, reject) => {
       // Animation function to scroll based on easing function.
@@ -169,11 +251,11 @@ window.fg.module('commands', function (exports, fg) {
         let value = easeOutQuad(time, initial, change, duration);
         if (time < duration) {
           // Schedule the next animation frame.
-          window.scrollTo(0, value);
+          node.scrollTo(0, value);
           window.requestAnimationFrame(animate);
         } else {
           // Finish by scrolling to the exact amount.
-          window.scrollTo(0, scrollTo);
+          node.scrollTo(0, scrollTo);
           resolve();
         }
       }
@@ -183,30 +265,10 @@ window.fg.module('commands', function (exports, fg) {
         window.requestAnimationFrame(animate);
       } else {
         // Animation is disabled.
-        window.scrollTo(0, scrollTo);
+        node.scrollTo(0, scrollTo);
         resolve();
       }
     });
-  }
-
-  // Try to determine if the scroll command occurred inside a frame that cannot be scrolled.
-  // The callback is invoked if the frame is scrollable, otherwise the command bubbles up to the parent frame.
-  // Disqus comment sections are an example of embedded non-scrolling frames. See also: #31.
-  function bubbleScroll (data, callback) {
-    let scrollHeight = document.scrollingElement.scrollHeight;
-    let clientHeight =  document.scrollingElement.clientHeight;
-    let scrollOffset = document.scrollingElement.scrollTop;
-
-    if ((scrollHeight <= clientHeight) && (window.parent !== window.self)) {
-      // Invoke this command on the parent frame.
-      delete data.context.scriptFrameId;
-      postTo(window.parent, 'delegateCommand', data);
-      return false;
-    } else {
-      // This frame can be scrolled.
-      callback(scrollHeight, clientHeight);
-      return true;
-    }
   }
 
   // Command implementations -------------------------------------------------------------------------------------------
@@ -260,37 +322,45 @@ window.fg.module('commands', function (exports, fg) {
 
   // Scroll to the bottom of the frame or page.
   function commandScrollBottom (data) {
-    bubbleScroll(data, (scrollHeight, clientHeight) => {
-      let scrollMax = Math.max(scrollHeight - clientHeight, 0);
-      return scrollYEase(scrollMax, settings.scrollDuration);
+    bubblingScrollTarget(data, 'commandScrollBottom', node => {
+      node = findScrollingDownNode(node);
+      return node ? scrollYEase(node, node.scrollHeight - node.clientHeight, settings.scrollDuration) : false;
     });
   }
 
   // Scroll the viewport down.
   function commandScrollDown (data) {
-    bubbleScroll(data, (scrollHeight, clientHeight) => {
-      let scrollAmount = clientHeight * (settings.scrollAmount / 100);
-      let scrollTop = document.scrollingElement.scrollTop;
-      let scrollMax = Math.max(scrollHeight - clientHeight, 0);
-      let scrollTo = Math.min(scrollTop + scrollAmount, scrollMax);
-      scrollYEase(scrollTo, settings.scrollDuration);
+    bubblingScrollTarget(data, 'commandScrollDown', node => {
+      node = findScrollingDownNode(node);
+      if (node) {
+        let scrollAmount = node.clientHeight * (settings.scrollAmount / 100);
+        let scrollTo = Math.min(node.scrollTop + scrollAmount, node.scrollTopMax);
+        scrollYEase(node, scrollTo, settings.scrollDuration);
+        return true;
+      }
+      return false;
     });
   }
 
   // Scroll to the top of the frame or page.
   function commandScrollTop (data) {
-    bubbleScroll(data, (scrollHeight, clientHeight) => {
-      scrollYEase(0, settings.scrollDuration);
+    bubblingScrollTarget(data, 'commandScrollTop', node => {
+      node = findScrollingUpNode(node);
+      return node ? scrollYEase(node, 0, settings.scrollDuration) : false;
     });
   }
 
   // Scroll the viewport up.
   function commandScrollUp (data) {
-    bubbleScroll(data, (scrollHeight, clientHeight) => {
-      let scrollAmount = clientHeight * (settings.scrollAmount / 100);
-      let scrollTop = document.scrollingElement.scrollTop;
-      let scrollTo = Math.max(scrollTop - scrollAmount, 0);
-      scrollYEase(scrollTo, settings.scrollDuration);
+    bubblingScrollTarget(data, 'commandScrollUp', node => {
+      node = findScrollingUpNode(node);
+      if (node) {
+        let scrollAmount = node.clientHeight * (settings.scrollAmount / 100);
+        let scrollTo = Math.max(node.scrollTop - scrollAmount, 0);
+        scrollYEase(node, scrollTo, settings.scrollDuration);
+        return true;
+      }
+      return false;
     });
   }
 
