@@ -29,6 +29,10 @@ window.fg.module('commands', function (exports, fg) {
     useRelPrevNext: true
   }, 'sync');
 
+  // Promise to ensure that repeated scroll commands are executed in order.
+  // Note: this only works within a frame as the promise does not exist if the command bubbles.
+  var scrollYPromise = Promise.resolve();
+
   // Event listeners ---------------------------------------------------------------------------------------------------
 
   browser.runtime.onMessage.addListener((message, sender) => {
@@ -241,10 +245,11 @@ window.fg.module('commands', function (exports, fg) {
 
   // Smoothly scroll the window to the given offset using requestAnimationFrame().
   function scrollYEase (node, scrollTo, duration) {
-    let start = window.performance.now();
-    let initial = typeof node.scrollY !== 'undefined' ? node.scrollY : node.scrollTop ;
-    let change = scrollTo - initial;
     return new Promise((resolve, reject) => {
+      let start = window.performance.now();
+      let initial = (typeof node.scrollY !== 'undefined') ? node.scrollY : node.scrollTop;
+      let change = scrollTo - initial;
+
       // Animation function to scroll based on easing function.
       function animate (step) {
         let time = (step - start);
@@ -330,15 +335,21 @@ window.fg.module('commands', function (exports, fg) {
 
   // Scroll the viewport down.
   function commandScrollDown (data) {
-    bubblingScrollTarget(data, 'commandScrollDown', node => {
-      node = findScrollingDownNode(node);
-      if (node) {
-        let scrollAmount = node.clientHeight * (settings.scrollAmount / 100);
-        let scrollTo = Math.min(node.scrollTop + scrollAmount, node.scrollTopMax);
-        scrollYEase(node, scrollTo, settings.scrollDuration);
-        return true;
-      }
-      return false;
+    // This chaining ensures the previous scroll command is done.
+    scrollYPromise = scrollYPromise.then(() => {
+      bubblingScrollTarget(data, 'commandScrollDown', node => {
+        node = findScrollingDownNode(node);
+        if (node) {
+          // This chaining ensures the scrolling animation is done.
+          scrollYPromise = scrollYPromise.then(() => {
+            let scrollAmount = node.clientHeight * (settings.scrollAmount / 100);
+            let scrollTo = Math.min(node.scrollTop + scrollAmount, node.scrollTopMax);
+            return scrollYEase(node, scrollTo, settings.scrollDuration);
+          });
+          return true;
+        }
+        return false;
+      });
     });
   }
 
@@ -352,15 +363,21 @@ window.fg.module('commands', function (exports, fg) {
 
   // Scroll the viewport up.
   function commandScrollUp (data) {
-    bubblingScrollTarget(data, 'commandScrollUp', node => {
-      node = findScrollingUpNode(node);
-      if (node) {
-        let scrollAmount = node.clientHeight * (settings.scrollAmount / 100);
-        let scrollTo = Math.max(node.scrollTop - scrollAmount, 0);
-        scrollYEase(node, scrollTo, settings.scrollDuration);
-        return true;
-      }
-      return false;
+    // This chaining ensures the previous scroll command is done.
+    scrollYPromise = scrollYPromise.then(() => {
+      bubblingScrollTarget(data, 'commandScrollUp', node => {
+        node = findScrollingUpNode(node);
+        if (node) {
+          // This chaining ensures the scrolling animation is done.
+          scrollYPromise = scrollYPromise.then(() => {
+            let scrollAmount = node.clientHeight * (settings.scrollAmount / 100);
+            let scrollTo = Math.max(node.scrollTop - scrollAmount, 0);
+            return scrollYEase(node, scrollTo, settings.scrollDuration);
+          });
+          return true;
+        }
+        return false;
+      });
     });
   }
 
