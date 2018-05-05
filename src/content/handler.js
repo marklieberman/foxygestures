@@ -36,7 +36,6 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     timeoutHandle: null,                        // Gesture timeout interval handle.
     noMovementTicks: 0,                         // Number of 100ms ticks without movement.
     getContentResolve: null                     // Promise to resolve a async work in the content.
-
   });
 
   // Settings for this module.
@@ -45,6 +44,17 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     gestureTimeout: 2000,
     showStatusText: true
   }, 'sync');
+
+  // If there is a restore state for this tab then apply it as soon as possible.
+  // At the moment, the use case for this is restoring closed tabs and windows.
+  browser.runtime.sendMessage({
+    topic: 'mg-getRestoreState',
+    data: {}
+  }).then(restoreState => {
+    if (restoreState) {
+      exports.replicateState(restoreState);
+    }
+  });
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 

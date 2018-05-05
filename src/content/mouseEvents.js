@@ -273,6 +273,15 @@ window.fg.module('mouseEvents', function (exports, fg) {
       event.stopPropagation();
     }
 
+    if (settings.chordGestures) {
+      // Supress context menu if multiple buttons are pressed. This reduces the change of showing the context menu
+      // when restoring tabs with chord gestures. For example, when repeating Undo Close command.
+      if (event.buttons !== BUTTONS_MASK.NONE) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }
+
     if (state.isNested) {
       // Send directly to top.
       postTo(window.top, 'contextmenu');

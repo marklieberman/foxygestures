@@ -1061,11 +1061,29 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Restore the most recently closed tab or window.
-  function commandUndoClose () {
+  function commandUndoClose (data) {
     return browser.sessions.getRecentlyClosed({ maxResults: 1 }).then(sessions => {
       if (sessions.length) {
         let sessionId = sessions[0].tab ? sessions[0].tab.sessionId : sessions[0].window.sessionId;
-        return browser.sessions.restore(sessionId);
+        return browser.sessions.restore(sessionId).then(session => {
+          // Disable the gesture state in the current tab.
+          browser.tabs.sendMessage(data.sender.tab.id, { topic: 'mg-abortGesture' });
+
+          if (session.tab) {
+            // Transition the gesture into the restored tab using state cloning.
+            modules.handler.addRestoreState(session.tab.id, data.cloneState);
+          } else
+          if (session.window) {
+            // Find the active tab in the restored window.
+            return browser.tabs.query({ windowId: session.window.id, active: true }).then(tabs => {
+              // Transition the gesture into the restored tab using state cloning.
+              modules.handler.addRestoreState(tabs[0].id, data.cloneState);
+            });
+          }
+        });
+      } else {
+        // Allow the wheel or chord gesture to repeat.
+        return { repeat: true };
       }
     });
   }

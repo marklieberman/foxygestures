@@ -4,7 +4,14 @@
  * This module is responsible for coordinating gesture state between the
  * background and content scripts.
  */
-(function (settings, helpers, commands) {
+
+ var modules = modules || {};
+ modules.handler = (function (module, settings, helpers, commands) {
+
+  // State for this module.
+  const state = module.state = {
+    restoreStates: {} // Pending gesture state for restored tabs.
+  };
 
   // Internationalization constants and formatter strings.
   const i18n = {
@@ -103,6 +110,15 @@
     }
   }
 
+  // Store a gesture state to be restored to a tab.
+  module.addRestoreState = function (tabId, cloneState) {
+    state.restoreStates[tabId] = cloneState;
+
+    // Do not need to remember these states indefinitely, but they may be fetched multiple times.
+    // Sometimes a restored tab will load and inject about:blank before the real location appears.
+    window.setTimeout(() => { delete state.restoreStates[tabId]; }, 2000);
+  };
+
   // Event listeners ---------------------------------------------------------------------------------------------------
 
   // Handle messages from the content script.
@@ -124,6 +140,9 @@
       case 'mg-executeInBackground':
         // This function will reply via a promise.
         return commands.executeInBackground(data);
+      case 'mg-getRestoreState':
+        // Get the restore state for the sender tab.
+        return Promise.resolve(state.restoreStates[sender.tab.id]);
     }
     return false;
   });
@@ -186,4 +205,6 @@
     });
   }
 
-}(modules.settings, modules.helpers, modules.commands));
+  return module;
+
+}(modules.handler || {}, modules.settings, modules.helpers, modules.commands));
