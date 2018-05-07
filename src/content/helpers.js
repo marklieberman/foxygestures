@@ -42,7 +42,7 @@ window.fg.module('helpers', function (exports) {
   // Keep the given settings hash up-to-date when storage changes.
   exports.initModuleSettings = (settings, area) => {
     // Update default values from storage.
-    browser.storage[area].get(settings).then(results => {
+    let promise = browser.storage[area].get(settings).then(results => {
       Object.keys(settings).forEach(key => {
         settings[key] = results[key];
       });

@@ -162,5 +162,14 @@
       </fieldset>
     </div>
 
+    <!-- Blacklisted URLs -->
+    <div class="form-group">
+      <label class="control-label" i18n="'optionsBlacklistUrlPatterns'"></label>
+      <textarea class="form-control"
+                ng-model="settings.blacklistUrlPatterns"
+                ng-list="&#10;" ng-trim="false"></textarea>
+      <p class="help-block" i18n="'optionsBlacklistUrlPatternsHelp'"></p>
+    </div>
+
   </div>
 </div>

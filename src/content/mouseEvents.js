@@ -60,6 +60,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
     isNested: (window !== window.top), // Is this frame nested?
     nestedFrames: [],                  // Array of all nested frames.
     frameScrolling: null,              // Scrolling attribute for this frame.
+    listenersInstalled: false,         // Are event listeners installed?
     isUnloading: false,                // Is the page is unloading?
     gestureState: GESTURE_STATE.NONE,  // Gesture state machine state.
     chordButtons: [],                  // Buttons in the chord gesture.
@@ -89,15 +90,66 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
-  window.addEventListener('message', function (event) {
+  // Need to handle messages to establish the frame hierarchy.
+  window.addEventListener('message', onMessage);
+
+  // Install native event listeners in this frame and all nested frames.
+  exports.installEventListeners = function () {
+    if (!state.listenersInstalled) {
+      window.addEventListener('unload', onUnload);
+      window.addEventListener('mousedown', onMouseDown, true);
+      window.addEventListener('mouseup', onMouseUp, true);
+      window.addEventListener('mousemove', onMouseMove, true);
+      window.addEventListener('wheel', onWheel, true);
+      window.addEventListener('click', onClick, true);
+      window.addEventListener('dblclick', onDblClick, true);
+      window.addEventListener('contextmenu', onContextMenu, true);
+      window.addEventListener('selectstart', onSelectStart);
+      window.addEventListener('dragstart', onDragStart);
+    }
+    state.listenersInstalled = true;
+
+    // Ensure nested frames install listeners as well.
+    exports.broadcast('installEventListeners');
+  };
+
+  // Remove native event listeners in this frame and all nested frames.
+  exports.removeEventListeners = function () {
+    if (state.listenersInstalled) {
+      window.removeEventListener('unload', onUnload);
+      window.removeEventListener('mousedown', onMouseDown, true);
+      window.removeEventListener('mouseup', onMouseUp, true);
+      window.removeEventListener('mousemove', onMouseMove, true);
+      window.removeEventListener('wheel', onWheel, true);
+      window.removeEventListener('click', onClick, true);
+      window.removeEventListener('dblclick', onDblClick, true);
+      window.removeEventListener('contextmenu', onContextMenu, true);
+      window.removeEventListener('selectstart', onSelectStart);
+      window.removeEventListener('dragstart', onDragStart);
+    }
+    state.listenersInstalled = false;
+
+    // Ensure nested frames remove listeners as well.
+    exports.broadcast('removeEventListeners');
+  };
+
+  function onMessage (event) {
     if (event.data) {
       switch (event.data.topic) {
+        case 'mg-installEventListeners':
+          exports.installEventListeners();
+          break;
+        case 'mg-removeEventListeners':
+          exports.removeEventListeners();
+          break;
         case 'mg-stateUpdate':
           // State replication messages should only go down the hierarchy.
           if (event.source.window === window.parent) {
             exports.replicateState(event.data.data);
           }
           break;
+
+        // Frame hierarchy.
         case 'mg-loadFrame':
           onLoadFrame(event.data.data, event.source);
           break;
@@ -116,7 +168,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
             // Refer this event up the hierarchy.
             postTo(window.parent, 'mousedown', event.data.data);
           } else {
-            onMouseDown(event.data.data);
+            onBubbledMouseDown(event.data.data);
           }
           break;
         case 'mg-mouseup':
@@ -126,19 +178,19 @@ window.fg.module('mouseEvents', function (exports, fg) {
             // Refer this event up the hierarchy.
             postTo(window.parent, 'mouseup', event.data.data);
           } else {
-            onMouseUp(event.data.data);
+            onBubbledMouseUp(event.data.data);
           }
           break;
 
         // Note: applyFrameOffset() is not required as the following messages are posted directly to window.top.
         case 'mg-mousemove':
-          onMouseMove(event.data.data);
+          onBubbledMouseMove(event.data.data);
           break;
         case 'mg-wheel':
-          onWheel(event.data.data);
+          onBubbledWheel(event.data.data);
           break;
         case 'mg-contextmenu':
-          onContextMenu(event.data.data);
+          onBubbledContextMenu(event.data.data);
           break;
 
         // Async content work handlers for nested frames.
@@ -150,16 +202,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
           break;
       }
     }
-  });
+  }
 
-  window.addEventListener('unload', function () {
-    state.isUnloading = true;
-    if (state.isNested) {
-      postTo(window.parent, 'unloadFrame');
-    }
-  });
-
-  window.addEventListener('mousedown', function (event) {
+  function onMouseDown (event) {
     // Ignore untrusted events, events while Alt/Shift are pressed, and events that need not be handled.
     if (shouldIgnoreEvent(event) || ignoreButtonNotUsedByGesture(event)) { return; }
 
@@ -177,11 +222,11 @@ window.fg.module('mouseEvents', function (exports, fg) {
       // Post to parent - must apply frame offsets.
       postTo(window.parent, 'mousedown', data);
     } else {
-      onMouseDown(data);
+      onBubbledMouseDown(data);
     }
-  }, true);
+  }
 
-  window.addEventListener('mouseup', function (event) {
+  function onMouseUp (event) {
     // Ignore untrusted events, events while Alt/Shift are pressed, and events that need not be handled.
     if (shouldIgnoreEvent(event) || ignoreButtonNotUsedByGesture(event)) { return; }
 
@@ -198,11 +243,11 @@ window.fg.module('mouseEvents', function (exports, fg) {
       // Post to parent - must apply frame offsets.
       postTo(window.parent, 'mouseup', data);
     } else {
-      onMouseUp(data);
+      onBubbledMouseUp(data);
     }
-  }, true);
+  }
 
-  window.addEventListener('mousemove', function (event) {
+  function onMouseMove (event) {
     // Ignore untrusted events and events when Alt is pressed.
     if (shouldIgnoreEvent(event)) { return; }
 
@@ -213,12 +258,12 @@ window.fg.module('mouseEvents', function (exports, fg) {
         // Send directly to top.
         postTo(window.top, 'mousemove', data);
       } else {
-        onMouseMove(data);
+        onBubbledMouseMove(data);
       }
     }
-  }, true);
+  }
 
-  window.addEventListener('wheel', function (event) {
+  function onWheel (event) {
     // Ignore untrusted events and events when Alt is pressed.
     if (shouldIgnoreEvent(event)) { return; }
 
@@ -232,12 +277,12 @@ window.fg.module('mouseEvents', function (exports, fg) {
         // Send directly to top.
         postTo(window.top, 'wheel', data);
       } else {
-        onWheel(data);
+        onBubbledWheel(data);
       }
     }
-  }, true);
+  }
 
-  window.addEventListener('click', function (event) {
+  function onClick (event) {
     // Ignore untrusted events and events when Alt is pressed.
     if (shouldIgnoreEvent(event)) { return; }
 
@@ -249,9 +294,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
       event.preventDefault();
       event.stopPropagation();
     }
-  }, true);
+  }
 
-  window.addEventListener('dblclick', function (event) {
+  function onDblClick (event) {
     // Ignore untrusted events and events when Alt is pressed.
     if (shouldIgnoreEvent(event)) { return; }
 
@@ -261,9 +306,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
       event.preventDefault();
       event.stopPropagation();
     }
-  }, true);
+  }
 
-  window.addEventListener('contextmenu', function (event) {
+  function onContextMenu (event) {
     // Disable the context menu event after a gesture.
     if (!state.contextMenu ||
       (state.gestureState !== GESTURE_STATE.NONE) &&
@@ -286,11 +331,11 @@ window.fg.module('mouseEvents', function (exports, fg) {
       // Send directly to top.
       postTo(window.top, 'contextmenu');
     } else {
-      onContextMenu();
+      onBubbledContextMenu();
     }
-  }, true);
+  }
 
-  window.addEventListener('selectstart', function (event) {
+  function onSelectStart (event) {
     // Prevent a selection from starting during a gesture.
     // Allow text selection if explicitly enabled by settings.
     if (!settings.canSelectStart &&
@@ -299,15 +344,22 @@ window.fg.module('mouseEvents', function (exports, fg) {
       event.preventDefault();
       event.stopPropagation();
     }
-  });
+  }
 
-  window.addEventListener('dragstart', function (event) {
+  function onDragStart (event) {
     // Prevent a drag and drop from starting during a gesture.
     if (state.gestureState !== GESTURE_STATE.NONE) {
       event.preventDefault();
       event.stopPropagation();
     }
-  });
+  }
+
+  function onUnload (event) {
+    state.isUnloading = true;
+    if (state.isNested) {
+      postTo(window.parent, 'unloadFrame');
+    }
+  }
 
   // Functions ---------------------------------------------------------------------------------------------------------
 
@@ -343,10 +395,14 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Post a mesage to all nested frames known to the script.
   // Typically used to send messages down the frame/window hierarchy.
   exports.broadcast = function (topic, data) {
-    state.nestedFrames.forEach(tuple => tuple.source.postMessage({
-      topic: 'mg-' + topic,
-      data: data || {}
-    }, '*'));
+    state.nestedFrames.forEach(tuple => {
+      try {
+        tuple.source.postMessage({
+          topic: 'mg-' + topic,
+          data: data || {}
+        }, '*');
+      } catch (err) {}
+    });
   };
 
   // Modify the state and replicate the changes to nested frames.
@@ -397,7 +453,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Note: OSX will occasionally fire a mousemove event with buttons = 0 at the moment a button is released, just
   // before the mouseup event. This is handled by requiring two consecutive sticky mousemove events to trigger the
   // sticky gesture.
-  exports.stickyGestureCheck = function (data) {
+  function stickyGestureCheck (data) {
     if (data.buttons === BUTTONS_MASK.NONE) {
       // Sticky gesture detected.
       if (state.stickyEventCount++ > 1) {
@@ -410,55 +466,6 @@ window.fg.module('mouseEvents', function (exports, fg) {
       state.stickyEventCount = 0;
       return false;
     }
-  };
-
-  // Remember nested frames when their DOM is parsed.
-  // Invoked when the nested frame posts an event at document_end. (i.e.: when
-  // this script is laoded.)
-  function onLoadFrame (data, source) {
-    // Compile a list of frames on the page.
-    var iframes = document.getElementsByTagName('iframe');
-    var allFrames = Array.from(iframes);
-    if (document.body && document.body.tagName === 'FRAMESET') {
-      var framesetFrames = document.getElementsByTagName('frame');
-      allFrames = allFrames.concat(Array.from(framesetFrames));
-    }
-
-    // Find the element containing the source window.
-    var frame = allFrames.find(frame => frame.contentWindow === source);
-    if (!!frame) {
-      let style = window.getComputedStyle(frame);
-      state.nestedFrames.push({
-        scriptFrameId: data.id,
-        source: source,
-        element: frame,
-        // Record properties that can affect the offset calculation.
-        // Padding introduces an offset when drawing the trails.
-        paddingTop: parseFloat(style.paddingTop) || 0,
-        paddingLeft: parseFloat(style.paddingLeft) || 0,
-      });
-
-      // Report some frame attributes back to the script in the nested frame.
-      postTo(source, 'frameInfo', {
-        frameScrolling: frame.getAttribute('scrolling')
-      });
-    }
-  }
-
-  // Forget nested frames when their DOM is unloaded.
-  // Invoked when the nested frame posts an event on DOM unload event.
-  function onUnloadFrame (data, source) {
-    // Remove the frame tuple if we know about it.
-    var index = state.nestedFrames.findIndex(tuple => tuple.source === source);
-    if (index >= 0) {
-      state.nestedFrames.splice(index, 1);
-    }
-  }
-
-  // The parent script will report some frame attributes to the nested frame.
-  function onFrameInfo (data, source) {
-    // The scolling attribute is useful for scroll commands.
-    state.frameScrolling = data.frameScrolling;
   }
 
   // Get the relevant parts of the mouse event as an object.
@@ -523,8 +530,75 @@ window.fg.module('mouseEvents', function (exports, fg) {
     return data;
   }
 
-  // Offset the x,y-coordinates of a mouse event by the x,y position of the
-  // frame element containing the source window.
+  // Nested frames -----------------------------------------------------------------------------------------------------
+
+  // Remember nested frames when their DOM is parsed.
+  // Invoked when the nested frame posts an event at document_start.
+  function onLoadFrame (data, source) {
+    // Compile a list of frames on the page.
+    var iframes = document.getElementsByTagName('iframe');
+    var allFrames = Array.from(iframes);
+    if (document.body && document.body.tagName === 'FRAMESET') {
+      var framesetFrames = document.getElementsByTagName('frame');
+      allFrames = allFrames.concat(Array.from(framesetFrames));
+    }
+
+    // Find the element containing the source window.
+    var frame = allFrames.find(frame => frame.contentWindow === source);
+    if (!!frame) {
+      // Attempt to get the computed styles for the frame.
+      let style = window.getComputedStyle(frame) || {
+        paddingTop: 0,
+        paddingLeft: 0
+      };
+
+      state.nestedFrames.push({
+        scriptFrameId: data.id,
+        source: source,
+        element: frame,
+        // Record properties that can affect the offset calculation.
+        // Padding introduces an offset when drawing the trails.
+        paddingTop: parseFloat(style.paddingTop) || 0,
+        paddingLeft: parseFloat(style.paddingLeft) || 0,
+      });
+
+      // Ensure that the nested frame installs listeners when enabled.
+      if (state.listenersInstalled) {
+        postTo(source, 'installEventListeners');
+      }
+
+      // Report some frame attributes back to the script in the nested frame.
+      // Be careful not to leak anything inappropriate like URLs.
+      postTo(source, 'frameInfo', {
+        frameScrolling: frame.getAttribute('scrolling')
+      });
+    }
+
+    // The browserAction title/icon gets reset when a frame loads in a tab even if the tab hasn't navigated.
+    // Ensure that it remains in sync with the actual listener status.
+    if (!state.isNested) {
+      window.setTimeout(() => exports.resetBrowserAction(), 0);
+    }
+  }
+
+  // Forget nested frames when their DOM is unloaded.
+  // Invoked when the nested frame posts an event on DOM unload event.
+  function onUnloadFrame (data, source) {
+    // Remove the frame tuple if we know about it.
+    var index = state.nestedFrames.findIndex(tuple => tuple.source === source);
+    if (index >= 0) {
+      state.nestedFrames.splice(index, 1);
+    }
+  }
+
+  // The parent script will post back some useful frame attributes.
+  // Invoked as a response to the mg-loadFrame event.
+  function onFrameInfo (data, source) {
+    // The scolling attribute is useful for scroll commands.
+    state.frameScrolling = data.frameScrolling;
+  }
+
+  // Offset the x,y-coordinates of a mouse event by the x,y position of the frame element containing the source window.
   function applyFrameOffset (data, source) {
     var tuple = state.nestedFrames.find(tuple => tuple.source === source);
     if (!!tuple) {
@@ -534,9 +608,11 @@ window.fg.module('mouseEvents', function (exports, fg) {
     }
   }
 
+  // Bubbled event handlers --------------------------------------------------------------------------------------------
+
   // Invoked by the mousedown event.
   // The event may have bubbled up from nested frames.
-  function onMouseDown (data, event) {
+  function onBubbledMouseDown (data, event) {
     // Keep a reference to the data for this mousedown event.
     state.mouseDownData = data;
 
@@ -566,7 +642,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }
 
   // Support chord gestures by handling mousedown events.
-  // This method is called by onMouseDown().
+  // This method is called by onBubbledMouseDown().
   // Return false to end handling of the mouse down event.
   function buttonDownChordGesture (data) {
     // Add the pressed button to the chord on mouse down.
@@ -600,7 +676,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // Invoked by the mouseup event.
   // The event may have bubbled up from nested frames.
-  function onMouseUp (data) {
+  function onBubbledMouseUp (data) {
     // Handle or update the chord gesture state when enabled.
     if (settings.chordGestures && buttonUpChordGesture(data)) { return; }
 
@@ -634,7 +710,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }
 
   // Support chord gestures by handling mouseup events.
-  // This method is called by onMouseUp().
+  // This method is called by onBubbledMouseUp().
   // Return false to end handling of the mouse up event.
   function buttonUpChordGesture (data) {
     // Remove any button that is not currently pressed.
@@ -661,9 +737,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // Invoked by the mousemove event.
   // The event may have bubbled up from nested frames.
-  function onMouseMove (data) {
+  function onBubbledMouseMove (data) {
     // Perform a check on gesture state and buttons.
-    if (!exports.stickyGestureCheck(data)) {
+    if (!stickyGestureCheck(data)) {
       // Limit the fidelity of gesture updates. This has two effects: 1) a gesture will not start until gestureFidelity
       // pixels in distance are covered, and 2) movements are smoothed to avoid rapid changes in gesture direction. The
       // mouse accumulator instance is added to the state by handler.js, so it only exists in the top window/frame.
@@ -692,9 +768,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // Invoked by the wheel event.
   // The event may have bubbled up from nested frames.
-  function onWheel (data) {
+  function onBubbledWheel (data) {
     // Perform a check on gesture state and buttons.
-    if (settings.wheelGestures && !exports.stickyGestureCheck(data)) {
+    if (settings.wheelGestures && !stickyGestureCheck(data)) {
       // Start or update a wheel gesture.
       switch (state.gestureState) {
         case GESTURE_STATE.MOUSE_DOWN:
@@ -718,7 +794,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // Invoked by the contextmenu event.
   // The event may have bubbled up from nested frames.
-  function onContextMenu () {
+  function onBubbledContextMenu () {
     // Re-enable the context menu for subsequent clicks. The event listener will call preventDefault() on the native
     // event while contextMenu is false.
     if (!state.contextMenu) {
@@ -727,6 +803,8 @@ window.fg.module('mouseEvents', function (exports, fg) {
       });
     }
   }
+
+  // Content work handlers ---------------------------------------------------------------------------------------------
 
   // Setup a promise to be resolved with data from a possibly nested frame. Then recursively broadcast a message to
   // invoke handler in the origin frame. The first argument to handler() is a resolver to be invoked with a result.

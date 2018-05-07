@@ -18,6 +18,7 @@ modules.settings = (function () {
     // Addon settings
     showStatusText: true,              // Show status text when enabled.
     statusTimeout: 2000,               // Timeout to hide the status text.
+    blacklistUrlPatterns: [],          // List of URL patterns to disable gestures.
 
     // Mouse gestures
     gestureButton: 2,                  // The button to start a gesture.

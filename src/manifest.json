@@ -15,8 +15,13 @@
   "description": "__MSG_manifestDescription__",
 
   "icons": {
-    "48": "icons/icon-48.png",
-    "96": "icons/icon-96.png"
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+
+  "browser_action": {
+    "default_title": "__MSG_browserActionEnableGestures__",
+    "default_icon": "icons/off.svg"
   },
 
   "permissions": [

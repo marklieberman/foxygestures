@@ -40,20 +40,33 @@ window.fg.extend('mouseEvents', function (exports, fg) {
 
   // Settings for this module.
   const settings = fg.helpers.initModuleSettings({
+    blacklistUrlPatterns: [],
     drawTrails: true,
     gestureTimeout: 2000,
     showStatusText: true
   }, 'sync');
 
-  // If there is a restore state for this tab then apply it as soon as possible.
-  // At the moment, the use case for this is restoring closed tabs and windows.
+  // Initialize and enable gestures in this tab if not blacklisted.
   browser.runtime.sendMessage({
-    topic: 'mg-getRestoreState',
-    data: {}
-  }).then(restoreState => {
-    if (restoreState) {
-      exports.replicateState(restoreState);
+    topic: 'mg-getInitialState',
+    data: {
+      url: String(window.location.href)
     }
+  }).then(initialState => {
+    // Enable gestures if the tab or URL is not blacklisted.
+    if (!initialState.blacklisted) {
+      // If there is a restore state for this tab then apply it as soon as possible.
+      // At the moment, the use case for this is restoring closed tabs and windows.
+      if (initialState.restoreState) {
+        exports.replicateState(initialState.restoreState);
+      }
+
+      // Install native event listeners.
+      exports.installEventListeners();
+    }
+
+    // Reset the browserAction title/icon.
+    exports.resetBrowserAction();
   });
 
   // Event listeners ---------------------------------------------------------------------------------------------------
@@ -61,6 +74,9 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   // Handle messages from the background script.
   browser.runtime.onMessage.addListener((message, sender) => {
     switch (message.topic) {
+      case 'mg-toggleEventListeners':
+        return toggleEventListeners(message.data);
+
       case 'mg-applyState':
         // Cancel any pending state changes.
         if (state.deadTimeHandle !== null) {
@@ -316,6 +332,32 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       }
     });
 
+  };
+
+  // Functions ---------------------------------------------------------------------------------------------------------
+
+  // Toggle gestures enabled by installing or removing event listeners.
+  function toggleEventListeners () {
+    if (state.listenersInstalled) {
+      exports.removeEventListeners();
+    } else {
+      exports.installEventListeners();
+    }
+
+    // Return the installed state of the event listeners.
+    return Promise.resolve({
+      enabled: state.listenersInstalled,
+    });
+  }
+
+  // Set the browserAction title/icon to match the current state of installed event listeners in this tab.
+  exports.resetBrowserAction = function () {
+    browser.runtime.sendMessage({
+      topic: 'mg-browserAction',
+      data: {
+        enabled: state.listenersInstalled
+      }
+    });
   };
 
 });

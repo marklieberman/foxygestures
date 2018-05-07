@@ -151,6 +151,30 @@ modules.helpers = (function (module) {
     return new Blob([ab], { type: mimeString });
   };
 
+  // Match a simple glob pattern against an input.
+  module.globMatches = function (glob, input) {
+    // Get the *-delimited parts of the glob.
+    let parts = glob.split('*');
+    let firstPart = parts[0];
+    let lastPart = parts[parts.length - 1];
+
+    // If the glob is longer than the string, it can't match.
+    if (parts.join('').length > input.length) {
+      return false;
+    }
+
+    let part, index = 0;
+    while ((part = parts.shift()) !== undefined) {
+      // Check if this part of the glob can be found in the string, after the previous part.
+      index = input.indexOf(part, index);
+      if (!~index) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   return module;
 
 }(modules.helpers || {}));
