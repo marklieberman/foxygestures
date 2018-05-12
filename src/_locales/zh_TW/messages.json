@@ -799,10 +799,10 @@
         "message": "在此分頁禁用手勢"
     },
     "tooltipMoveUserScriptUp": {
-        "message": "Move user script up"
+        "message": "上移自訂腳本"
     },
     "tooltipMoveUserScriptDown": {
-        "message": "Move user script down"
+        "message": "下移自訂腳本"
     },
     "optionsUserScriptsWellHelpPermissions": {
         "description": "Help text that appears in the right well at the top of the user scripts tab",
