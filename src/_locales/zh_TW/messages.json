@@ -205,7 +205,7 @@
     },
     "modalChordPrompt": {
         "description": "Prompt to press a chord in the chord gesture modal.",
-        "message": "同時按下兩個或以上的滑鼠按鈕來錄製和鉉手勢。"
+        "message": "同時按下兩個或以上的滑鼠按鈕來錄製組合手勢。"
     },
     "modalChordWaiting": {
         "description": "Placeholder text while waiting for buttons to be pressed.",
@@ -287,7 +287,7 @@
     },
     "optionsEnableChordGesturesHelp": {
         "description": "Help text for the chord gestures panel.",
-        "message": "同時按下兩個或以上的滑鼠按鈕來執行和鉉手勢"
+        "message": "同時按下兩個或以上的滑鼠按鈕來執行組合手勢"
     },
     "optionsEnableWheelGestures": {
         "description": "Label text for enable wheel gestures checkbox.",
@@ -553,7 +553,7 @@
     },
     "confirmRemoveChord": {
         "description": "Confirm dialog when removing a chord.",
-        "message": "移除和鉉 $CHORD$？",
+        "message": "移除組合 $CHORD$？",
         "placeholders": {
             "chord": {
                 "content": "$1",
