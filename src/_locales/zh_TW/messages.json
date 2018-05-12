@@ -1,7 +1,7 @@
 {
     "buttonAddChord": {
         "description": "Button text to add a chord.",
-        "message": "新增和弦"
+        "message": "新增組合"
     },
     "buttonAddUserScript": {
         "description": "Label for the button to add a user script",
@@ -29,7 +29,7 @@
     },
     "buttonXSSWarningAccept": {
         "description": "Label for the button to accept the user scripts XSS warning.",
-        "message": "我已了解此風險"
+        "message": "我已瞭解此風險"
     },
     "commandCloseLeftTabs": {
         "message": "關閉左側分頁"
@@ -197,11 +197,11 @@
     },
     "modalChordAcceptable": {
         "description": "Prompt to accept a chord in the chord gesture modal.",
-        "message": "按確定接受這個和弦手勢。"
+        "message": "按確定接受這個組合手勢。"
     },
     "modalChordConflict": {
         "description": "Prompt to indicate a conflict in the chord gesture modal.",
-        "message": "這個和弦已存在。"
+        "message": "這個組合已存在。"
     },
     "modalChordPrompt": {
         "description": "Prompt to press a chord in the chord gesture modal.",
@@ -283,7 +283,7 @@
     },
     "optionsEnableChordGestures": {
         "description": "Label text for enable chord gestures checkbox.",
-        "message": "啟用和弦手勢"
+        "message": "啟用組合手勢"
     },
     "optionsEnableChordGesturesHelp": {
         "description": "Help text for the chord gestures panel.",
@@ -423,11 +423,11 @@
     },
     "optionsUserScriptsWellHelp2": {
         "description": "Help text that appears in the well at the top of the user scripts tab",
-        "message": "使用前請閱讀文章了解自訂腳本（英文）。"
+        "message": "使用前請閱讀文章瞭解自訂腳本（英文）。"
     },
     "optionsXSSWarning1": {
         "description": "XSS warning text.",
-        "message": "此功能是為進階用戶準備。如果您看到某篇文章說如何操作來製成某項功能，並且並不了解其代碼的目的，請審慎使用，惡意代碼可能危及您的系統安全。"
+        "message": "此功能是為進階用戶準備。如果您看到某篇文章說如何操作來製成某項功能，並且並不瞭解其代碼的目的，請審慎使用，惡意代碼可能危及您的系統安全。"
     },
     "optionsXSSWarning2": {
         "description": "XSS warning text.",
@@ -654,7 +654,7 @@
         "message": "書籤 URL"
     },
     "commandBookmarkUrlTooltip": {
-        "message": "該書籤將放在“其他書籤”文件夾中。重複該手勢則移除該書籤。"
+        "message": "該書籤將放在「其他書籤」文件夾中。重複該手勢則移除該書籤。"
     },
     "confirmResetSettings": {
         "description": "Confirm dialog when resetting all settings back to default values",
@@ -689,5 +689,123 @@
     },
     "commandViewSourceTooltip": {
         "message": "使用此命令檢視原始碼時不附有 POST 資料。"
+    },
+    "commandReloadAllTabs": {
+        "message": "重新整理所有分頁"
+    },
+    "commandReloadAllTabsTooltip": {
+        "message": "重新整理視窗中的所有分頁"
+    },
+    "tooltipRequiresPermissions": {
+        "description": "Tooltip for commands that require additional permissions.",
+        "message": "需要權限: $PERMISSION_LIST$",
+        "placeholders": {
+            "permission_list": {
+                "content": "$1",
+                "example": "bookmarks"
+            }
+        }
+    },
+    "modalAskPermissionPrompt": {
+        "description": "Prompt that appears at the top of the ask permission modal.",
+        "message": "Foxy Gestures 需要以下權限才能啟用此命令。"
+    },
+    "modalAskPermissionRequest": {
+        "description": "Label for the button in the model to request optional permissions.",
+        "message": "請求權限"
+    },
+    "optionalPermissionBookmarksSummary": {
+        "description": "I copied this from the first paragraph of the MDN documentation.",
+        "message": "WebExtensions bookmarks API 允許附加元件操作瀏覽器的書籤系統。您可以用它給加入書籤，讀取書籤，以及編輯，移除和管理書籤"
+    },
+    "optionalPermissionBookmarksLink": {
+        "description": "I copied this from the first paragraph of the MDN documentation.",
+        "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/bookmarks"
+    },
+    "optionalPermissionClipboardWriteSummary": {
+        "description": "I copied this from the first paragraph of the MDN documentation.",
+        "message": "clipboard API 允許附加元件可以將項目複製到系統剪貼板。目前該 API 僅支持複製圖片，但它未來將能夠複製文字和 HTML。"
+    },
+    "optionalPermissionClipboardWriteLink": {
+        "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/clipboard"
+    },
+    "optionalPermissionDownloadsSummary": {
+        "description": "I copied this from the first paragraph of the MDN documentation.",
+        "message": "允許附加元件操作下載管理器。 您可以使用此 API 模塊下載文件，取消，暫停，恢復下載，並在檔案管理器中顯示下載的文件。"
+    },
+    "optionalPermissionDownloadsLink": {
+        "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/downloads"
+    },
+    "optionsHeadingOptionalPermissions": {
+        "description": "Heading for optional permissions management.",
+        "message": "權限"
+    },
+    "optionsRequestOptionalPermissionHelp": {
+        "description": "Help text to describe buttons that request optional permissions.",
+        "message": "向手勢分配命令時會自動請求權限。不過，您可以使用這些按鈕來請求在用戶腳本中使用的權限。"
+    },
+    "optionsRevokeOptionalPermissionHelp": {
+        "description": "Help text to describe buttons that revoke optional permissions.",
+        "message": "您可以撤消權限以防止訪問相關的 API。 當權限被撤銷時，所有需要權限的命令都將被取消對應。如果您從以前的版本進行升級（此權限不是可選的），這很有用。"
+    },
+    "labelRequestPermission": {
+        "description": "Help text to describe the buttons that request optional permissions.",
+        "message": "請求 \"$PERMISSION$\" 權限",
+        "placeholders": {
+            "permission": {
+                "content": "$1",
+                "example": "bookmarks"
+            }
+        }
+    },
+    "labelRevokePermission": {
+        "description": "Help text to describe the buttons that revoke optional permissions.",
+        "message": "撤銷 \"$PERMISSION$\" 權限",
+        "placeholders": {
+            "permission": {
+                "content": "$1",
+                "example": "bookmarks"
+            }
+        }
+    },
+    "commandCloseTabActivateLeft": {
+        "message": "關閉目前分頁並切換到左方分頁"
+    },
+    "commandCloseTabActivateRight": {
+        "message": "關閉目前分頁並切換到右方分頁"
+    },
+    "commandParentDirectory": {
+        "message": "前往父目錄"
+    },
+    "commandParentDirectoryTooltip": {
+        "message": "前往父目錄或域名"
+    },
+    "commandOpenLinksInSelection": {
+        "message": "開啟被選取的連結"
+    },
+    "commandOpenLinksInSelectionTooltip": {
+        "message": "在背景分頁打開所有"
+    },
+    "optionsBlacklistUrlPatterns": {
+        "message": "禁用的網址"
+    },
+    "optionsBlacklistUrlPatternsHelp": {
+        "message": "當 URL 符合以下規則時，滑鼠手勢將被禁用。每行僅可輸入一組規則，星號可作為萬用字元來使用。(例如: example.com/*/login)"
+    },
+    "browserActionEnableGestures": {
+        "message": "在此分頁啟用手勢"
+    },
+    "browserActionDisableGestures": {
+        "message": "在此分頁禁用手勢"
+    },
+    "tooltipMoveUserScriptUp": {
+        "message": "Move user script up"
+    },
+    "tooltipMoveUserScriptDown": {
+        "message": "Move user script down"
+    },
+    "optionsUserScriptsWellHelpPermissions": {
+        "description": "Help text that appears in the right well at the top of the user scripts tab",
+        "message": "如果需要，請從「細節偏好」頁籤請求權限。"
     }
 }
