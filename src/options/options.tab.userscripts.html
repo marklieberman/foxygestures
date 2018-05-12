@@ -73,6 +73,16 @@
                         ng-click="removeUserScript(userScript)">
                   <i class="fa fa-trash"></i>
                 </button>
+                <button class="btn btn-default" type="button"
+                        uib-tooltip="{{i18n('tooltipMoveUserScriptUp')}}" tooltip-placement="left"
+                        ng-click="moveUserScriptUp(userScript)">
+                  <i class="fa fa-arrow-up"></i>
+                </button>
+                <button class="btn btn-default" type="button"
+                        uib-tooltip="{{i18n('tooltipMoveUserScriptDown')}}" tooltip-placement="left"
+                        ng-click="moveUserScriptDown(userScript)">
+                  <i class="fa fa-arrow-down"></i>
+                </button>
               </span>
             </div>
 

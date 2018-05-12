@@ -797,5 +797,11 @@
   },
   "browserActionDisableGestures": {
     "message": "Disable gestures for this tab"
+  },
+  "tooltipMoveUserScriptUp": {
+    "message": "Move user script up"
+  },
+  "tooltipMoveUserScriptDown": {
+    "message": "Move user script down"
   }
 }

@@ -95,6 +95,22 @@ app.controller('OptionsTabUserScriptsCtrl', [
       }
     };
 
+    $scope.moveUserScriptUp = (moveUp) => {
+      let index = settings.userScripts.indexOf(moveUp);
+      if (index >= 1) {
+        settings.userScripts[index] = settings.userScripts[index - 1];
+        settings.userScripts[index - 1] = moveUp;
+      }
+    };
+
+    $scope.moveUserScriptDown = (moveDown) => {
+      let index = settings.userScripts.indexOf(moveDown);
+      if ((index >= 0) && (index < (settings.userScripts.length - 1))) {
+        settings.userScripts[index] = settings.userScripts[index + 1];
+        settings.userScripts[index + 1] = moveDown;
+      }
+    };
+
   }]);
 
 // ---------------------------------------------------------------------------------------------------------------------
