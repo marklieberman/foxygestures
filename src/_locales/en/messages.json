@@ -790,7 +790,7 @@
     "message": "Blacklisted URLs"
   },
   "optionsBlacklistUrlPatternsHelp": {
-    "message": "Mouse gestures are disabled when the tab URL contains any of these patterns. Place one pattern per line and wildcard using asterisk. (e.g. example.com/*/login)"
+    "message": "Mouse gestures are disabled when the tab URL contains any of these patterns. Place one pattern per line and wildcard using asterisk. (e.g.: example.com/*/login)"
   },
   "browserActionEnableGestures": {
     "message": "Enable gestures for this tab"
