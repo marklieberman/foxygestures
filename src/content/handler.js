@@ -47,27 +47,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   }, 'sync');
 
   // Initialize and enable gestures in this tab if not blacklisted.
-  browser.runtime.sendMessage({
-    topic: 'mg-getInitialState',
-    data: {
-      url: String(window.location.href)
-    }
-  }).then(initialState => {
-    // Enable gestures if the tab or URL is not blacklisted.
-    if (!initialState.blacklisted) {
-      // If there is a restore state for this tab then apply it as soon as possible.
-      // At the moment, the use case for this is restoring closed tabs and windows.
-      if (initialState.restoreState) {
-        exports.replicateState(initialState.restoreState);
-      }
-
-      // Install native event listeners.
-      exports.installEventListeners();
-    }
-
-    // Reset the browserAction title/icon.
-    exports.resetBrowserAction();
-  });
+  initializeGestures(0);
 
   // Event listeners ---------------------------------------------------------------------------------------------------
 
@@ -335,6 +315,39 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   };
 
   // Functions ---------------------------------------------------------------------------------------------------------
+
+  // Initialize and enable gestures in this tab if not blacklisted.
+  function initializeGestures (attempt) {
+    browser.runtime.sendMessage({
+      topic: 'mg-getInitialState',
+      data: {
+        url: String(window.location.href)
+      }
+    }).then(initialState => {
+      // Enable gestures if the tab or URL is not blacklisted.
+      if (!initialState.blacklisted) {
+        // If there is a restore state for this tab then apply it as soon as possible.
+        // At the moment, the use case for this is restoring closed tabs and windows.
+        if (initialState.restoreState) {
+          exports.replicateState(initialState.restoreState);
+        }
+
+        // Install native event listeners.
+        exports.installEventListeners();
+      }
+
+      // Reset the browserAction title/icon.
+      exports.resetBrowserAction();
+    }).catch(() => {
+      // During upgrade/install the background script maybe not be loaded before the content script. Make several
+      // attempts to initialize before giving up.
+      if (attempt < 10) {
+        attempt++;
+        window.setTimeout(() => initializeGestures(attempt), 250);
+        console.log('retry gestures init - attempt', attempt);
+      }
+    });
+  }
 
   // Toggle gestures enabled by installing or removing event listeners.
   function toggleEventListeners () {
