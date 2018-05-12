@@ -49,6 +49,8 @@ gulp.task('jsonlint', function () {
 
 gulp.task('dist', [ 'sass' ], function () {
   return gulp.src(sources.dist)
-    .pipe(zip('foxygestures.xpi'))
+    .pipe(zip('foxygestures.xpi', {
+      compress: false
+    }))
     .pipe(gulp.dest('dist'));
 });
