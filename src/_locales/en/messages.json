@@ -803,5 +803,9 @@
   },
   "tooltipMoveUserScriptDown": {
     "message": "Move user script down"
+  },
+  "optionsUserScriptsWellHelpPermissions": {
+    "description": "Help text that appears in the right well at the top of the user scripts tab",
+    "message": "Request optional permissions from the More Preferences tab if you require them."
   }
 }

@@ -21,6 +21,12 @@ app.controller('OptionsTabUserScriptsCtrl', [
 
     // Functions -------------------------------------------------------------------------------------------------------
 
+    // Accept the XSS warning and add an initial empty user script.
+    $scope.acceptXSSWarning = () => {
+      settings.sawXSSWarning = true;
+      $scope.addUserScript();
+    };
+
     // Find a user script by ID.
     $scope.findUserScriptById = (id) =>
       Optional.of(settings.userScripts.find(userScript => userScript.id === id));

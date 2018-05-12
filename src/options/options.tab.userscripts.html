@@ -1,6 +1,5 @@
-<div class="row">
+<div class="row" ng-if="!settings.sawXSSWarning">
   <div class="col-md-12">
-
     <!-- XSS warning well -->
     <div class="alert alert-danger self-xss-warning" ng-if="!settings.sawXSSWarning">
       <h3>
@@ -24,22 +23,36 @@
       </p>
       <div class="clearfix">
         <button class="btn btn-danger pull-right" type="button"
-                ng-click="settings.sawXSSWarning = true"
+                ng-click="acceptXSSWarning()"
                 i18n="'buttonXSSWarningAccept'"></button>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="well" ng-if="settings.sawXSSWarning">
+<div class="row" ng-if="settings.sawXSSWarning">
+  <div class="col-md-6">
+    <div class="well">
       <i class="fa fa-2x fa-info-circle"></i>
-      <span>
+      <div>
         <span i18n="'optionsUserScriptsWellHelp1'"></span>
         <a href="https://github.com/marklieberman/foxygestures/wiki/User-Scripts" target="_blank">
           <span i18n="'optionsUserScriptsWellHelp2'"></span>
         </a>
-      </span>
+      </div>
     </div>
+  </div>
+  <div class="col-md-6">
+    <div class="well">
+      <i class="fa fa-2x fa-info-circle"></i>
+      <span i18n="'optionsUserScriptsWellHelpPermissions'"></span>
+    </div>
+  </div>
+</div>
 
-    <div class="mapping-list user-scripts" ng-if="settings.sawXSSWarning">
+<div class="row" ng-if="settings.sawXSSWarning">
+  <div class="col-md-12">
+    <div class="mapping-list user-scripts">
       <div class="user-script-item"
            ng-repeat="userScript in settings.userScripts track by userScript.id">
 
