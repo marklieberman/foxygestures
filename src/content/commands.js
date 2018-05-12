@@ -394,6 +394,14 @@ window.fg.module('commands', function (exports, fg) {
 
   // Execute a user script.
   function commandUserScript (data) {
+    // TODO Remove this in next version.
+    if (data.element.mediaSource) {
+      data.element.mediaInfo = {
+        source: data.element.mediaSource,
+        type: data.element.mediaType
+      };
+    }
+
     /* jshint evil:true */
     try {
       var mouseDown = fg.mouseEvents.state.mouseDown;
