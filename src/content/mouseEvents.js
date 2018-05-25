@@ -162,23 +162,29 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
         // Messages that may bubble up from nested frames and require applyFrameOffset() to be applied.
         case 'mg-mousedown':
-          // Offset the x,y-coordinates by the source element's position.
-          applyFrameOffset(event.data.data, event.source);
-          if (state.isNested) {
-            // Refer this event up the hierarchy.
-            postTo(window.parent, 'mousedown', event.data.data);
-          } else {
-            onBubbledMouseDown(event.data.data);
+          // This should never be dispatched from a frame above.
+          if ((event.source.window !== window.parent) && (event.source.window !== window.top)) {
+            // Offset the x,y-coordinates by the source element's position.
+            applyFrameOffset(event.data.data, event.source);
+            if (state.isNested) {
+              // Refer this event up the hierarchy.
+              postTo(window.parent, 'mousedown', event.data.data);
+            } else {
+              onBubbledMouseDown(event.data.data);
+            }
           }
           break;
         case 'mg-mouseup':
-          // Offset the x,y-coordinates by the source element's position.
-          applyFrameOffset(event.data.data, event.source);
-          if (state.isNested) {
-            // Refer this event up the hierarchy.
-            postTo(window.parent, 'mouseup', event.data.data);
-          } else {
-            onBubbledMouseUp(event.data.data);
+          // This should never be dispatched from a frame above.
+          if ((event.source.window !== window.parent) && (event.source.window !== window.top)) {
+            // Offset the x,y-coordinates by the source element's position.
+            applyFrameOffset(event.data.data, event.source);
+            if (state.isNested) {
+              // Refer this event up the hierarchy.
+              postTo(window.parent, 'mouseup', event.data.data);
+            } else {
+              onBubbledMouseUp(event.data.data);
+            }
           }
           break;
 

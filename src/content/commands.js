@@ -49,19 +49,22 @@ window.fg.module('commands', function (exports, fg) {
   });
 
   window.addEventListener('message', event => {
-    switch (event.data.topic) {
-      case 'mg-commandScrollBottom':
-        commandScrollBottom(event.data.data);
-        break;
-      case 'mg-commandScrollDown':
-        commandScrollDown(event.data.data);
-        break;
-      case 'mg-commandScrollTop':
-        commandScrollTop(event.data.data);
-        break;
-      case 'mg-commandScrollUp':
-        commandScrollUp(event.data.data);
-        break;
+    // These commands should never be dispatched from a frame above.
+    if ((event.source.window !== window.parent) && (event.source.window !== window.top)) {
+      switch (event.data.topic) {
+        case 'mg-commandScrollBottom':
+          commandScrollBottom(event.data.data);
+          break;
+        case 'mg-commandScrollDown':
+          commandScrollDown(event.data.data);
+          break;
+        case 'mg-commandScrollTop':
+          commandScrollTop(event.data.data);
+          break;
+        case 'mg-commandScrollUp':
+          commandScrollUp(event.data.data);
+          break;
+      }
     }
   });
 
