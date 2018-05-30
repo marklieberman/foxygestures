@@ -807,5 +807,14 @@
   "optionsUserScriptsWellHelpPermissions": {
     "description": "Help text that appears in the right well at the top of the user scripts tab",
     "message": "Request optional permissions from the More Preferences tab if you require them."
+  },
+  "optionsWhitelistMode": {
+    "message": "Enable whitelist mode."
+  },
+  "optionsWhitelistUrlPatterns": {
+    "message": "Whitelisted URLs"
+  },
+  "optionsWhitelistUrlPatternsHelp": {
+    "message": "Mouse gestures are enabled when the tab URL contains any of these patterns. Place one pattern per line and wildcard using asterisk. (e.g.: example.com/*/login)"
   }
 }

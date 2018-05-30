@@ -19,6 +19,7 @@ modules.settings = (function () {
     showStatusText: true,              // Show status text when enabled.
     statusTimeout: 2000,               // Timeout to hide the status text.
     blacklistUrlPatterns: [],          // List of URL patterns to disable gestures.
+    whitelistMode: false,              // Invert blacklist conditions.
 
     // Mouse gestures
     gestureButton: 2,                  // The button to start a gesture.

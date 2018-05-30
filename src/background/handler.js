@@ -229,8 +229,12 @@
       return Promise.resolve(true);
     } else {
       // Check the URL pattern blacklist.
-      return browser.storage.sync.get({ blacklistUrlPatterns: [] }).then(results => {
-        return results.blacklistUrlPatterns.some(glob => helpers.globMatches(glob, url));
+      return browser.storage.sync.get({
+        blacklistUrlPatterns: [],
+        whitelistMode: false
+      }).then(results => {
+        // Invert the result when whitelist mode is enabled.
+        return results.whitelistMode ^ results.blacklistUrlPatterns.some(glob => helpers.globMatches(glob, url));
       });
     }
   }

@@ -164,11 +164,28 @@
 
     <!-- Blacklisted URLs -->
     <div class="form-group">
-      <label class="control-label" i18n="'optionsBlacklistUrlPatterns'"></label>
+      <label class="control-label"
+             ng-hide="settings.whitelistMode"
+             i18n="'optionsBlacklistUrlPatterns'"></label>
+      <label class="control-label"
+             ng-show="settings.whitelistMode"
+             i18n="'optionsWhitelistUrlPatterns'"></label>
       <textarea class="form-control"
                 ng-model="settings.blacklistUrlPatterns"
                 ng-list="&#10;" ng-trim="false"></textarea>
-      <p class="help-block" i18n="'optionsBlacklistUrlPatternsHelp'"></p>
+      <p class="help-block"
+         ng-hide="settings.whitelistMode"
+         i18n="'optionsBlacklistUrlPatternsHelp'"></p>
+      <p class="help-block"
+         ng-show="settings.whitelistMode"
+         i18n="'optionsWhitelistUrlPatternsHelp'"></p>
+      <div class="checkbox">
+        <label>
+          <input class="control-label" type="checkbox"
+                 ng-model="settings.whitelistMode"></input>
+          <span i18n="'optionsWhitelistMode'"></span>
+        </label>
+      </div>
     </div>
 
   </div>
