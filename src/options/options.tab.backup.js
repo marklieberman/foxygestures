@@ -21,15 +21,24 @@ app.controller('OptionsTabBackupCtrl', [
       return $scope.getSettingsBackup().then(backupData => {
         // Stringify and serialize the backup data.
         let jsonData = JSON.stringify(backupData, null, 2);
-        let dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonData);
+        let blob = new Blob([ jsonData ], { type: 'application/json' });
+        let objectURL = URL.createObjectURL(blob);
 
-        // Prompt the user to download the backup.
-        let a = window.document.createElement('a');
-        a.href = dataUrl;
-        a.download = backupData.fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        // Download the file using a save as prompt.
+        browser.downloads.download({
+          url: objectURL,
+          filename: backupData.fileName,
+          saveAs: true
+        }).then(downloadId => {
+          // Release the object URL once the download completes.
+          let handler = (downloadDelta) => {
+            if ((downloadDelta.id === downloadId) && (downloadDelta.state.current !== 'in_progress')) {
+              URL.revokeObjectURL(objectURL);
+              browser.downloads.onChanged.removeListener(handler);
+            }
+          };
+          browser.downloads.onChanged.addListener(handler);
+        });
       });
     };
 
