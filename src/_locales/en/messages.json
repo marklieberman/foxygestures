@@ -816,5 +816,17 @@
   },
   "optionsWhitelistUrlPatternsHelp": {
     "message": "Mouse gestures are enabled when the tab URL contains any of these patterns. Place one pattern per line and wildcard using asterisk. (e.g.: example.com/*/login)"
+  },
+  "optionsGestureStyle": {
+    "message": "Gesture Style"
+  },
+  "optionsGestureStyleHelp": {
+    "message": "Each mouse gesture style supports different moves and features."
+  },
+  "optionsGestureStyleCardinal": {
+    "message": "Cardinal (UDLR)"
+  },
+  "optionsGestureStyleIntercardinal": {
+    "message": "Intercardinal (UDLR + Diagonals)"
   }
 }

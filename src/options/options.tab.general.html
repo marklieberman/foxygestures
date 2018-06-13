@@ -62,6 +62,17 @@
       <p class="help-block" i18n="'optionsGestureTimeoutHelp'"></p>
     </div>
 
+    <!-- Gesture style -->
+    <div class="form-group">
+      <label class="control-label" i18n="'optionsGestureStyle'"></label>
+      <select class="form-control"
+              ng-model="settings.gestureDetector.style">
+        <option ng-value="'cardinal'" i18n="'optionsGestureStyleCardinal'"></option>
+        <option ng-value="'intercardinal'" i18n="'optionsGestureStyleIntercardinal'"></option>
+      </select>
+      <p class="help-block" i18n="'optionsGestureStyleHelp'"></p>
+    </div>
+
     <!-- Draw trails -->
     <div class="panel panel-default">
       <div class="panel-heading">

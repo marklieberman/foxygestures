@@ -14,9 +14,8 @@
     "URL": true,
 
     "modules": true,
-    "MouseDeltaAccumulator": true,
     "Optional": true,
-    "UDLRGestureDetector": true,
+    "GestureDetector": true,
 
     "angular": true,
     "app": true
