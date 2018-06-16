@@ -816,5 +816,20 @@
   },
   "optionsWhitelistUrlPatternsHelp": {
     "message": "Mouse gestures are enabled when the tab URL contains any of these patterns. Place one pattern per line and wildcard using asterisk. (e.g.: example.com/*/login)"
+  },
+  "commandUndoCloseTooltip": {
+    "message": "Restore the most recently closed tab or window."
+  },
+  "commandUndoCloseTab": {
+    "message": "Undo Close Tab"
+  },
+  "commandUndoCloseTabTooltip": {
+    "message": "Restore the most recently closed tab or in the current window."
+  },
+  "commandUndoCloseWindow": {
+    "message": "Undo Close Window"
+  },
+  "commandUndoCloseWindowTooltip": {
+    "message": "Restore the most recently closed window."
   }
 }

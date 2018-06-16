@@ -384,6 +384,21 @@ modules.commands = (function (settings, helpers) {
       id: 'undoClose',
       handler: commandUndoClose,
       label: browser.i18n.getMessage('commandUndoClose'),
+      tooltip: browser.i18n.getMessage('commandUndoCloseTooltip'),
+      group: groups.tabs
+    },
+    {
+      id: 'undoCloseTab',
+      handler: commandUndoCloseTab,
+      label: browser.i18n.getMessage('commandUndoCloseTab'),
+      tooltip: browser.i18n.getMessage('commandUndoCloseTabTooltip'),
+      group: groups.tabs
+    },
+    {
+      id: 'undoCloseWindow',
+      handler: commandUndoCloseWindow,
+      label: browser.i18n.getMessage('commandUndoCloseWindow'),
+      tooltip: browser.i18n.getMessage('commandUndoCloseWindowTooltip'),
       group: groups.tabs
     },
     {
@@ -588,6 +603,25 @@ modules.commands = (function (settings, helpers) {
             .then(tabs => transitionGesture(null, tabs[0], data.cloneState));
       }
     });
+  }
+
+  // Restore a tab or window and attempt a gesture state transition to the restored tab.
+  function undoCloseSession (data, session) {
+    if (session.tab) {
+      return browser.sessions.restore(session.tab.sessionId).then(() => {
+        // Transition the gesture into the restored tab using state cloning.
+        modules.handler.addRestoreState(session.tab.id, data.cloneState);
+      });
+    } else
+    if (session.window) {
+      return browser.sessions.restore(session.window.sessionId).then(() => {
+        // Find the active tab in the restored window.
+        return browser.tabs.query({ windowId: session.window.id, active: true }).then(tabs => {
+          // Transition the gesture into the restored tab using state cloning.
+          modules.handler.addRestoreState(tabs[0].id, data.cloneState);
+        });
+      });
+    }
   }
 
   // Convert about:newtab or empty strings to null, otherwise return the URL.
@@ -1064,24 +1098,51 @@ modules.commands = (function (settings, helpers) {
   function commandUndoClose (data) {
     return browser.sessions.getRecentlyClosed({ maxResults: 1 }).then(sessions => {
       if (sessions.length) {
-        let sessionId = sessions[0].tab ? sessions[0].tab.sessionId : sessions[0].window.sessionId;
-        return browser.sessions.restore(sessionId).then(session => {
+        // Disable the gesture state in the current tab.
+        browser.tabs.sendMessage(data.sender.tab.id, { topic: 'mg-abortGesture' });
+
+        // Restore the tab or window.
+        return undoCloseSession(data, sessions[0]);
+      } else {
+        // Nothing to restore.
+        // Allow the wheel or chord gesture to repeat.
+        return { repeat: true };
+      }
+    });
+  }
+
+  // Restore the most recently closed tab in the current window.
+  function commandUndoCloseTab (data) {
+    return browser.windows.getCurrent().then(window => {
+      return browser.sessions.getRecentlyClosed().then(sessions => {
+        let tabSession = sessions.find(session => session.tab && (session.tab.windowId = window.id));
+        if (tabSession) {
           // Disable the gesture state in the current tab.
           browser.tabs.sendMessage(data.sender.tab.id, { topic: 'mg-abortGesture' });
 
-          if (session.tab) {
-            // Transition the gesture into the restored tab using state cloning.
-            modules.handler.addRestoreState(session.tab.id, data.cloneState);
-          } else
-          if (session.window) {
-            // Find the active tab in the restored window.
-            return browser.tabs.query({ windowId: session.window.id, active: true }).then(tabs => {
-              // Transition the gesture into the restored tab using state cloning.
-              modules.handler.addRestoreState(tabs[0].id, data.cloneState);
-            });
-          }
-        });
+          // Restore the tab.
+          return undoCloseSession(data, tabSession);
+        } else {
+          // Nothing to restore.
+          // Allow the wheel or chord gesture to repeat.
+          return { repeat: true };
+        }
+      });
+    });
+  }
+
+  // Restore the most recently closed window.
+  function commandUndoCloseWindow (data) {
+    return browser.sessions.getRecentlyClosed().then(sessions => {
+      let windowSession = sessions.find(session => session.window);
+      if (windowSession) {
+        // Disable the gesture state in the current tab.
+        browser.tabs.sendMessage(data.sender.tab.id, { topic: 'mg-abortGesture' });
+
+        // Restore the window.
+        return undoCloseSession(data, windowSession);
       } else {
+        // Nothing to restore.
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       }
