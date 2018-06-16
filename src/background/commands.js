@@ -309,6 +309,13 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'saveLinkAs',
+      handler: commandSaveLinkAs,
+      label: browser.i18n.getMessage('commandSaveLinkAs'),
+      group: groups.other,
+      permissions: [ 'downloads' ]
+    },
+    {
       id: 'saveMediaNow',
       handler: commandSaveMediaNow,
       label: browser.i18n.getMessage('commandSaveMediaNow'),
@@ -1006,6 +1013,24 @@ modules.commands = (function (settings, helpers) {
   // Reload the active tab and bypass the cache.
   function commandReloadBypassCache () {
     return getActiveTab(tab => browser.tabs.reload(tab.id, { bypassCache: true }));
+  }
+
+  // Save the link href under the gesture.
+  // Prompt for the location to save the file.
+  function commandSaveLinkAs (data) {
+    let promise;
+    if (data.element.linkHref) {
+      // Start the download.
+      promise = browser.downloads.download({
+        url: data.element.linkHref,
+        saveAs: true
+      });
+    } else {
+      promise = Promise.resolve(data);
+    }
+
+    // Allow the wheel or chord gesture to repeat.
+    return promise.then(() => ({ repeat: true }));
   }
 
   // Save the media URL of the element under the gesture.

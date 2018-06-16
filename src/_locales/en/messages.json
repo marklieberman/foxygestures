@@ -831,5 +831,8 @@
   },
   "commandUndoCloseWindowTooltip": {
     "message": "Restore the most recently closed window."
+  },
+  "commandSaveLinkAs": {
+    "message": "Save Link As"
   }
 }
