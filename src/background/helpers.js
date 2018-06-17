@@ -101,15 +101,14 @@ modules.helpers = (function (module) {
     // Extract the filename from the URL.
     let match = /\/([^\/?#]+)($|\?|#)/i.exec(decodeURI(mediaSource));
     if (match && match[1]) {
-      // Try to determine if the filename has an extension.
-      let filename = match[1];
-      let dot = filename.indexOf('.');
-      if ((dot === -1) || ((dot >= 0) && (dot < (filename.length - 4)))) {
-        // Try to guess the extension from the type.
-        return filename + (mimeToExtensionMap[mediaType] || '');
-      } else {
+      // Extract the extension from the filename.
+      match = /([^.]+)(\.[a-z0-9]+)?/i.exec(match[1]);
+      if (match && match[2]) {
         // Filename seems to have an extension
-        return filename;
+        return match[1] + match[2];
+      } else {
+        // Try to guess the extension from the type.
+        return match[1] + (mimeToExtensionMap[mediaType] || '');
       }
     }
 
