@@ -840,5 +840,17 @@
   },
   "commandHistoryBackOrCloseTabTooltip": {
     "message": "Close the current tab if there is no history to go back."
+  },
+  "commandOpenLinkInNewForegroundTab|newTab": {
+    "message": "Open Link in New Foreground Tab or New Tab"
+  },
+  "commandOpenLinkInNewForegroundTab|newTabTooltip": {
+    "message": "When the gesture begins over a link, open the link in a new foreground tab. Otherwise open a new tab."
+  },
+  "commandOpenLinkInNewWindow|newWindow": {
+    "message": "Open Link in New Window or New Window"
+  },
+  "commandOpenLinkInNewWindow|newWindowTooltip": {
+    "message": "When the gesture begins over a link, open the link in a new window. Otherwise open a new window."
   }
 }

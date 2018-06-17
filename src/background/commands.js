@@ -19,27 +19,27 @@ modules.commands = (function (settings, helpers) {
     navigation: {
       order: 0,
       id: 'navigation',
-      label: browser.i18n.getMessage('groupCommandsNavigation'),
+      label: browser.i18n.getMessage('groupCommandsNavigation')
     },
     tabs: {
       order: 1,
       id: 'tabs',
-      label: browser.i18n.getMessage('groupCommandsTabs'),
+      label: browser.i18n.getMessage('groupCommandsTabs')
     },
     windows: {
       order: 2,
       id: 'windows',
-      label: browser.i18n.getMessage('groupCommandsWindows'),
+      label: browser.i18n.getMessage('groupCommandsWindows')
     },
     hybrid: {
       order: 3,
       id: 'hybrid',
-      label: browser.i18n.getMessage('groupCommandsHybrid'),
+      label: browser.i18n.getMessage('groupCommandsHybrid')
     },
     other: {
       order: 100,
       id: 'other',
-      label: browser.i18n.getMessage('groupCommandsOther'),
+      label: browser.i18n.getMessage('groupCommandsOther')
     }
   };
 
@@ -158,7 +158,7 @@ modules.commands = (function (settings, helpers) {
       },
       label: browser.i18n.getMessage('commandHistoryBackOrCloseTab'),
       tooltip: browser.i18n.getMessage('commandHistoryBackOrCloseTabTooltip'),
-      group: groups.navigation
+      group: groups.hybrid
     },
     {
       id: 'historyForward',
@@ -237,10 +237,24 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'openLinkInNewForegroundTab|newTab',
+      handler: (data) => ((data.element.linkHref) ? commandOpenLinkInNewForegroundTab : commandNewTab)(data),
+      label: browser.i18n.getMessage('commandOpenLinkInNewForegroundTab|newTab'),
+      tooltip: browser.i18n.getMessage('commandOpenLinkInNewForegroundTab|newTabTooltip'),
+      group: groups.hybrid
+    },
+    {
       id: 'openLinkInNewWindow',
       handler: commandOpenLinkInNewWindow,
       label: browser.i18n.getMessage('commandOpenLinkInNewWindow'),
       group: groups.navigation
+    },
+    {
+      id: 'openLinkInNewWindow|newWindow',
+      handler: (data) => ((data.element.linkHref) ? commandOpenLinkInNewWindow : commandNewWindow)(data),
+      label: browser.i18n.getMessage('commandOpenLinkInNewWindow|newWindow'),
+      tooltip: browser.i18n.getMessage('commandOpenLinkInNewWindow|newWindowTooltip'),
+      group: groups.hybrid
     },
     {
       id: 'openLinkInPrivateWindow',
