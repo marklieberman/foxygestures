@@ -8,6 +8,7 @@ window.fg.module('commands', function (exports, fg) {
   // Hash of handler functions for supported commands.
   var commandHandlers = {
     'historyBack': commandHistoryBack,
+    'historyBackOrCloseTab': commandHistoryBackOrCloseTab,
     'historyForward': commandHistoryForward,
     'pageUp': commandPageUp,
     'pageDown': commandPageDown,
@@ -290,6 +291,25 @@ window.fg.module('commands', function (exports, fg) {
   // Navigate back in history.
   function commandHistoryBack (data) {
     window.history.back();
+  }
+
+  // Navigate back in history or close the tab if there are no previous states.
+  function commandHistoryBackOrCloseTab (data) {
+    let originalUrl = window.location.href;
+    window.history.back();
+
+    // Using a timeout to kill the current tab if the content script is not unloaded was suggested by @kafene.
+    // Also check if the URL changed to catch push-state on single page applications.
+    // If the application is lagging a short timeout could potentially close a tab with more history.
+    const closeTabTimeoutMs = 300;
+    window.setTimeout(function () {
+      if (originalUrl === window.location.href) {
+        // URL hasn't changed and script was not killed so lose the current tab.
+        return executeInBackground(data => {
+          return commandCloseTab(data); // jshint ignore:line
+        }, [ data ]); 
+      }
+    }, closeTabTimeoutMs);
   }
 
   // Navigate forward in history.

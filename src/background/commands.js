@@ -150,6 +150,17 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'historyBackOrCloseTab',
+      handler: data => {
+        commands.executeInContent('historyBackOrCloseTab', data, false);
+        // Allow the wheel or chord gesture to repeat.
+        return { repeat: true };
+      },
+      label: browser.i18n.getMessage('commandHistoryBackOrCloseTab'),
+      tooltip: browser.i18n.getMessage('commandHistoryBackOrCloseTabTooltip'),
+      group: groups.navigation
+    },
+    {
       id: 'historyForward',
       handler: data => {
         commands.executeInContent('historyForward', data, false);

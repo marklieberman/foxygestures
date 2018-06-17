@@ -834,5 +834,11 @@
   },
   "commandSaveLinkAs": {
     "message": "Save Link As"
+  },
+  "commandHistoryBackOrCloseTab": {
+    "message": "History Back or Close Tab"
+  },
+  "commandHistoryBackOrCloseTabTooltip": {
+    "message": "Close the current tab if there is no history to go back."
   }
 }
