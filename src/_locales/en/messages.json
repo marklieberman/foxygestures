@@ -824,7 +824,7 @@
     "message": "Undo Close Tab"
   },
   "commandUndoCloseTabTooltip": {
-    "message": "Restore the most recently closed tab or in the current window."
+    "message": "Restore the most recently closed tab in the current window."
   },
   "commandUndoCloseWindow": {
     "message": "Undo Close Window"

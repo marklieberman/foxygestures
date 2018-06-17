@@ -77,14 +77,20 @@ body {
 
 .command-label {
   display: flex;
-  justify-content: center;
+  flex-flow: row nowrap;
+  justify-content: space-between;
   align-items: flex-end;
-  min-height: 24px;
+  min-height: 36px;
   line-height: 12px;
-  text-align: center;
 
-  span.info-icons {
+  span:nth-child(1) {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  span:nth-child(2) {
     white-space: nowrap;
+    margin-left: 2px;
   }
 }
 

@@ -40,7 +40,7 @@ modules.settings = (function () {
       { gesture: 'RDLU', command: 'reload' },
       { gesture: 'DLR', command: 'scrollBottom' },
       { gesture: 'ULR', command: 'scrollTop' },
-      { gesture: 'RLR', command: 'undoClose' },
+      { gesture: 'RLR', command: 'undoCloseTab' },
       { gesture: 'ULD', command: 'openOptions' }
     ],
     disableOnAlt: true,                // Disable gestures when Alt is pressed.

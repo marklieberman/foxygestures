@@ -29,16 +29,14 @@
                ng-repeat="command in group.members | orderBy:'label'">
 
             <label class="control-label command-label">
+              <span>{{command.label}}</span>
               <span>
-                {{command.label}}
-                <span class="info-icons">
-                  <i class="fa fa-question-circle"
-                     ng-if="command.tooltip"
-                     uib-tooltip="{{command.tooltip}}"></i>
-                  <i class="fa fa-exclamation-triangle"
-                      ng-if="command.permissions"
-                      uib-tooltip="{{i18n('tooltipRequiresPermissions', command.permissions.join(', '))}}"></i>
-                </span>
+                <i class="fa fa-question-circle"
+                   ng-if="command.tooltip"
+                   uib-tooltip="{{command.tooltip}}"></i>
+                <i class="fa fa-exclamation-triangle"
+                    ng-if="command.permissions"
+                    uib-tooltip="{{i18n('tooltipRequiresPermissions', command.permissions.join(', '))}}"></i>
               </span>
             </label>
 
