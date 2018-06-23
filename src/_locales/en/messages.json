@@ -852,5 +852,17 @@
   },
   "commandOpenLinkInNewWindow|newWindowTooltip": {
     "message": "When the gesture begins over a link, open the link in a new window. Otherwise open a new window."
+  },
+  "groupCommandsContainer": {
+    "message": "Container Commands"
+  },
+  "openLinkInNewForegroundContainerTab": {
+    "message": "Open Link in Foreground Tab in $CONTAINER$",
+    "placeholders": {
+      "container": {
+        "content": "$1",
+        "example": "Personal"
+      }
+    }
   }
 }

@@ -36,6 +36,11 @@ modules.commands = (function (settings, helpers) {
       id: 'hybrid',
       label: browser.i18n.getMessage('groupCommandsHybrid')
     },
+    container: {
+      order: 4,
+      id: 'container',
+      label: browser.i18n.getMessage('groupCommandsContainer')
+    },
     other: {
       order: 100,
       id: 'other',
@@ -235,6 +240,13 @@ modules.commands = (function (settings, helpers) {
       handler: commandOpenLinkInNewForegroundTab,
       label: browser.i18n.getMessage('commandOpenLinkInNewForegroundTab'),
       group: groups.navigation
+    },
+    {
+      id: 'openLinkInNewForegroundContainerTab',
+      handler: () => {},
+      label: browser.i18n.getMessage('commandOpenLinkInNewForegroundContainerTab'),
+      group: groups.container,
+      visible: false
     },
     {
       id: 'openLinkInNewForegroundTab|newTab',
@@ -467,6 +479,8 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     }
   ];
+
+  commands.groups = groups;
 
   // Keep track of the sequence in which tabs are activated in each window.
   const activeTabHistory = {};

@@ -46,7 +46,24 @@ app.factory('commands', [
     // Populate the service reference with the commands module when loaded.
     moduleLoader('commands').then(commands => {
       angular.extend(service, commands);
-      service.loaded = true;
+
+      browser.contextualIdentities.query({}).then(ids => {
+        ids.forEach(id => {
+          console.log(id);
+          service.push({
+            id: 'openLinkInNewForegroundContainerTab',
+            label: id.name,
+            data: {
+              cookieStoreId: id.cookieStoreId
+            },
+            group: commands.groups.container
+          });
+        });
+
+        service.loaded = true;
+      });
+
+
     });
 
     return service;
