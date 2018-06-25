@@ -75,7 +75,7 @@
       "all_frames": false,
       "run_at": "document_start",
       "js": [
-        "common/UDLRGestureDetector.js",
+        "common/GestureDetector.js",
         "content/helpers.js",
         "content/interface.js",
         "content/handler.js"

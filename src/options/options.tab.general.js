@@ -171,9 +171,25 @@ app.directive('mgGestureInput', [
               paths.push([x + arrowSize, y - arrowSize]);
               paths.push([x + arrowSize, y + arrowSize]);
               break;
+            case 'Lu':
+              paths.push([x + arrowSize * 1.5, y]);
+              paths.push([x, y + arrowSize * 1.5]);
+              break;
+            case 'Ld':
+              paths.push([x + arrowSize * 1.5, y]);
+              paths.push([x, y - arrowSize * 1.5]);
+              break;
             case 'R':
               paths.push([x - arrowSize, y - arrowSize]);
               paths.push([x - arrowSize, y + arrowSize]);
+              break;
+            case 'Ru':
+              paths.push([x - arrowSize * 1.5, y]);
+              paths.push([x, y + arrowSize * 1.5]);
+              break;
+            case 'Rd':
+              paths.push([x - arrowSize * 1.5, y]);
+              paths.push([x, y - arrowSize * 1.5]);
               break;
           }
           paths.push([x, y]);
@@ -182,7 +198,7 @@ app.directive('mgGestureInput', [
 
         // Get a path to draw a gesture.
         function getGesturePath (moves) {
-          var offsetSize = 5, legSize = 30;
+          var offsetSize = 5, legSize = 30, diagLegSize = 25;
           var path = [], x = 0, y = 0;
           path.push([[0, 0]]);
           moves.forEach(function (move) {
@@ -200,9 +216,25 @@ app.directive('mgGestureInput', [
                 y -= offsetSize;
                 x -= legSize - offsetSize;
                 break;
+              case 'Lu':
+                y -= diagLegSize - offsetSize;
+                x -= diagLegSize - offsetSize;
+                break;
+              case 'Ld':
+                y += diagLegSize + offsetSize;
+                x -= diagLegSize - offsetSize;
+                break;
               case 'R':
                 y -= offsetSize;
                 x += legSize - offsetSize;
+                break;
+              case 'Ru':
+                y -= diagLegSize - offsetSize;
+                x += diagLegSize - offsetSize;
+                break;
+              case 'Rd':
+                y += diagLegSize + offsetSize;
+                x += diagLegSize - offsetSize;
                 break;
             }
             arrowTo(subpath, x, y, move);
@@ -227,12 +259,22 @@ app.directive('mgGestureInput', [
           return bounds;
         }
 
+        // Tokenize a gesture string.
+        function tokenizeGesture (gesture) {
+          let moves = [], match = null;
+          while ((match = /(Ru|Rd|R|Lu|Ld|L|U|D)/.exec(gesture))) {
+            moves.push(match[0]);
+            gesture = gesture.substring(match[0].length);
+          }
+          return moves;
+        }
+
         // Draw the gesture.
         function drawGesture () {
           clearCanvas();
           if (scope.gesture) {
             // Get one or more paths describing the gesture.
-            var moves = scope.gesture.split('');
+            var moves = tokenizeGesture(scope.gesture);
             var paths = getGesturePath(moves);
 
             // Determine the offset to center the paths.
@@ -253,6 +295,7 @@ app.directive('mgGestureInput', [
             paths.forEach(function (subpath) {
               ctx.beginPath();
               ctx.globalAlpha = alpha;
+              ctx.lineCap = 'round';
               subpath.forEach(point => ctx.lineTo(point[0], point[1]));
               ctx.stroke();
               alpha += 0.67 / (paths.length - 1);
@@ -298,7 +341,7 @@ app.directive('mgGestureInput', [
         };
 
         var mouseAccumulator = new MouseAccumulator();
-        var gestureDetector = new UDLRGestureDetector();
+        var gestureDetector = null;
 
         element.on('mousedown', onMouseDown);
         element.on('mouseup', onMouseUp);
@@ -330,7 +373,7 @@ app.directive('mgGestureInput', [
             state.inProgress = true;
             state.contextMenu = false;
             mouseAccumulator.reset();
-            gestureDetector.reset();
+            gestureDetector = new GestureDetector(scope.settings.gestureDetector);
             state.x = mouseDown.x;
             state.y = mouseDown.y;
             clearCanvas();

@@ -31,7 +31,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   // State for this module.
   const state = Object.assign(exports.state, {
     mouseAccumulator: new MouseAccumulator(),   // Accumulator to throttle mouse events.
-    gestureDetector: new UDLRGestureDetector(), // Mouse gesture implementation for UDLR gestures.
+    gestureDetector: null,                      // Mouse gesture implementation for UDLR gestures.
     disableGestures: false,                     // Disable gesture handlers when true.
     timeoutHandle: null,                        // Gesture timeout interval handle.
     noMovementTicks: 0,                         // Number of 100ms ticks without movement.
@@ -43,7 +43,10 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     blacklistUrlPatterns: [],
     drawTrails: true,
     gestureTimeout: 2000,
-    showStatusText: true
+    showStatusText: true,
+    gestureDetector: {
+      style: 'cardinal'
+    }
   }, 'sync');
 
   // Initialize and enable gestures in this tab if not blacklisted.
@@ -115,7 +118,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
   // Invoked when a mouse gesture begins.
   exports.mouseGestureStart = function (mouseData) {
     // Start tracking the gesture.
-    state.gestureDetector.reset(mouseData);
+    state.gestureDetector = new GestureDetector(settings.gestureDetector);
 
     // Paint the gesture trail.
     if (settings.drawTrails) {
@@ -180,6 +183,8 @@ window.fg.extend('mouseEvents', function (exports, fg) {
         }
       });
     }
+
+    state.gestureDetector = null;
   };
 
   // Abort a mouse gesture and reset the interface.

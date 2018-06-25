@@ -852,5 +852,26 @@
   },
   "commandOpenLinkInNewWindow|newWindowTooltip": {
     "message": "When the gesture begins over a link, open the link in a new window. Otherwise open a new window."
+  },
+  "optionsGestureStyle": {
+    "message": "Gesture Style"
+  },
+  "optionsGestureStyleCardinal": {
+    "message": "Cardinal directions only (default)"
+  },
+  "optionsGestureStyleCardinalHelp": {
+    "message": "Standard gesture directions that go up (U), down (D), left (L) and right (R)."
+  },
+  "optionsGestureStyleIntercardinal45": {
+    "message": "Intercardinal directions with 45° slices"
+  },
+  "optionsGestureStyleIntercardinal45Help": {
+    "message": "Adds diagonal directions left-up (Lu), left-down (Ld), right-up (Ru), and right-down (Rd). Directions are evenly distributed with 45° slices."
+  },
+  "optionsGestureStyleIntercardinal60": {
+    "message": "Intercardinal directions with 60° slices"
+  },
+  "optionsGestureStyleIntercardinal60Help": {
+    "message": "Adds diagonal directions left-up (Lu), left-down (Ld), right-up (Ru), and right-down (Rd). Diagonal directions get a larger slice to make diagonal gestures easier to perform."
   }
 }

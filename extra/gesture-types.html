@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <!-- This page is used to generate the gesture style diagrams used in the options page. -->
+
+    <canvas id="cardinal" width="80" height="80"></canvas>
+
+    <canvas id="intercardinal-45" width="80" height="80"></canvas>
+
+    <canvas id="intercardinal-3060" width="80" height="80"></canvas>
+
+    <script type="text/javascript">
+      const origin = { x: 40, y: 40 };
+      const sliceRadius = 40;
+      const textRadius = 35;
+
+      var canvas, ctx;
+
+      function rads (deg) {
+        return deg * (Math.PI / 180);
+      }
+
+      function sin (deg) {
+        return Math.sin(rads(deg));
+      }
+
+      function cos (deg) {
+        return Math.cos(rads(deg));
+      }
+
+      function move (deg, length) {
+        let x = origin.x + (length * cos(deg));
+        let y = origin.y + (length * sin(deg));
+        ctx.loveTo(x, y);
+      }
+
+      function line (deg, length) {
+        ctx.moveTo(origin.x, origin.y);
+        let x = origin.x + (length * cos(deg));
+        let y = origin.y + (length * sin(deg));
+        ctx.lineTo(x, y);
+      }
+
+      function text (value, deg, length) {
+        let size = ctx.measureText(value);
+        let x = origin.x + (length * cos(deg)) - (size.width / 2);
+        let y = origin.y + (length * sin(deg)) + 4;
+        ctx.strokeText(value, x, y);
+      }
+
+      function arc (deg1, deg2, radius) {
+        ctx.arc(origin.x, origin.y, radius, rads(deg1), rads(deg2));
+      }
+
+      /* Draw cardinal graph */
+      canvas = document.getElementById('cardinal');
+      ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#000';
+      ctx.font = '12px Segoe UI';
+      ctx.beginPath();
+      line(45, sliceRadius); line(-45, sliceRadius);
+      line(135, sliceRadius); line(-135, sliceRadius);
+      ctx.stroke();
+      text('U', -90, textRadius);
+      text('D', 90, textRadius);
+      text('L', 180, textRadius);
+      text('R', 0, textRadius);
+      ctx.strokeStyle = '#666';
+      ctx.beginPath();
+      ctx.moveTo(origin.x + 5, origin.y - 5);
+      ctx.lineTo(origin.x + 10, origin.y);
+      ctx.lineTo(origin.x + 5, origin.y + 5);
+      ctx.stroke();
+
+      /* Draw intercardinal45 graph. */
+      canvas = document.getElementById('intercardinal-45');
+      ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#000';
+      ctx.font = '12px Segoe UI';
+      ctx.beginPath();
+      line(22.5, sliceRadius); line(-22.5, sliceRadius);
+      line(67.5, sliceRadius); line(-67.5, sliceRadius);
+      line(112.5, sliceRadius); line(-112.5, sliceRadius);
+      line(157.5, sliceRadius); line(-157.5, sliceRadius);
+      ctx.stroke();
+      text('U', -90, textRadius);
+      text('D', 90, textRadius);
+      text('L', 180, textRadius);
+      text('R', 0, textRadius);
+      text('Ru', -45, textRadius);
+      text('Rd', 45, textRadius);
+      text('Lu', -135, textRadius);
+      text('Ld', 135, textRadius);
+      ctx.strokeStyle = '#666';
+      ctx.beginPath();
+      arc(-67.5, -22.5, 10);
+      ctx.stroke();
+      ctx.font = '10px Segoe UI';
+      text('45°', -42.5, 20);
+
+      /* Draw intercardinal60 graph. */
+      canvas = document.getElementById('intercardinal-3060');
+      ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#000';
+      ctx.font = '12px Segoe UI';
+      ctx.beginPath();
+      line(15, sliceRadius); line(-15, sliceRadius);
+      line(75, sliceRadius); line(-75, sliceRadius);
+      line(105, sliceRadius); line(-105, sliceRadius);
+      line(165, sliceRadius); line(-165, sliceRadius);
+      ctx.stroke();
+      text('U', -90, textRadius);
+      text('D', 90, textRadius);
+      text('L', 180, textRadius);
+      text('R', 0, textRadius);
+      text('Ru', -45, textRadius);
+      text('Rd', 45, textRadius);
+      text('Lu', -135, textRadius);
+      text('Ld', 135, textRadius);
+      ctx.strokeStyle = '#666';
+      ctx.beginPath();
+      arc(-75, -15, 10);
+      ctx.stroke();
+      ctx.font = '10px Segoe UI';
+      text('60°', -42.5, 20);
+
+    </script>
+
+  </body>
+</html>

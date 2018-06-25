@@ -62,6 +62,28 @@
       <p class="help-block" i18n="'optionsGestureTimeoutHelp'"></p>
     </div>
 
+    <!-- Gesture style -->
+    <div class="form-group gesture-style"
+         ng-switch="settings.gestureDetector.style">
+      <label class="control-label" i18n="'optionsGestureStyle'"></label>
+      <div>
+        <div>
+          <select class="form-control"
+                  ng-model="settings.gestureDetector.style">
+            <option ng-value="'cardinal'" i18n="'optionsGestureStyleCardinal'"></option>
+            <option ng-value="'intercardinal45'" i18n="'optionsGestureStyleIntercardinal45'"></option>
+            <option ng-value="'intercardinal60'" i18n="'optionsGestureStyleIntercardinal60'"></option>
+          </select>
+          <p class="help-block" ng-switch-when="cardinal" i18n="'optionsGestureStyleCardinalHelp'"></p>
+          <p class="help-block" ng-switch-when="intercardinal45" i18n="'optionsGestureStyleIntercardinal45Help'"></p>
+          <p class="help-block" ng-switch-when="intercardinal60" i18n="'optionsGestureStyleIntercardinal60Help'"></p>
+        </div>
+        <img ng-switch-when="cardinal" src="images/cardinal.png"></img>
+        <img ng-switch-when="intercardinal45" src="images/intercardinal45.png"></img>
+        <img ng-switch-when="intercardinal60" src="images/intercardinal60.png"></img>
+      </div>
+    </div>
+
     <!-- Draw trails -->
     <div class="panel panel-default">
       <div class="panel-heading">

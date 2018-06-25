@@ -22,9 +22,12 @@ modules.settings = (function () {
     whitelistMode: false,              // Invert blacklist conditions.
 
     // Mouse gestures
+    gestureDetector: {                 // Setting to configure gesture detector.
+      style: 'cardinal'
+    },
     gestureButton: 2,                  // The button to start a gesture.
     gestureTimeout: 2000,              // Movement timeout to cancel a gesture.
-    gestureFidelity: 10,               // Fidelity of mouse events in gestures.
+    gestureFidelity: 3,                // Fidelity of mouse events in gestures.
     drawTrails: true,                  // Draw gesture trails when enabled.
     trailFidelity: 10,                 // Minimum size of gesture trial segments.
     trailWidth: 2,                     // The width of the gesture trail.
