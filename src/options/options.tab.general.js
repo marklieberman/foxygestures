@@ -198,7 +198,7 @@ app.directive('mgGestureInput', [
 
         // Get a path to draw a gesture.
         function getGesturePath (moves) {
-          var offsetSize = 5, legSize = 30;
+          var offsetSize = 5, legSize = 30, diagLegSize = 25;
           var path = [], x = 0, y = 0;
           path.push([[0, 0]]);
           moves.forEach(function (move) {
@@ -217,24 +217,24 @@ app.directive('mgGestureInput', [
                 x -= legSize - offsetSize;
                 break;
               case 'Lu':
-                y -= legSize - offsetSize;
-                x -= legSize - offsetSize;
+                y -= diagLegSize - offsetSize;
+                x -= diagLegSize - offsetSize;
                 break;
               case 'Ld':
-                y += legSize + offsetSize;
-                x -= legSize - offsetSize;
+                y += diagLegSize + offsetSize;
+                x -= diagLegSize - offsetSize;
                 break;
               case 'R':
                 y -= offsetSize;
                 x += legSize - offsetSize;
                 break;
               case 'Ru':
-                y -= legSize - offsetSize;
-                x += legSize - offsetSize;
+                y -= diagLegSize - offsetSize;
+                x += diagLegSize - offsetSize;
                 break;
               case 'Rd':
-                y += legSize + offsetSize;
-                x += legSize - offsetSize;
+                y += diagLegSize + offsetSize;
+                x += diagLegSize - offsetSize;
                 break;
             }
             arrowTo(subpath, x, y, move);

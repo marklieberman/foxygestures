@@ -820,13 +820,22 @@
   "optionsGestureStyle": {
     "message": "Gesture Style"
   },
-  "optionsGestureStyleHelp": {
-    "message": "Each mouse gesture style supports different moves and features."
-  },
   "optionsGestureStyleCardinal": {
-    "message": "Cardinal (UDLR)"
+    "message": "Cardinal directions only (default)"
   },
-  "optionsGestureStyleIntercardinal": {
-    "message": "Intercardinal (UDLR + Diagonals)"
+  "optionsGestureStyleCardinalHelp": {
+    "message": "Standard gesture directions that go up (U), down (D), left (L) and right (R)."
+  },
+  "optionsGestureStyleIntercardinal45": {
+    "message": "Intercardinal directions with 45° slices"
+  },
+  "optionsGestureStyleIntercardinal45Help": {
+    "message": "Adds diagonal directions left-up (Lu), left-down (Ld), right-up (Ru), and right-down (Rd). Directions are evenly distributed with 45° slices."
+  },
+  "optionsGestureStyleIntercardinal60": {
+    "message": "Intercardinal directions with 60° slices"
+  },
+  "optionsGestureStyleIntercardinal60Help": {
+    "message": "Adds diagonal directions left-up (Lu), left-down (Ld), right-up (Ru), and right-down (Rd). Diagonal directions get a larger slice to make diagonal gestures easier to perform."
   }
 }
