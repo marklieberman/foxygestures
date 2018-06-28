@@ -546,7 +546,7 @@ modules.commands = (function (settings, helpers) {
 
   // Get the tabs in the current window.
   function getCurrentWindowTabs () {
-    return browser.tabs.query({ currentWindow: true });
+    return browser.tabs.query({ currentWindow: true }).filter(tab => !tab.hidden);
   }
 
   // Receive a callback with the active tab.
