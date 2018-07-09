@@ -1,5 +1,16 @@
 # Changelog
 
+### Version 1.2.0
+ - Added support for diagonal gestures.
+ - Added hybrid command History Back or Close Tab.
+ - Added hybrid command Open Link in New Tab/Window or Open New Tab/Window.
+ - Added command Save Link As.
+ - Added commands Undo Close Tab and Undo Close Window (in addition to existing Undo Close command.)
+ - Fixed save media now failing for some URLs.
+ - Fixed handling of hidden tabs.
+
+This version requires FF61+ dues to changes related to hidden tabs.
+
 ### Version 1.1.1
  - Implemented a blacklist to disable gestures by default for matching URLs.
  - Added a browserAction to enable/disable gestures per tab.
