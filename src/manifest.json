@@ -27,6 +27,7 @@
   "permissions": [
     "browserSettings",
     "cookies",
+    "downloads",
     "sessions",
     "storage",
     "tabs"
