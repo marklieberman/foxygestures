@@ -7,6 +7,14 @@ var app = angular.module('mgOptionsApp', [
 ]);
 
 // ---------------------------------------------------------------------------------------------------------------------
+app.config([
+  '$compileProvider',
+  function( $compileProvider ) {
+    $compileProvider.imgSrcSanitizationWhitelist (/^\s*(https?|moz-extension):/);
+  }
+]);
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Helper service that resolves a promise when modules are available.
 app.factory('moduleLoader', [
   '$q',
