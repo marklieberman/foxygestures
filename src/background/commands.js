@@ -559,13 +559,23 @@ modules.commands = (function (settings, helpers) {
     // Determine the active tab if not provided.
     active = active || tabs.find(tab => tab.active);
 
+    // Find the largest index less than the active index.
+    let left = tabs.reduce((left, tab) => {
+      return (tab.index < active.index) && (tab.index > left.index) ? tab : left;
+    }, { index: Number.MIN_SAFE_INTEGER, initial: true });
+
+    // Find the smallest index greater than the active index.
+    let right = tabs.reduce((right, tab) => {
+      return (tab.index > active.index) && (tab.index < right.index) ? tab : right;
+    }, { index: Number.MAX_SAFE_INTEGER, initial: true });
+
     // Determine the next tab to activate: given, left, or right.
     // Find the right/left tab with fallback to the left/right tab.
     if (next === 'left') {
-      next = tabs.find(tab => tab.index === active.index - 1) || tabs.find(tab => tab.index === active.index + 1);
+      next = left.initial ? right : left;
     } else
     if (next === 'right' || !next) {
-      next = tabs.find(tab => tab.index === active.index + 1) || tabs.find(tab => tab.index === active.index - 1);
+      next = right.initial ? left : right;
     }
 
     // Activate the next tab, then close the previous tab.
@@ -589,7 +599,7 @@ modules.commands = (function (settings, helpers) {
 
   // Close the current tab and activate the left, right, recent, or Firefox's choice of tab.
   function closeTabTransition (data, direction) {
-    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+    return browser.tabs.query({ currentWindow: true, hidden: false }).then(tabs => {
       let active = tabs.find(tab => tab.active);
       if (active.pinned) {
         // Pinned tabs cannot be closed by a gesture.
@@ -648,9 +658,10 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the first tab in the window.
   function commandActivateFirstTab (data) {
-    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+    return browser.tabs.query({ currentWindow: true, hidden: false }).then(tabs => {
       let active = tabs.find(tab => tab.active);
-      let first = tabs.find(tab => tab.index === 0);
+      let first = tabs.reduce((first, tab) => (tab.index < first.index) ? tab : first,
+        { index: Number.MAX_SAFE_INTEGER });
       if (active === first) {
         // Already on the first tab.
         return { repeat: true };
@@ -664,9 +675,10 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the last tab in the window.
   function commandActivateLastTab (data) {
-    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+    return browser.tabs.query({ currentWindow: true, hidden: false }).then(tabs => {
       let active = tabs.find(tab => tab.active);
-      let last = tabs.find(tab => tab.index === (tabs.length - 1));
+      let last = tabs.reduce((last, tab) => (tab.index > last.index) ? tab : last,
+        { index: Number.MIN_SAFE_INTEGER });
       if (active === last) {
         // Already on the last tab.
         return { repeat: true };
@@ -680,14 +692,30 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the next tab.
   function commandActivateNextTab (data) {
-    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+    return browser.tabs.query({ currentWindow: true, hidden: false }).then(tabs => {
       let active = tabs.find(tab => tab.active);
-      if ((active.index === (tabs.length - 1)) && !modules.settings.nextTabWrap) {
-        return { repeat: true };
+      let last = tabs.reduce((last, tab) => (tab.index > last.index) ? tab : last,
+        { index: Number.MIN_SAFE_INTEGER });
+      if (active.index === last.index) {
+        if (modules.settings.nextTabWrap) {
+          // Last tab and wrapping is enabled.
+          let first = tabs.reduce((first, tab) => (tab.index < first.index) ? tab : first,
+            { index: Number.MAX_SAFE_INTEGER });
+
+          return transitionGesture(active, first, data.cloneState)
+            .then(() => browser.tabs.update(first.id, { active: true }));
+        } else {
+          // Last tab and wrapping is disabled.
+          // Allow the wheel or chord gesture to repeat.
+          return { repeat: true };
+        }
       } else {
-        // Transition the gesture into the new tab using state cloning.
-        let index = (active.index + 1) % tabs.length;
-        let next = tabs[index];
+        // Transition the gesture into the next tab using state cloning.
+        // Find the smallest index greater than the active index.
+        let next = tabs.reduce((next, tab) => {
+          return (tab.index > active.index) && (tab.index < next.index) ? tab : next;
+        }, last);
+
         return transitionGesture(active, next, data.cloneState)
           .then(() => browser.tabs.update(next.id, { active: true }));
       }
@@ -696,14 +724,30 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the previous tab.
   function commandActivatePreviousTab (data) {
-    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+    return browser.tabs.query({ currentWindow: true, hidden: false }).then(tabs => {
       let active = tabs.find(tab => tab.active);
-      if ((active.index === 0) && !modules.settings.nextTabWrap) {
-        return { repeat: true };
+      let first = tabs.reduce((first, tab) => (tab.index < first.index) ? tab : first,
+        { index: Number.MAX_SAFE_INTEGER });
+      if (active.index === first.index) {
+        if (modules.settings.nextTabWrap) {
+          // First tab and wrapping is enabled.
+          let last = tabs.reduce((last, tab) => (tab.index > last.index) ? tab : last,
+            { index: Number.MIN_SAFE_INTEGER });
+
+          return transitionGesture(active, first, data.cloneState)
+            .then(() => browser.tabs.update(last.id, { active: true }));
+        } else {
+          // First tab and wrapping is disabled.
+          // Allow the wheel or chord gesture to repeat.
+          return { repeat: true };
+        }
       } else {
-        // Transition the gesture into the new tab using state cloning.
-        let index = (active.index - 1) % tabs.length;
-        let previous = tabs[index < 0 ? tabs.length - 1 : index];
+        // Transition the gesture into the next tab using state cloning.
+        // Find the largest index less than the active index.
+        let previous = tabs.reduce((previous, tab) => {
+          return (tab.index < active.index) && (tab.index > previous.index) ? tab : previous;
+        }, first);
+
         return transitionGesture(active, previous, data.cloneState)
           .then(() => browser.tabs.update(previous.id, { active: true }));
       }
@@ -744,7 +788,7 @@ modules.commands = (function (settings, helpers) {
 
   // Close tabs to the left of the active tab.
   function commandCloseLeftTabs () {
-    return browser.tabs.query({ currentWindow: true })
+    return browser.tabs.query({ currentWindow: true, hidden: false })
       .then(tabs => {
         let activeTabIndex = tabs.find(tab => tab.active).index;
         return browser.tabs.remove(tabs.filter(tab => {
@@ -757,7 +801,7 @@ modules.commands = (function (settings, helpers) {
 
   // Close all tabs other than the active tab.
   function commandCloseOtherTabs () {
-    return browser.tabs.query({ currentWindow: true })
+    return browser.tabs.query({ currentWindow: true, hidden: false })
       .then(tabs => {
         return browser.tabs.remove(tabs.filter(tab => !tab.active && !tab.pinned).map(tab => tab.id));
       })
@@ -767,7 +811,7 @@ modules.commands = (function (settings, helpers) {
 
   // Close tabs to the right of the active tab.
   function commandCloseRightTabs () {
-    return browser.tabs.query({ currentWindow: true })
+    return browser.tabs.query({ currentWindow: true, hidden: false })
       .then(tabs => {
         let activeTabIndex = tabs.find(tab => tab.active).index;
         return browser.tabs.remove(tabs.filter(tab => {
@@ -1006,7 +1050,7 @@ modules.commands = (function (settings, helpers) {
 
   // Reload all tabs in the current window.
   function commandReloadAllTabs () {
-    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+    return browser.tabs.query({ currentWindow: true, hidden: false }).then(tabs => {
       tabs.forEach(tab => browser.tabs.reload(tab.id));
       // Allow the wheel or chord gesture to repeat.
       return { repeat: true };
