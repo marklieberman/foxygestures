@@ -539,23 +539,6 @@ modules.commands = (function (settings, helpers) {
     }
   };
 
-  // Get the current window.
-  function getCurrentWindow () {
-    return browser.windows.getCurrent();
-  }
-
-  // Get the tabs in the current window.
-  function getCurrentWindowTabs () {
-    return browser.tabs.query({ currentWindow: true });
-  }
-
-  // Receive a callback with the active tab.
-  function getActiveTab (callback) {
-    return getCurrentWindowTabs().then(tabs => {
-      return callback(tabs.find(tab => tab.active), tabs);
-    });
-  }
-
   // Clone the gesture state from one tab to another.
   function transitionGesture (from, to, state) {
     if (state) {
@@ -665,7 +648,7 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the first tab in the window.
   function commandActivateFirstTab (data) {
-    return getCurrentWindowTabs().then(tabs => {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
       let active = tabs.find(tab => tab.active);
       let first = tabs.find(tab => tab.index === 0);
       if (active === first) {
@@ -681,7 +664,7 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the last tab in the window.
   function commandActivateLastTab (data) {
-    return getCurrentWindowTabs().then(tabs => {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
       let active = tabs.find(tab => tab.active);
       let last = tabs.find(tab => tab.index === (tabs.length - 1));
       if (active === last) {
@@ -697,7 +680,7 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the next tab.
   function commandActivateNextTab (data) {
-    return getCurrentWindowTabs().then(tabs => {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
       let active = tabs.find(tab => tab.active);
       if ((active.index === (tabs.length - 1)) && !modules.settings.nextTabWrap) {
         return { repeat: true };
@@ -713,7 +696,7 @@ modules.commands = (function (settings, helpers) {
 
   // Activate the previous tab.
   function commandActivatePreviousTab (data) {
-    return getCurrentWindowTabs().then(tabs => {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
       let active = tabs.find(tab => tab.active);
       if ((active.index === 0) && !modules.settings.nextTabWrap) {
         return { repeat: true };
@@ -761,7 +744,7 @@ modules.commands = (function (settings, helpers) {
 
   // Close tabs to the left of the active tab.
   function commandCloseLeftTabs () {
-    return getCurrentWindowTabs()
+    return browser.tabs.query({ currentWindow: true })
       .then(tabs => {
         let activeTabIndex = tabs.find(tab => tab.active).index;
         return browser.tabs.remove(tabs.filter(tab => {
@@ -774,7 +757,7 @@ modules.commands = (function (settings, helpers) {
 
   // Close all tabs other than the active tab.
   function commandCloseOtherTabs () {
-    return getCurrentWindowTabs()
+    return browser.tabs.query({ currentWindow: true })
       .then(tabs => {
         return browser.tabs.remove(tabs.filter(tab => !tab.active && !tab.pinned).map(tab => tab.id));
       })
@@ -784,7 +767,7 @@ modules.commands = (function (settings, helpers) {
 
   // Close tabs to the right of the active tab.
   function commandCloseRightTabs () {
-    return getCurrentWindowTabs()
+    return browser.tabs.query({ currentWindow: true })
       .then(tabs => {
         let activeTabIndex = tabs.find(tab => tab.active).index;
         return browser.tabs.remove(tabs.filter(tab => {
@@ -817,12 +800,16 @@ modules.commands = (function (settings, helpers) {
 
   // Duplicate the active tab.
   function commandDuplicateTab () {
-    return getActiveTab(tab => browser.tabs.duplicate(tab.id));
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      return browser.tabs.duplicate(tabs[0].id);
+    });
   }
 
   // Duplicate the active tab in a new private window.
   function commandDuplicateTabInNewPrivateWindow () {
-    return getActiveTab(tab => browser.windows.create({ url: tab.url, incognito: true }));
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      return browser.windows.create({ url: tabs[0].url, incognito: true });
+    });
   }
 
   // Toggle between fullscreen and last known window state.
@@ -868,12 +855,14 @@ modules.commands = (function (settings, helpers) {
 
   // Minimize the current window.
   function commandMinimize () {
-    return getCurrentWindow().then(win => browser.windows.update(win.id, { state: "minimized" }));
+    return browser.windows.getCurrent()
+      .then(win => browser.windows.update(win.id, { state: "minimized" }));
   }
 
   // Move the active tab to a new window.
   function commandMoveTabToNewWindow () {
-    return getActiveTab(tab => browser.windows.create({ tabId: tab.id }));
+    return browser.tabs.query({ currentWindow: true, active: true })
+      .then(tabs => browser.windows.create({ tabId: tabs[0].id }));
   }
 
   // Create a new empty tab.
@@ -900,15 +889,15 @@ modules.commands = (function (settings, helpers) {
   // Open a frame in a new tab.
   function commandOpenFrameInNewTab (data) {
     if (data.context.frameUrl) {
-      return getActiveTab(tab => {
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
         let tabOptions = {};
         tabOptions.url = data.context.frameUrl;
         tabOptions.active = true;
-        tabOptions.openerTabId = tab.id;
+        tabOptions.openerTabId = tabs[0].id;
         // Preserve the container when opening a new tab from a link/frame.
-        tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.cookieStoreId = tabs[0].cookieStoreId;
         if (settings.insertRelatedTab) {
-          tabOptions.index = tab.index + 1;
+          tabOptions.index = tabs[0].index + 1;
         }
         return browser.tabs.create(tabOptions);
       });
@@ -928,15 +917,15 @@ modules.commands = (function (settings, helpers) {
     let promise = Promise.resolve();
 
     if (url || data.element.linkHref) {
-      promise = getActiveTab(tab => {
+      promise = browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
         let tabOptions = {};
         tabOptions.url = url || data.element.linkHref;
         tabOptions.active = false;
-        tabOptions.openerTabId = tab.id;
+        tabOptions.openerTabId = tabs[0].id;
         // Preserve the container when opening a new tab from a link/frame.
-        tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.cookieStoreId = tabs[0].cookieStoreId;
         if (settings.insertRelatedTab) {
-          tabOptions.index = tab.index + 1;
+          tabOptions.index = tabs[0].index + 1;
         }
         return browser.tabs.create(tabOptions);
       });
@@ -949,15 +938,15 @@ modules.commands = (function (settings, helpers) {
   // Open a link in a new foreground tab.
   function commandOpenLinkInNewForegroundTab (data) {
     if (data.element.linkHref) {
-      return getActiveTab(tab => {
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
         let tabOptions = {};
         tabOptions.url = data.element.linkHref;
         tabOptions.active = true;
-        tabOptions.openerTabId = tab.id;
+        tabOptions.openerTabId = tabs[0].id;
         // Preserve the container when opening a new tab from a link/frame.
-        tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.cookieStoreId = tabs[0].cookieStoreId;
         if (settings.insertRelatedTab) {
-          tabOptions.index = tab.index + 1;
+          tabOptions.index = tabs[0].index + 1;
         }
         return browser.tabs.create(tabOptions);
       });
@@ -1003,12 +992,12 @@ modules.commands = (function (settings, helpers) {
   // Open the options page in a new tab.
   function commandOpenOptions (data) {
     browser.management.getSelf().then(selfInfo => {
-      return getActiveTab(tab => {
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
         let tabOptions = {};
         tabOptions.url = selfInfo.optionsUrl;
         tabOptions.active = true;
         if (settings.insertRelatedTab) {
-          tabOptions.index = tab.index + 1;
+          tabOptions.index = tabs[0].index + 1;
         }
         return browser.tabs.create(tabOptions);
       });
@@ -1019,25 +1008,32 @@ modules.commands = (function (settings, helpers) {
   function commandReloadAllTabs () {
     return browser.tabs.query({ currentWindow: true }).then(tabs => {
       tabs.forEach(tab => browser.tabs.reload(tab.id));
+      // Allow the wheel or chord gesture to repeat.
       return { repeat: true };
     });
   }
 
   // Pin or unpin the current tab.
   function commandPinUnpinTab (data) {
-    return getActiveTab(tab => browser.tabs.update({ pinned: !tab.pinned }))
-      // Allow the wheel or chord gesture to repeat.
-      .then(() => ({ repeat: true }));
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      return browser.tabs.update({ pinned: !tabs[0].pinned })
+        // Allow the wheel or chord gesture to repeat.
+        .then(() => ({ repeat: true }));
+    });
   }
 
   // Reload the active tab.
   function commandReload () {
-    return getActiveTab(tab => browser.tabs.reload(tab.id));
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      return browser.tabs.reload(tabs[0].id);
+    });
   }
 
   // Reload the active tab and bypass the cache.
   function commandReloadBypassCache () {
-    return getActiveTab(tab => browser.tabs.reload(tab.id, { bypassCache: true }));
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      return browser.tabs.reload(tabs[0].id, { bypassCache: true });
+    });
   }
 
   // Save the link href under the gesture.
@@ -1104,24 +1100,24 @@ modules.commands = (function (settings, helpers) {
   // Navigate to the URL of the frame.
   function commandShowOnlyThisFrame (data) {
     if (data.context.nested && data.context.frameUrl) {
-      return getActiveTab(tab => browser.tabs.update(tab.id, { url: data.context.frameUrl }));
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+        return browser.tabs.update(tabs[0].id, { url: data.context.frameUrl });
+      });
     }
   }
 
   // View the source of a page.
   function commandViewFrameSource (data) {
-    let promise = Promise.resolve();
-
     if (data.context.frameUrl) {
-      promise = getActiveTab(tab => {
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
         let tabOptions = {};
         tabOptions.url = 'view-source:' + data.context.frameUrl;
         tabOptions.active = true;
-        tabOptions.openerTabId = tab.id;
+        tabOptions.openerTabId = tabs[0].id;
         // Preserve the container when opening a new tab from a link/frame.
-        tabOptions.cookieStoreId = tab.cookieStoreId;
+        tabOptions.cookieStoreId = tabs[0].cookieStoreId;
         if (settings.insertRelatedTab) {
-          tabOptions.index = tab.index + 1;
+          tabOptions.index = tabs[0].index + 1;
         }
         return browser.tabs.create(tabOptions);
       });
@@ -1130,15 +1126,15 @@ modules.commands = (function (settings, helpers) {
 
   // View the source of a frame.
   function commandViewPageSource (data) {
-    return getActiveTab(tab => {
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
       let tabOptions = {};
-      tabOptions.url = 'view-source:' + tab.url;
+      tabOptions.url = 'view-source:' + tabs[0].url;
       tabOptions.active = true;
-      tabOptions.openerTabId = tab.id;
+      tabOptions.openerTabId = tabs[0].id;
       // Preserve the container when opening a new tab from a link/frame.
-      tabOptions.cookieStoreId = tab.cookieStoreId;
+      tabOptions.cookieStoreId = tabs[0].cookieStoreId;
       if (settings.insertRelatedTab) {
-        tabOptions.index = tab.index + 1;
+        tabOptions.index = tabs[0].index + 1;
       }
       return browser.tabs.create(tabOptions);
     });
@@ -1228,6 +1224,26 @@ modules.commands = (function (settings, helpers) {
     return browser.tabs.setZoom(0)
       // Allow the wheel or chord gesture to repeat.
       .then(() => ({ repeat: true }));
+  }
+
+  // Deprecated --------------------------------------------------------------------------------------------------------
+  // Leaving these functions here in case someone is using them in user scripts.
+
+  // Get the current window.
+  function getCurrentWindow () {
+    return browser.windows.getCurrent();
+  }
+
+  // Get the tabs in the current window.
+  function getCurrentWindowTabs () {
+    return browser.tabs.query({ currentWindow: true });
+  }
+
+  // Receive a callback with the active tab.
+  function getActiveTab (callback) {
+    return getCurrentWindowTabs().then(tabs => {
+      return callback(tabs.find(tab => tab.active), tabs);
+    });
   }
 
   return commands;
