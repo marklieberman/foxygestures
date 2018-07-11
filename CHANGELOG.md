@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.2.1
+ - Excluding content scripts on duosecurity.com due to Duo/FG interaction causing an infinite redirect loop. See [#257](https://github.com/marklieberman/foxygestures/issues/257)
+
 ### Version 1.2.0
  - Added support for diagonal gestures.
  - Added hybrid command History Back or Close Tab.
