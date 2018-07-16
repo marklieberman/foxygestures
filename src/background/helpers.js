@@ -26,14 +26,15 @@ modules.helpers = (function (module) {
     // Document
     'text/plain': '.txt',
     'text/html': '.html',
-    'text/css' : '.css',
-    'text/javascript' : '.js',
+    'text/css': '.css',
+    'text/javascript': '.js',
+    'text/json': '.json',
     // Image
-    'image/png' : '.png',
-    'image/jpeg' : '.jpg',
-    'image/gif' : '.gif',
-    'image/bmp' : '.bmp',
-    'image/webp' : '.webp',
+    'image/png': '.png',
+    'image/jpeg': '.jpg',
+    'image/gif': '.gif',
+    'image/bmp': '.bmp',
+    'image/webp': '.webp',
     // Video
     'video/mp4': '.mp4',
     'video/ogg': '.ogg',
@@ -48,6 +49,7 @@ modules.helpers = (function (module) {
     'audio/wave': '.wav',
     'audio/webm': '.webm',
     // Other
+    'application/json': '.json',
     'application/octet-stream': '.bin'
   };
 
@@ -85,9 +87,14 @@ modules.helpers = (function (module) {
     return format;
   };
 
+  // Remove invalid characters in a Windows path.
+  module.cleanPath = (input, replace = '') => {
+    return input.replace(/[\\/:"*?<>|]+/gi, replace);
+  };
+
   // Attempt to determine the filename from a media URL. If the media source does not contain a file extension but the
   // mime type is known, select the extension automatically.
-  module.suggestFilename = (mediaSource, mediaType) => {
+  module.suggestFilename = (mediaSource, mediaType = null) => {
     // Data URIs do not have a file name so try generate a name like 'data.ext' using mime type.
     if (mediaSource.startsWith('data:')) {
       // Extract the mime type if present.
@@ -98,19 +105,30 @@ modules.helpers = (function (module) {
       return (mime === '') ? 'data.txt' : 'data' + (mimeToExtensionMap[mime] || '.bin');
     }
 
-    // Extract the filename from the URL.
-    let match = /\/([^\/?#]+)($|\?|#)/i.exec(decodeURI(mediaSource));
-    if (match && match[1]) {
-      // Extract the extension from the filename.
-      match = /([^.]+)(\.[a-z0-9]+)?/i.exec(match[1]);
-      if (match && match[2]) {
-        // Filename seems to have an extension
-        return match[1] + match[2];
-      } else {
-        // Try to guess the extension from the type.
-        return match[1] + (mimeToExtensionMap[mediaType] || '');
+    try {
+      // Extract the filename from the URL.
+      // Take everything from the final / to the query, fragment, or end of URL.
+      mediaSource = decodeURI(mediaSource);
+      let match = /\/([^\/?#]+)($|\?|#)/i.exec(mediaSource);
+      if (mediaSource && match && match[1]) {
+        let basename = match[1];
+        basename = decodeURIComponent(basename);
+        basename = module.cleanPath(basename, ' ');
+
+        // Split the basename into file and extension.
+        let lastDot = basename.lastIndexOf('.');
+        if (!!~lastDot)  {
+          let filename = basename.substring(0, lastDot);
+          let extension = basename.substring(lastDot);
+
+          // Trim any trailing text from the extension.
+          return filename + /\.\w+/.exec(extension);
+        } else {
+          // Try to guess the extension from the type.
+          return basename + (mimeToExtensionMap[mediaType] || '');
+        }
       }
-    }
+    } catch (error) {}
 
     // Couldn't determine the filename; let the browser guess.
     return null;

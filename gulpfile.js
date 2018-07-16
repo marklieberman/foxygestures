@@ -1,7 +1,8 @@
 var gulp     = require('gulp'),
     jshint   = require('gulp-jshint'),
-    jsonlint = require("gulp-jsonlint");
+    jsonlint = require("gulp-jsonlint"),
     sass     = require('gulp-sass'),
+    karma    = require('karma'),
     zip      = require('gulp-zip');
 
 var sources = {
@@ -19,6 +20,19 @@ var sources = {
     'src/**',
     '!**/*.scss'
   ]
+};
+
+// Default Karma configuration.
+var karmaConfig = {
+  browsers: ['FirefoxHeadless'],
+  customLaunchers: {
+    FirefoxHeadless: {
+      base: 'Firefox',
+      flags: [ '-headless' ],
+    },
+  },
+  frameworks: [ 'jasmine' ],
+  singleRun: true
 };
 
 gulp.task('default', [ 'lint', 'jsonlint', 'sass', 'watch' ]);
@@ -45,6 +59,17 @@ gulp.task('jsonlint', function () {
   return gulp.src(sources.json)
     .pipe(jsonlint())
     .pipe(jsonlint.reporter());
+});
+
+gulp.task('test', function (done) {
+  // background/helpers.js
+  new karma.Server(Object.assign(karmaConfig, {
+    files: [
+      'test/background/webex-mocks.js',
+      'src/background/helpers.js',
+      'test/background/helpers.spec.js'
+    ]
+  }), done).start();
 });
 
 gulp.task('dist', [ 'sass' ], function () {
