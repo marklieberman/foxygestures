@@ -189,6 +189,12 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'muteOtherTabs',
+      handler: commandMuteOtherTabs,
+      label: browser.i18n.getMessage('commandMuteOtherTabs'),
+      group: groups.tabs
+    },
+    {
       id: 'nextTab',
       handler: commandActivateNextTab,
       label: browser.i18n.getMessage('commandActivateNextTab'),
@@ -413,6 +419,12 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'toggleMute',
+      handler: commandToggleMute,
+      label: browser.i18n.getMessage('commandToggleMute'),
+      group: groups.tabs
+    },
+    {
       id: 'undoClose',
       handler: commandUndoClose,
       label: browser.i18n.getMessage('commandUndoClose'),
@@ -431,6 +443,12 @@ modules.commands = (function (settings, helpers) {
       handler: commandUndoCloseWindow,
       label: browser.i18n.getMessage('commandUndoCloseWindow'),
       tooltip: browser.i18n.getMessage('commandUndoCloseWindowTooltip'),
+      group: groups.tabs
+    },
+    {
+      id: 'unmuteAllTabs',
+      handler: commandUnmuteAllTabs,
+      label: browser.i18n.getMessage('commandUnmuteAllTabs'),
       group: groups.tabs
     },
     {
@@ -909,6 +927,16 @@ modules.commands = (function (settings, helpers) {
       .then(tabs => browser.windows.create({ tabId: tabs[0].id }));
   }
 
+  // Mute other tabs in the current window.
+  function commandMuteOtherTabs (data) {
+    return browser.tabs.query({ currentWindow: true, active: false }).then(tabs => {
+      tabs.forEach(tab => browser.tabs.update(tab.id, { muted: true }));
+
+      // Allow the wheel or chord gesture to repeat.
+      return { repeat: true };
+    });
+  }
+
   // Create a new empty tab.
   function commandNewTab (data) {
     // In Firefox the New Tab button does not preserve the container.
@@ -1184,6 +1212,16 @@ modules.commands = (function (settings, helpers) {
     });
   }
 
+  // Toggle mute for the current tab.
+  function commandToggleMute (data) {
+    return browser.tabs.query({ currentWindow:true, active: true })
+      .then(tabs => browser.tabs.update(tabs[0].id, {
+        muted: !tabs[0].mutedInfo.muted
+      }))
+      // Allow the wheel or chord gesture to repeat.
+      .then(() => ({ repeat: true }));
+  }
+
   // Restore the most recently closed tab or window.
   function commandUndoClose (data) {
     return browser.sessions.getRecentlyClosed({ maxResults: 1 }).then(sessions => {
@@ -1236,6 +1274,16 @@ modules.commands = (function (settings, helpers) {
         // Allow the wheel or chord gesture to repeat.
         return { repeat: true };
       }
+    });
+  }
+
+  // Unmute all tabs in the current window.
+  function commandUnmuteAllTabs (data) {
+    return browser.tabs.query({ currentWindow: true }).then(tabs => {
+      tabs.forEach(tab => browser.tabs.update(tab.id, { muted: false }));
+
+      // Allow the wheel or chord gesture to repeat.
+      return { repeat: true };
     });
   }
 

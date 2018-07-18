@@ -873,5 +873,14 @@
   },
   "optionsGestureStyleIntercardinal60Help": {
     "message": "Adds diagonal directions left-up (Lu), left-down (Ld), right-up (Ru), and right-down (Rd). Diagonal directions get a larger slice to make diagonal gestures easier to perform."
+  },
+  "commandToggleMute": {
+    "message": "Toggle Mute"
+  },
+  "commandMuteOtherTabs": {
+    "message": "Mute Other Tabs"
+  },
+  "commandUnmuteAllTabs": {
+    "message": "Unmute All Tabs"
   }
 }
