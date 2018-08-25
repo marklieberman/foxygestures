@@ -98,13 +98,13 @@
     "message": "上一页"
   },
   "commandPageDownTooltip": {
-    "message": "使用启发式方法匹配并减少网址中的页码"
+    "message": "使用启发式方法匹配并减少网址中的页码或点击“上一页”链接/按钮"
   },
   "commandPageUp": {
     "message": "下一页"
   },
   "commandPageUpTooltip": {
-    "message": "使用启发式方法匹配并增加网址中的页码"
+    "message": "使用启发式方法匹配并增加网址中的页码或点击“下一页”链接/按钮"
   },
   "commandPinUnpinTab": {
     "message": "固定/取消固定标签页"
@@ -689,5 +689,198 @@
   },
   "commandViewSourceTooltip": {
     "message": "使用此命令查看源代码时不附有 POST 数据。"
+  },
+  "commandReloadAllTabs": {
+    "message": "重新载入所有标签页"
+  },
+  "commandReloadAllTabsTooltip": {
+    "message": "重新载入当前窗口中的所有标签页"
+  },
+  "tooltipRequiresPermissions": {
+    "description": "Tooltip for commands that require additional permissions.",
+    "message": "需要可选权限：$PERMISSION_LIST$。",
+    "placeholders": {
+      "permission_list": {
+        "content": "$1",
+        "example": "bookmarks"
+      }
+    }
+  },
+  "modalAskPermissionPrompt": {
+    "description": "Prompt that appears at the top of the ask permission modal.",
+    "message": "Foxy Gestures 需要如下权限才能启用此命令。"
+  },
+  "modalAskPermissionRequest": {
+    "description": "Label for the button in the model to request optional permissions.",
+    "message": "请求权限"
+  },
+  "optionalPermissionBookmarksSummary": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "WebExtensions 书签 API 允许一个扩展与浏览器的书签系统交互和操作该系统。您可以借助它将页面加入书签、检索现有书签，以及编辑、删除和管理书签。"
+  },
+  "optionalPermissionBookmarksLink": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/bookmarks"
+  },
+  "optionalPermissionClipboardWriteSummary": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "剪贴板 API 使一个扩展能将信息复制到系统的剪贴板。当前该 API 仅支持复制图像，但它将来将支持复制文本和 HTML。"
+  },
+  "optionalPermissionClipboardWriteLink": {
+    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/clipboard"
+  },
+  "optionalPermissionDownloadsSummary": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "允许该扩展与浏览器的下载管理器交互。您可以使用此 API 模块来下载文件、取消下载、恢复下载，以及显示已下载的文件。"
+  },
+  "optionalPermissionDownloadsLink": {
+    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/downloads"
+  },
+  "optionsHeadingOptionalPermissions": {
+    "description": "Heading for optional permissions management.",
+    "message": "可选权限"
+  },
+  "optionsRequestOptionalPermissionHelp": {
+    "description": "Help text to describe buttons that request optional permissions.",
+    "message": "给特定命令分配手势时，将会自动请求可选权限。不过，您也可以使用下列按钮请求权限以供本扩展中的用户脚本使用。"
+  },
+  "optionsRevokeOptionalPermissionHelp": {
+    "description": "Help text to describe buttons that revoke optional permissions.",
+    "message": "您可以撤销权限以停止访问相关 API。撤销权限时将取消所有需要相应权限的命令的手势映射。如果您是从以前不支持可选权限的版本升级而来，这很有用。"
+  },
+  "labelRequestPermission": {
+    "description": "Help text to describe the buttons that request optional permissions.",
+    "message": "请求“$PERMISSION$”",
+    "placeholders": {
+      "permission": {
+        "content": "$1",
+        "example": "bookmarks"
+      }
+    }
+  },
+  "labelRevokePermission": {
+    "description": "Help text to describe the buttons that revoke optional permissions.",
+    "message": "撤销“$PERMISSION$”",
+    "placeholders": {
+      "permission": {
+        "content": "$1",
+        "example": "bookmarks"
+      }
+    }
+  },
+  "commandCloseTabActivateLeft": {
+    "message": "关闭标签页并激活左侧"
+  },
+  "commandCloseTabActivateRight": {
+    "message": "关闭标签页并激活右侧"
+  },
+  "commandParentDirectory": {
+    "message": "上层目录"
+  },
+  "commandParentDirectoryTooltip": {
+    "message": "转至上层目录或域名"
+  },
+  "commandOpenLinksInSelection": {
+    "message": "打开选中的链接"
+  },
+  "commandOpenLinksInSelectionTooltip": {
+    "message": "在后台标签页中打开选中部分包含的所有链接。"
+  },
+  "optionsBlacklistUrlPatterns": {
+    "message": "黑名单 URL"
+  },
+  "optionsBlacklistUrlPatternsHelp": {
+    "message": "标签页 URL 匹配下列任意模式时鼠标手势将被禁用。每个模式写一行，支持通配符（例如 example.com/*/login）"
+  },
+  "browserActionEnableGestures": {
+    "message": "对此标签页启用手势"
+  },
+  "browserActionDisableGestures": {
+    "message": "对此标签页禁用手势"
+  },
+  "tooltipMoveUserScriptUp": {
+    "message": "上移用户脚本"
+  },
+  "tooltipMoveUserScriptDown": {
+    "message": "下移用户脚本"
+  },
+  "optionsUserScriptsWellHelpPermissions": {
+    "description": "Help text that appears in the right well at the top of the user scripts tab",
+    "message": "如果您需要，请从“细节偏好”选项卡请求可选权限。"
+  },
+  "optionsWhitelistMode": {
+    "message": "启用白名单模式"
+  },
+  "optionsWhitelistUrlPatterns": {
+    "message": "白名单 URL"
+  },
+  "optionsWhitelistUrlPatternsHelp": {
+    "message": "标签页 URL 匹配下列任意模式时鼠标手势才会启用。每个模式写一行，支持通配符（例如 example.com/*/login）"
+  },
+  "commandUndoCloseTooltip": {
+    "message": "还原最近关闭的标签页或窗口。"
+  },
+  "commandUndoCloseTab": {
+    "message": "还原关闭的标签页"
+  },
+  "commandUndoCloseTabTooltip": {
+    "message": "还原当前窗口中最近关闭的窗口或标签页。"
+  },
+  "commandUndoCloseWindow": {
+    "message": "还原关闭的窗口"
+  },
+  "commandUndoCloseWindowTooltip": {
+    "message": "还原最近关闭的窗口。"
+  },
+  "commandSaveLinkAs": {
+    "message": "链接另存为"
+  },
+  "commandHistoryBackOrCloseTab": {
+    "message": "后退或关闭标签页"
+  },
+  "commandHistoryBackOrCloseTabTooltip": {
+    "message": "如果没有更早的页面历史，关闭当前标签页。"
+  },
+  "commandOpenLinkInNewForegroundTab|newTab": {
+    "message": "新建标签页并尝试打开链接"
+  },
+  "commandOpenLinkInNewForegroundTab|newTabTooltip": {
+    "message": "如果手势起始处是一个链接，新建一个标签页来打开该链接。否则只是新建一个标签页。"
+  },
+  "commandOpenLinkInNewWindow|newWindow": {
+    "message": "新建窗口并尝试打开链接"
+  },
+  "commandOpenLinkInNewWindow|newWindowTooltip": {
+    "message": "如果手势起始处是一个链接，新建一个窗口来打开该链接。否则只是新建一个窗口。"
+  },
+  "optionsGestureStyle": {
+    "message": "手势风格"
+  },
+  "optionsGestureStyleCardinal": {
+    "message": "仅主要方向 (默认)"
+  },
+  "optionsGestureStyleCardinalHelp": {
+    "message": "标准手势检测 上 (U)、下 (D)、左 (L)、右 (R)。"
+  },
+  "optionsGestureStyleIntercardinal45": {
+    "message": "45° 发散"
+  },
+  "optionsGestureStyleIntercardinal45Help": {
+    "message": "添加对角线方向的 左上 (Lu)、左下 (Ld)、右上 (Ru)、右下 (Rd)。各方向均匀分布，45° 切分。"
+  },
+  "optionsGestureStyleIntercardinal60": {
+    "message": "60° 发散"
+  },
+  "optionsGestureStyleIntercardinal60Help": {
+    "message": "添加对角线方向的 左上 (Lu)、左下 (Ld)、右上 (Ru)、右下 (Rd)。对角线方向为更大切片，利于执行对角线手势。"
+  },
+  "commandToggleMute": {
+    "message": "切换静音"
+  },
+  "commandMuteOtherTabs": {
+    "message": "静音其他标签页"
+  },
+  "commandUnmuteAllTabs": {
+    "message": "取消静音所有标签页"
   }
 }
