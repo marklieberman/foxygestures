@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.2.2
+ - No changes. An AMO reviewer mistakenly disabled 1.2.1 and required a version bump to re-instate the addon.
+
 ### Version 1.2.1
  - Excluding content scripts on duosecurity.com due to Duo/FG interaction causing an infinite redirect loop. See [#257](https://github.com/marklieberman/foxygestures/issues/257)
 
