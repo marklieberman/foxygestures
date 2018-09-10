@@ -752,7 +752,7 @@ modules.commands = (function (settings, helpers) {
           let last = tabs.reduce((last, tab) => (tab.index > last.index) ? tab : last,
             { index: Number.MIN_SAFE_INTEGER });
 
-          return transitionGesture(active, first, data.cloneState)
+          return transitionGesture(active, last, data.cloneState)
             .then(() => browser.tabs.update(last.id, { active: true }));
         } else {
           // First tab and wrapping is disabled.
