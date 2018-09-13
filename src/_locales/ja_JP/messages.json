@@ -131,7 +131,7 @@
     "message": "メディアをすぐに保存"
   },
   "commandSaveMediaNowTooltip": {
-    "message": "S画像あるいはHTML5の音声・映像を既定のディレクトリに保存します"
+    "message": "画像あるいはHTML5の音声・映像を既定のディレクトリに保存します"
   },
   "commandScrollBottom": {
     "message": "最下部に移動"
@@ -197,31 +197,31 @@
   },
   "modalChordAcceptable": {
     "description": "Prompt to accept a chord in the chord gesture modal.",
-    "message": "Press OK to accept this chord gesture."
+    "message": "使用可能なコードジェスチャーです"
   },
   "modalChordConflict": {
     "description": "Prompt to indicate a conflict in the chord gesture modal.",
-    "message": "This chord contains or is contained within an already defined chord."
+    "message": "このコードジェスチャーは既に登録されています"
   },
   "modalChordPrompt": {
     "description": "Prompt to press a chord in the chord gesture modal.",
-    "message": "Press two or more mouse buttons simultaneously to record a chord gesture."
+    "message": "マウスのボタンを複数個クリックすることでコードジェスチャーを登録できます"
   },
   "modalChordWaiting": {
     "description": "Placeholder text while waiting for buttons to be pressed.",
-    "message": "Waiting..."
+    "message": "ここで入力"
   },
   "mouseButtonLeft": {
     "description": "Name of left mouse button",
-    "message": "Left"
+    "message": "左ボタン"
   },
   "mouseButtonMiddle": {
     "description": "Name of middle mouse button",
-    "message": "Middle"
+    "message": "中央ボタン"
   },
   "mouseButtonOther": {
     "description": "Name of other mouse buttons (e.g.: Button 4)",
-    "message": "Button $BUTTON$",
+    "message": "$BUTTON$ボタン",
     "placeholders": {
       "name": {
         "content": "$1",
@@ -231,107 +231,107 @@
   },
   "mouseButtonRight": {
     "description": "Name of right mouse button",
-    "message": "Right"
+    "message": "右ボタン"
   },
   "noCommand": {
     "description": "Placeholder for when a gesture is not assigned to a command.",
-    "message": "-- No Command --"
+    "message": "(未設定)"
   },
   "optionsBackupBackupSettings": {
     "description": "Header for backup settings section.",
-    "message": "Backup Settings"
+    "message": "バックアップ"
   },
   "optionsBackupBackupSettingsButton": {
     "description": "Button text to download settings.",
-    "message": "Download settings"
+    "message": "バックアップファイルの保存"
   },
   "optionsBackupBackupSettingsInfo": {
     "description": "Description of the backup settings function.",
-    "message": "Click to download a JSON file containing a backup of settings and user scripts."
+    "message": "ジェスチャーとユーザースクリプトの設定をJSONファイルにバックアップします。"
   },
   "optionsBackupRestoreSettings": {
     "description": "Header for restore settings section.",
-    "message": "Restore Settings"
+    "message": "復元"
   },
   "optionsBackupRestoreSettingsButton": {
     "description": "Button text to upload settings.",
-    "message": "Restore settings from file"
+    "message": "バックアップファイルから設定を復元"
   },
   "optionsBackupRestoreSettingsInfo": {
     "description": "Description of the restore settings function.",
-    "message": "Select a backup file from which settings and user scripts will be restored."
+    "message": "バックアップしたJSONファイルから設定を復元します。"
   },
   "optionsCanSelectStart": {
     "description": "Checkbox to enable or disable text selection during gestures",
-    "message": "Allow text to be selected during a gesture."
+    "message": "ジェスチャー入力と範囲選択を同時に行う"
   },
   "optionsCommandsWellHelp": {
     "description": "Help text that appears in the well at the top of the commands tap",
-    "message": "Perform a gesture in each box to assign the gesture for the command. Press and release the gesture button to clear the gesture."
+    "message": "各領域内でジェスチャーを入力することでジェスチャーを登録できます。また、領域内でジェスチャーボタンをクリックすることでジェスチャーを解除できます。"
   },
   "optionsDisableOnAlt": {
     "description": "Label text for disable on alt checkbox.",
-    "message": "Do not start a gesture while holding the Alt key."
+    "message": "Altキーを押している間はジェスチャーを無効にする"
   },
   "optionsDisableOnShift": {
     "description": "Label text for disable on shift checkbox.",
-    "message": "Do not start a gesture while holding the Shift key."
+    "message": "Shiftキーを押している間はジェスチャーを無効にする"
   },
   "optionsDrawTrails": {
     "description": "Label text for draw gesture trails checkbox.",
-    "message": "Draw gesture trails"
+    "message": "ジェスチャーの軌跡を表示"
   },
   "optionsEnableChordGestures": {
     "description": "Label text for enable chord gestures checkbox.",
-    "message": "Enable chord gestures"
+    "message": "コードジェスチャーを有効化"
   },
   "optionsEnableChordGesturesHelp": {
     "description": "Help text for the chord gestures panel.",
-    "message": "Press two or more buttons simultaneously to perform a chord gesture."
+    "message": "複数個のボタンの組み合わせで発動するコードジェスチャーを有効にします。"
   },
   "optionsEnableWheelGestures": {
     "description": "Label text for enable wheel gestures checkbox.",
-    "message": "Enable wheel gestures"
+    "message": "ホイールジェスチャーを有効化"
   },
   "optionsEnableWheelGesturesHelp": {
     "description": "Help text for the wheel gestures panel.",
-    "message": "Hold the gesture button and scroll the mouse wheel to perform a wheel gesture."
+    "message": "ジェスチャーボタンを押しながらホイールを操作することで発動するホイールジェスチャーを有効にします。"
   },
   "optionsGestureButton": {
     "description": "Label for the gesture button select.",
-    "message": "Gesture Button"
+    "message": "ジェスチャーボタン"
   },
   "optionsGestureButtonHelp": {
     "description": "Help text for the gesture button select.",
-    "message": "The mouse button used to start a gesture."
+    "message": "ジェスチャーを入力するために用いるボタンです。"
   },
   "optionsGestureTimeout": {
     "description": "Label for the gesture timeout input.",
-    "message": "Gesture Timeout"
+    "message": "ジェスチャーのタイムアウト"
   },
   "optionsGestureTimeoutHelp": {
     "description": "Help text for the gesture timeout input.",
-    "message": "Cancel a gesture if there is no movement for this many seconds. Use zero to disable."
+    "message": "ジェスチャー入力中にこの時間だけ放置するとそのジェスチャーは破棄されます。"
   },
   "optionsHeadingNavigationAndScrolling": {
     "description": "Heading for navigation and scrolling preferences.",
-    "message": "Navigation and Scrolling"
+    "message": "ナビゲーションとスクロール"
   },
   "optionsHeadingOSXLinuxOnly": {
     "description": "Heading for the OSX and Linux only section in general options.",
-    "message": "OSX and Linux Only"
+    "message": "OSX/Linux固有の設定"
   },
   "optionsHeadingOtherCommands": {
     "description": "Heading for other command preferences.",
-    "message": "Other Commands"
+    "message": "その他"
   },
   "optionsHeadingTabAndWindow": {
     "description": "Heading for tab and window preferences.",
-    "message": "Tab and Window Commands"
+    "message": "タブとウィンドウ"
   },
   "optionsMorePrefsInsertRelatedTab": {
     "description": "Label for the checkbox to toggle insert related tab after current behaviour.",
-    "message": "Open in New Tab family of commands insert the tab after the current tab. This setting is similar browser.tabs.insertRelatedAfterCurrent."
+    "message": "ジェスチャーによりリンクを新しいタブで開くとき、そのタブを現在のタブの直後に開く"
   },
   "optionsMorePrefsNewPrivateWindowUrl": {
     "description": "Label for the default URL for new private windows.",
@@ -375,31 +375,31 @@
   },
   "optionsMorePrefsWellHelp": {
     "description": "Help text that appears in the well at the top of the more preferences tab",
-    "message": "Preferences to modify the behaviour of built-in commands and other tweaks."
+    "message": "ビルトインコマンドの挙動の調整やその他の微調整を行います。"
   },
   "optionsMorePrefsZoomStep": {
     "description": "Label for the amount to change zoom factor.",
-    "message": "Amount to change zoom factor for Zoom In/Out commands"
+    "message": "ズームイン/ズームアウトコマンドにおける変化量"
   },
   "optionsShowStatusText": {
     "description": "Label for the checkbox to show status text.",
-    "message": "Show status text"
+    "message": "入力ログの表示"
   },
   "optionsStatusTemplate": {
     "description": "Label for the status template field.",
-    "message": "Status Template"
+    "message": "ログ表示テンプレート"
   },
   "optionsStatusTemplateHelp": {
     "description": "Help text for the status template field.",
-    "message": "Edit the HTML template for the status text. The content of the element with the data-mg-status attribute will be replaced with the status text."
+    "message": "ログの表示方法を編集できます。data-mg-status属性を持つHTML要素の内容はログに置き換えられます。"
   },
   "optionsStatusTimeout": {
     "description": "Label for the status timeout field.",
-    "message": "Status Timeout"
+    "message": "ログ消去までの時間"
   },
   "optionsStatusTimeoutHelp": {
     "description": "Help text for the status timeout field.",
-    "message": "Amount of time to display the status text after a gesture."
+    "message": "ジェスチャー入力後、この時間を過ぎるとログは消滅します。"
   },
   "optionsTitle": {
     "description": "Large heading at the top of the options page.",
@@ -407,23 +407,23 @@
   },
   "optionsTrailColor": {
     "description": "Label for the input to pick trail color.",
-    "message": "Trail Color"
+    "message": "色"
   },
   "optionsTrailColorHelp": {
     "description": "Help text for the input to pick trail color.",
-    "message": "Any CSS color definition is accepted. e.g.: blue, #336699, or rgba(64, 128, 192, 0.5)"
+    "message": "CSSのカラーネームを使用できます(blue, #336699, rgba(64, 128, 192, 0.5) など)。"
   },
   "optionsTrailWidth": {
     "description": "Label for the input to pick trail width.",
-    "message": "Trail Width"
+    "message": "幅"
   },
   "optionsUserScriptsWellHelp1": {
     "description": "Help text that appears in the well at the top of the user scripts tab",
-    "message": "Execute a custom script with a mouse gesture."
+    "message": "ユーザー定義のスクリプトを設定します。"
   },
   "optionsUserScriptsWellHelp2": {
     "description": "Help text that appears in the well at the top of the user scripts tab",
-    "message": "Please read the user scripts article on the wiki before proceeding."
+    "message": "ユーザースクリプトの記法についてはFoxy Gesturesのwikiを参照してください。"
   },
   "optionsXSSWarning1": {
     "description": "XSS warning text.",
@@ -455,7 +455,7 @@
   },
   "statusGestureKnown": {
     "description": "Status message when a gesture is mapped to a command",
-    "message": "Gesture: $GESTURE$ ($COMMAND$)",
+    "message": "ジェスチャー: $GESTURE$ ($COMMAND$)",
     "placeholders": {
       "command": {
         "content": "$2",
@@ -469,7 +469,7 @@
   },
   "statusGestureProgress": {
     "description": "Status message during a gesture",
-    "message": "Gesture: $GESTURE$",
+    "message": "ジェスチャー: $GESTURE$",
     "placeholders": {
       "gesture": {
         "content": "$1",
@@ -479,7 +479,7 @@
   },
   "statusGestureUnknown": {
     "description": "Status message when a gesture is not mapped to a command",
-    "message": "Unknown Gesture: $GESTURE$",
+    "message": "未定義のジェスチャー: $GESTURE$",
     "placeholders": {
       "gesture": {
         "content": "$1",
@@ -489,39 +489,39 @@
   },
   "tabBackupRestore": {
     "description": "Heading for the backup and restore tab",
-    "message": "Backup & Restore"
+    "message": "バックアップと復元"
   },
   "tabCommands": {
     "description": "Heading for the built-in commands tab",
-    "message": "Built-in Commands"
+    "message": "ジェスチャーの設定"
   },
   "tabGeneral": {
     "description": "Heading for the general settings tab",
-    "message": "General Settings"
+    "message": "一般設定"
   },
   "tabMorePrefs": {
     "description": "Heading for the more preferences tab",
-    "message": "More Preferences"
+    "message": "詳細設定"
   },
   "tabOtherGestures": {
     "description": "Heading for the other gestures tab",
-    "message": "Other Gestures"
+    "message": "その他のジェスチャ"
   },
   "tabUserScripts": {
     "description": "Heading for the user scripts tab",
-    "message": "User Scripts"
+    "message": "ユーザースクリプト"
   },
   "tooltipRemoveUserScript": {
     "description": "Tooltip for the button to delete a user script.",
-    "message": "Remove user script"
+    "message": "このユーザースクリプトを削除"
   },
   "userScriptNoName": {
     "description": "Label used for user scripts without a name in gesture status, etc.",
-    "message": "User Script: <No Name>"
+    "message": "ユーザースクリプト: <No Name>"
   },
   "userScriptWithName": {
     "description": "Label used for user scripts with a name in gesture status, etc.",
-    "message": "User Script: $NAME$",
+    "message": "ユーザースクリプト: $NAME$",
     "placeholders": {
       "name": {
         "content": "$1",
@@ -531,11 +531,11 @@
   },
   "warning": {
     "description": "The word warning.",
-    "message": "Warning"
+    "message": "警告"
   },
   "confirmReassignGesture": {
     "description": "Confirm dialog when assigning a gesture that is already mapped to a command.",
-    "message": "$GESTURE$ is already mapped to $OLD_COMMAND$. Re-assign to $NEW_COMMAND$?",
+    "message": "$GESTURE$は既に\"$OLD_COMMAND$\"として登録されています。\"$NEW_COMMAND$?\"で上書きしますか?",
     "placeholders": {
       "gesture": {
         "content": "$1",
@@ -553,7 +553,7 @@
   },
   "confirmRemoveChord": {
     "description": "Confirm dialog when removing a chord.",
-    "message": "Remove chord $CHORD$?",
+    "message": "コードジェスチャ$CHORD$を削除しますか?",
     "placeholders": {
       "chord": {
         "content": "$1",
@@ -563,7 +563,7 @@
   },
   "confirmRemoveUserScript": {
     "description": "Confirm dialog when removing a user script.",
-    "message": "Remove $USER_SCRIPT$?",
+    "message": "$USER_SCRIPT$を削除しますか?",
     "placeholders": {
       "user_script": {
         "content": "$1",
@@ -573,46 +573,46 @@
   },
   "alertBackupNotRecognized": {
     "description": "Alert when backup data addon ID is missing or invalid.",
-    "message": "File not recognized; missing or wrong addon ID."
+    "message": "不正なファイル: アドオンIDが不正または存在しません。"
   },
   "alertBackupInvalidVersion": {
     "description": "Alert when backup data version is missing or invalid.",
-    "message": "Invalid or unknown version number."
+    "message": "不正なファイル: バックアップデータのバージョンが不正または存在しません。"
   },
   "alertBackupCorrupt": {
     "description": "Alert when backup data settings are invalid or corrupt.",
-    "message": "Backup data is invalid or corrupt."
+    "message": "不正なファイル: バックアップデータが不正または壊れています。"
   },
   "alertBackupRestored": {
     "description": "Alert when backup data is successfully restored.",
-    "message": "All settings successfully restored from backup."
+    "message": "バックアップファイルから設定を正常に復元しました。"
   },
   "commandOpenOptions": {
     "message": "Foxy Gesturesの設定を開く"
   },
   "groupCommandsNavigation": {
     "description": "Name of the group for navigation type commands.",
-    "message": "Navigation Commands"
+    "message": "ナビゲーション"
   },
   "groupCommandsTabs": {
     "description": "Name of the group for tab type commands.",
-    "message": "Tab Commands"
+    "message": "タブ"
   },
   "groupCommandsWindows": {
     "description": "Name of the group for window type commands.",
-    "message": "Window Commands"
+    "message": "ウィンドウ"
   },
   "groupCommandsHybrid": {
     "description": "Name of the group for hybrid type commands.",
-    "message": "Hybrid Commands"
+    "message": "複合コマンド"
   },
   "groupCommandsOther": {
     "description": "Name of the group for other commands.",
-    "message": "Other Commands"
+    "message": "その他のコマンド"
   },
   "groupCommandsUserScripts": {
     "description": "Name of the group for user scripts.",
-    "message": "User Scripts"
+    "message": "ユーザースクリプト"
   },
   "commandStop": {
     "message": "中止"
@@ -627,22 +627,22 @@
     "message": "右端のタブへ移動"
   },
   "optionsActiveTabAfterClose": {
-    "message": "Next active tab after Close Tab"
+    "message": "タブを閉じた後のフォーカス"
   },
   "optionsActiveTabAfterCloseHelp": {
-    "message": "Choose which tab will be activated after closing the current tab."
+    "message": "現在のタブを閉じた後、次にアクティブになるタブを設定します。"
   },
   "optionsActiveTabAfterCloseFirefox": {
-    "message": "Let Firefox choose"
+    "message": "既定"
   },
   "optionsActiveTabAfterCloseRight": {
-    "message": "Activate the right tab"
+    "message": "右のタブ"
   },
   "optionsActiveTabAfterCloseLeft": {
-    "message": "Activate the left tab"
+    "message": "左のタブ"
   },
   "optionsActiveTabAfterCloseRecent": {
-    "message": "Activate the most recently active tab"
+    "message": "最後にアクティブだったタブ"
   },
   "commandActivateRecentTab": {
     "message": "最後にアクティブだったタブへ移動"
@@ -658,19 +658,19 @@
   },
   "confirmResetSettings": {
     "description": "Confirm dialog when resetting all settings back to default values",
-    "message": "Are you sure you want to reset all settings to default values?"
+    "message": "Foxy Gesturesの設定を完全に初期化しますか?"
   },
   "optionsBackupResetSettings": {
     "description": "Header for reset settings section.",
-    "message": "Reset Settings"
+    "message": "設定の初期化"
   },
   "optionsBackupResetSettingsInfo": {
     "description": "Description of the reset settings function.",
-    "message": "All changes to settings wil be lost and values will be reset to default."
+    "message": "すべての設定値は削除され、初期値が設定されます。"
   },
   "optionsBackupResetSettingsButton": {
     "description": "Label for button to reset all settings back to default.",
-    "message": "Reset settings to default"
+    "message": "設定の初期化"
   },
   "commandMaximize": {
     "message": "ウィンドウの最大化"
@@ -688,7 +688,7 @@
     "message": "ページのソースを表示"
   },
   "commandViewSourceTooltip": {
-    "message": "POST data is not preserved when viewing source with this command."
+    "message": "POSTリクエストのデータは保持されません。"
   },
   "commandReloadAllTabs": {
     "message": "すべてのタブを更新"
