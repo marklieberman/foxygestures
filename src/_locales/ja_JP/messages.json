@@ -720,21 +720,21 @@
   },
   "optionalPermissionBookmarksLink": {
     "description": "I copied this from the first paragraph of the MDN documentation.",
-    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/bookmarks"
+    "message": "https://developer.mozilla.org/ja-JP/Add-ons/WebExtensions/API/bookmarks"
   },
   "optionalPermissionClipboardWriteSummary": {
     "description": "I copied this from the first paragraph of the MDN documentation.",
     "message": "clipboard API は、拡張機能がシステムのクリップボードに項目をクリップするのを可能にします。"
   },
   "optionalPermissionClipboardWriteLink": {
-    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/clipboard"
+    "message": "https://developer.mozilla.org/ja-JP/Add-ons/WebExtensions/API/clipboard"
   },
   "optionalPermissionDownloadsSummary": {
     "description": "I copied this from the first paragraph of the MDN documentation.",
     "message": "download API は、拡張機能にブラウザーのダウンロードマネージャーとのやりとりを可能にさせます。このAPI モジュールを、ファイルマネージャーでのファイルのダウンロード、キャンセル、停止、ダウンロードの再開、ダウンロード済みのファイルの表示に使用できます。"
   },
   "optionalPermissionDownloadsLink": {
-    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/downloads"
+    "message": "https://developer.mozilla.org/ja-JP/Add-ons/WebExtensions/API/downloads"
   },
   "optionsHeadingOptionalPermissions": {
     "description": "Heading for optional permissions management.",
