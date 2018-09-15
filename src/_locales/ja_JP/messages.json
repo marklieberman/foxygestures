@@ -134,16 +134,16 @@
     "message": "画像あるいはHTML5の音声・映像を既定のディレクトリに保存します"
   },
   "commandScrollBottom": {
-    "message": "最下部に移動"
+    "message": "最下部にスクロール"
   },
   "commandScrollDown": {
-    "message": "下に移動"
+    "message": "下にスクロール"
   },
   "commandScrollTop": {
-    "message": "最上部に移動"
+    "message": "最上部にスクロール"
   },
   "commandScrollUp": {
-    "message": "上に移動"
+    "message": "上にスクロール"
   },
   "commandShowOnlyThisFrame": {
     "message": "このフレームのみを表示"
@@ -335,43 +335,43 @@
   },
   "optionsMorePrefsNewPrivateWindowUrl": {
     "description": "Label for the default URL for new private windows.",
-    "message": "Default URL for windows opened with New Private Window command"
+    "message": "新しいプライベートウィンドウのデフォルトURL"
   },
   "optionsMorePrefsNewTabOrWindowHelp": {
     "description": "Help text for the default URL for new tabs and windows.",
-    "message": "Leave this field empty to use the default URL about:newtab. Unprivileged about: pages like about:blank and about:home are also acceptable."
+    "message": "空欄の場合はabout:newtabになります。"
   },
   "optionsMorePrefsNewTabUrl": {
     "description": "Label for the default URL for new tabs.",
-    "message": "Default URL for tabs opened with New Tab command"
+    "message": "新しいタブのデフォルトURL"
   },
   "optionsMorePrefsNewWindowUrl": {
     "description": "Label for the default URL for new windows.",
-    "message": "Default URL for windows opened with New Window command"
+    "message": "新しいウィンドウのデフォルトURL"
   },
   "optionsMorePrefsNextTabWrap": {
     "description": "Label for the checkbox to enable tab wrapping.",
-    "message": "Next Tab and Previous Tab commands wrap from last tab to first tab."
+    "message": "左/右のタブへ移動時に両端で循環させる"
   },
   "optionsMorePrefsScrollAmount": {
     "description": "Label to configure scroll up and scroll down amount.",
-    "message": "Amount of viewport to scroll for Scroll Up/Down commands"
+    "message": "上/下にスクロールする際の移動量"
   },
   "optionsMorePrefsScrollAmountHelp": {
     "description": "Help text to configure scroll up and scroll down amount.",
-    "message": "1 vh = ¹/₁₀₀ viewport height."
+    "message": "1 vh = 表示領域の高さ / 100"
   },
   "optionsMorePrefsScrollDuration": {
     "description": "Label to configure scroll animation duration.",
-    "message": "Duration of the animation for the Scroll family of commands"
+    "message": "スクロールアニメーションの所要時間"
   },
   "optionsMorePrefsScrollDurationHelp": {
     "description": "Help text to configure scroll animation duration.",
-    "message": "Use zero to disable."
+    "message": "0でアニメーションを無効"
   },
   "optionsMorePrefsUseRelPrevNext": {
     "description": "Label for checkbox to follow rel=next attributes.",
-    "message": "Next Page and Previous Page commands follow rel=next and rel=prev attributes."
+    "message": "URL内の数値を増加/減少する際、rel=next及びrel=prevが存在すればそれを優先する"
   },
   "optionsMorePrefsWellHelp": {
     "description": "Help text that appears in the well at the top of the more preferences tab",
@@ -698,7 +698,7 @@
   },
   "tooltipRequiresPermissions": {
     "description": "Tooltip for commands that require additional permissions.",
-    "message": "Requires optional permissions for: $PERMISSION_LIST$.",
+    "message": "追加のAPIパーミッションが必要です: $PERMISSION_LIST$",
     "placeholders": {
       "permission_list": {
         "content": "$1",
@@ -708,15 +708,15 @@
   },
   "modalAskPermissionPrompt": {
     "description": "Prompt that appears at the top of the ask permission modal.",
-    "message": "Foxy Gestures requires the following permissions to enable this command."
+    "message": "このコマンドを有効にするには以下のAPIパーミッションが追加で必要になります。"
   },
   "modalAskPermissionRequest": {
     "description": "Label for the button in the model to request optional permissions.",
-    "message": "Request permissions"
+    "message": "APIパーミッションの追加"
   },
   "optionalPermissionBookmarksSummary": {
     "description": "I copied this from the first paragraph of the MDN documentation.",
-    "message": "The WebExtensions bookmarks API lets an extension interact with and manipulate the browser's bookmarking system. You can use it to bookmark pages, retrieve existing bookmarks, and edit, remove, and organize bookmarks."
+    "message": "bookmarks API を利用すると、拡張機能からブラウザのブックマークシステムにアクセスしたり、操作することができます。ページをブックマークする、既存のブックマークを取得したり、ブックマークを編集・削除・整理することが可能です。"
   },
   "optionalPermissionBookmarksLink": {
     "description": "I copied this from the first paragraph of the MDN documentation.",
@@ -724,33 +724,33 @@
   },
   "optionalPermissionClipboardWriteSummary": {
     "description": "I copied this from the first paragraph of the MDN documentation.",
-    "message": "The clipboard API enables an extension to copy items to the system clipboard. Currently the API only supports copying images, but it's intended to support copying text and HTML in the future."
+    "message": "clipboard API は、拡張機能がシステムのクリップボードに項目をクリップするのを可能にします。"
   },
   "optionalPermissionClipboardWriteLink": {
     "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/clipboard"
   },
   "optionalPermissionDownloadsSummary": {
     "description": "I copied this from the first paragraph of the MDN documentation.",
-    "message": "Enables extensions to interact with the browser's download manager. You can use this API module to download files, cancel, pause, resume downloads, and show downloaded files in the file manager."
+    "message": "download API は、拡張機能にブラウザーのダウンロードマネージャーとのやりとりを可能にさせます。このAPI モジュールを、ファイルマネージャーでのファイルのダウンロード、キャンセル、停止、ダウンロードの再開、ダウンロード済みのファイルの表示に使用できます。"
   },
   "optionalPermissionDownloadsLink": {
     "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/downloads"
   },
   "optionsHeadingOptionalPermissions": {
     "description": "Heading for optional permissions management.",
-    "message": "Optional Permissions"
+    "message": "追加のAPIパーミッション"
   },
   "optionsRequestOptionalPermissionHelp": {
     "description": "Help text to describe buttons that request optional permissions.",
-    "message": "Optional permissions are requested automatically when assigning a command to a gesture. However, you can use these buttons to request permissions for use in user scripts."
+    "message": "各APIパーミッションはジェスチャーの登録に際し自動的に追加されますが、ユーザースクリプトで使用するために手動追加することもできます。"
   },
   "optionsRevokeOptionalPermissionHelp": {
     "description": "Help text to describe buttons that revoke optional permissions.",
-    "message": "You may revoke permissions to prevent access to the related API. All commands that require the permission will be un-mapped when the permission is revoked. This is useful if you are upgrading from a previous version where the permission was not optional."
+    "message": "各APIを使用するジェスチャーは自動的に無効化されます。"
   },
   "labelRequestPermission": {
     "description": "Help text to describe the buttons that request optional permissions.",
-    "message": "\"$PERMISSION$\"パーミッションの有効化",
+    "message": "\"$PERMISSION$\" APIパーミッションの有効化",
     "placeholders": {
       "permission": {
         "content": "$1",
@@ -760,7 +760,7 @@
   },
   "labelRevokePermission": {
     "description": "Help text to describe the buttons that revoke optional permissions.",
-    "message": "\"$PERMISSION$\"パーミッションの無効化",
+    "message": "\"$PERMISSION$\" APIパーミッションの無効化",
     "placeholders": {
       "permission": {
         "content": "$1",
@@ -787,38 +787,38 @@
     "message": "選択範囲に含まれるすべてのリンクをバックグラウンドで開きます"
   },
   "optionsBlacklistUrlPatterns": {
-    "message": "Blacklisted URLs"
+    "message": "ジェスチャーを無効化するURL"
   },
   "optionsBlacklistUrlPatternsHelp": {
-    "message": "Mouse gestures are disabled when the tab URL contains any of these patterns. Place one pattern per line and wildcard using asterisk. (e.g.: example.com/*/login)"
+    "message": "各行ごとに指定されたパターンに合致するURLでジェスチャーを無効化します。URLの指定にはワイルドカードが使用可能です(例: example.com/*/login)。"
   },
   "browserActionEnableGestures": {
-    "message": "Enable gestures for this tab"
+    "message": "このタブでジェスチャーを有効化"
   },
   "browserActionDisableGestures": {
-    "message": "Disable gestures for this tab"
+    "message": "このタブでジェスチャーを無効化"
   },
   "tooltipMoveUserScriptUp": {
-    "message": "Move user script up"
+    "message": "上に移動"
   },
   "tooltipMoveUserScriptDown": {
-    "message": "Move user script down"
+    "message": "下に移動"
   },
   "optionsUserScriptsWellHelpPermissions": {
     "description": "Help text that appears in the right well at the top of the user scripts tab",
-    "message": "Request optional permissions from the More Preferences tab if you require them."
+    "message": "追加のAPIパーミッションが必要になる場合があります。"
   },
   "optionsWhitelistMode": {
-    "message": "Enable whitelist mode."
+    "message": "ホワイトリストモード"
   },
   "optionsWhitelistUrlPatterns": {
-    "message": "Whitelisted URLs"
+    "message": "ジェスチャーを有効化するURL"
   },
   "optionsWhitelistUrlPatternsHelp": {
-    "message": "Mouse gestures are enabled when the tab URL contains any of these patterns. Place one pattern per line and wildcard using asterisk. (e.g.: example.com/*/login)"
+    "message": "各行ごとに指定されたパターンに合致するURLでのみジェスチャーを有効化します。URLの指定にはワイルドカードが使用可能です(例: example.com/*/login)。"
   },
   "commandUndoCloseTooltip": {
-    "message": "Restore the most recently closed tab or window."
+    "message": "最後に閉じたタブまたはウィンドウを復元します"
   },
   "commandUndoCloseTab": {
     "message": "タブを復元"
@@ -854,25 +854,25 @@
     "message": "ジェスチャがリンクの上で開始された場合にはそのリンクを新しいウィンドウで開き、そうでなければ新しいウィンドウを開きます"
   },
   "optionsGestureStyle": {
-    "message": "Gesture Style"
+    "message": "入力方法"
   },
   "optionsGestureStyleCardinal": {
-    "message": "Cardinal directions only (default)"
+    "message": "4方向(デフォルト)"
   },
   "optionsGestureStyleCardinalHelp": {
-    "message": "Standard gesture directions that go up (U), down (D), left (L) and right (R)."
+    "message": "上(U)、下(D)、左(L)、右(R)の入力を識別します。"
   },
   "optionsGestureStyleIntercardinal45": {
-    "message": "Intercardinal directions with 45° slices"
+    "message": "8方向(45°)"
   },
   "optionsGestureStyleIntercardinal45Help": {
-    "message": "Adds diagonal directions left-up (Lu), left-down (Ld), right-up (Ru), and right-down (Rd). Directions are evenly distributed with 45° slices."
+    "message": "上下左右に加え、左上(Lu)、左下(Ld)、右上(Ru)、右下(Rd)の入力を識別します。各入力方向には均等な領域が割り当てられます。"
   },
   "optionsGestureStyleIntercardinal60": {
-    "message": "Intercardinal directions with 60° slices"
+    "message": "8方向(60°)"
   },
   "optionsGestureStyleIntercardinal60Help": {
-    "message": "Adds diagonal directions left-up (Lu), left-down (Ld), right-up (Ru), and right-down (Rd). Diagonal directions get a larger slice to make diagonal gestures easier to perform."
+    "message": "8方向(45°)と同様ですが、斜め方向への入力には広い領域が割り当てられます。"
   },
   "commandToggleMute": {
     "message": "ミュートの切り替え"
