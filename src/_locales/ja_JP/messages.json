@@ -1,7 +1,7 @@
 {
   "buttonAddChord": {
     "description": "Button text to add a chord.",
-    "message": "Add Chord"
+    "message": "コードジェスチャの追加"
   },
   "buttonAddUserScript": {
     "description": "Label for the button to add a user script",
@@ -95,16 +95,16 @@
     "message": "リンクを新しいウィンドウで開く"
   },
   "commandPageDown": {
-    "message": "URL内の数値を減少"
+    "message": "前のURLへ移動"
   },
   "commandPageDownTooltip": {
-    "message": "URL内に数値が含まれる場合にそれを減少させ、そのページへ移動します"
+    "message": "URL内に数値が含まれる場合にそれを減少させ、そのURLへ移動します"
   },
   "commandPageUp": {
-    "message": "URL内の数値を増加"
+    "message": "次のURLへ移動"
   },
   "commandPageUpTooltip": {
-    "message": "URL内に数値が含まれる場合にそれを増加させ、そのページへ移動します"
+    "message": "URL内に数値が含まれる場合にそれを増加させ、そのURLへ移動します"
   },
   "commandPinUnpinTab": {
     "message": "ピン止め状態の切り替え"
@@ -375,7 +375,7 @@
   },
   "optionsMorePrefsWellHelp": {
     "description": "Help text that appears in the well at the top of the more preferences tab",
-    "message": "ビルトインコマンドの挙動の調整やその他の微調整を行います。"
+    "message": "コマンドの挙動の調整やその他の微調整を行います。"
   },
   "optionsMorePrefsZoomStep": {
     "description": "Label for the amount to change zoom factor.",
@@ -427,23 +427,23 @@
   },
   "optionsXSSWarning1": {
     "description": "XSS warning text.",
-    "message": "This is a feature intended for power users. If someone told you to copy and paste something here to enable a feature or \"hack\" something, it is a scam and will give them access to your browser."
+    "message": "上級者向け設定を含みます。使用の際は細心の注意を払い、信頼できないスクリプトの使用は避けてください。"
   },
   "optionsXSSWarning2": {
     "description": "XSS warning text.",
-    "message": "User scripts have access to all of the web extension APIs that can be used by Foxy Gestures. These APIs may be used to access browser history, download malicious JavaScript, or otherwise take over your browser. Never copy and paste a user script from an untrustworthy source."
+    "message": "ユーザースクリプトはFoxy Gesturesが使用可能なすべてのWebExtensions APIを使用できることに注意してください。悪意あるスクリプトを登録した場合、個人情報の漏洩や悪意あるファイルのダウンロードなどが行われる可能性があります。"
   },
   "optionsXSSWarningInfo": {
     "description": "XSS warning text.",
-    "message": "For more information see the following resources:"
+    "message": "より詳しい情報は以下を参照してください:"
   },
   "optionsXSSWarningLink1": {
     "description": "XSS warning text.",
-    "message": "The wikipedia article on cross-site scripting."
+    "message": "Wikipedia等におけるクロスサイトスクリプティング(XSS)の解説"
   },
   "optionsXSSWarningLink2": {
     "description": "XSS warning text.",
-    "message": "The wikipedia article on self-XSS attacks."
+    "message": "Wikipedia等におけるSelf XSSの解説"
   },
   "percentAddon": {
     "description": "The word percent in a bootstrap input-addon in options.",
@@ -688,7 +688,7 @@
     "message": "ページのソースを表示"
   },
   "commandViewSourceTooltip": {
-    "message": "POSTリクエストのデータは保持されません。"
+    "message": "POSTリクエストのデータは保持されません"
   },
   "commandReloadAllTabs": {
     "message": "すべてのタブを更新"
@@ -738,7 +738,7 @@
   },
   "optionsHeadingOptionalPermissions": {
     "description": "Heading for optional permissions management.",
-    "message": "追加のAPIパーミッション"
+    "message": "APIパーミッションの追加"
   },
   "optionsRequestOptionalPermissionHelp": {
     "description": "Help text to describe buttons that request optional permissions.",
@@ -750,7 +750,7 @@
   },
   "labelRequestPermission": {
     "description": "Help text to describe the buttons that request optional permissions.",
-    "message": "\"$PERMISSION$\" APIパーミッションの有効化",
+    "message": "$PERMISSION$ APIパーミッションの追加",
     "placeholders": {
       "permission": {
         "content": "$1",
@@ -760,7 +760,7 @@
   },
   "labelRevokePermission": {
     "description": "Help text to describe the buttons that revoke optional permissions.",
-    "message": "\"$PERMISSION$\" APIパーミッションの無効化",
+    "message": "$PERMISSION$ APIパーミッションの削除",
     "placeholders": {
       "permission": {
         "content": "$1",
