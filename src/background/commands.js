@@ -1243,7 +1243,7 @@ modules.commands = (function (settings, helpers) {
   function commandUndoCloseTab (data) {
     return browser.windows.getCurrent().then(window => {
       return browser.sessions.getRecentlyClosed().then(sessions => {
-        let tabSession = sessions.find(session => session.tab && (session.tab.windowId = window.id));
+        let tabSession = sessions.find(session => session.tab && (session.tab.windowId === window.id));
         if (tabSession) {
           // Disable the gesture state in the current tab.
           browser.tabs.sendMessage(data.sender.tab.id, { topic: 'mg-abortGesture' });
