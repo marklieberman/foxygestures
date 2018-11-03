@@ -1,8 +1,11 @@
 # Changelog
 
+### Version 1.2.4
+ - Fixed a broken command Undo Close Tab.
+
 ### Version 1.2.3
  - Fixed a bug in Go to Previous Tab when wrapping to last tab.
- 
+
 ### Version 1.2.2
  - No changes. An AMO reviewer mistakenly disabled 1.2.1 and required a version bump to re-instate the addon.
 
