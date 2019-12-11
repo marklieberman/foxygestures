@@ -1,3 +1,4 @@
+
 var gulp     = require('gulp'),
     jshint   = require('gulp-jshint'),
     jsonlint = require("gulp-jsonlint"),
@@ -35,33 +36,31 @@ var karmaConfig = {
   singleRun: true
 };
 
-gulp.task('default', [ 'lint', 'jsonlint', 'sass', 'watch' ]);
+function watchFiles () {
+  gulp.watch(sources.js, lintTask);
+  gulp.watch(sources.json, jsonlintTask);
+  gulp.watch(sources.sass, sassTask);
+}
 
-gulp.task('watch', [ 'sass' ], function () {
-  gulp.watch(sources.js, [ 'lint' ]);
-  gulp.watch(sources.json, [ 'jsonlint' ]);
-  gulp.watch(sources.sass, [ 'sass' ]);
-});
-
-gulp.task('sass', function () {
-  gulp.src(sources.sass)
+function sassTask () {
+  return gulp.src(sources.sass)
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('src/options/'));
-});
+}
 
-gulp.task('lint', function () {
+function lintTask () {
   return gulp.src(sources.js)
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
-});
+}
 
-gulp.task('jsonlint', function () {
+function jsonlintTask () {
   return gulp.src(sources.json)
     .pipe(jsonlint())
     .pipe(jsonlint.reporter());
-});
+}
 
-gulp.task('test', function (done) {
+function testTask (done) {
   // background/helpers.js
   new karma.Server(Object.assign(karmaConfig, {
     files: [
@@ -69,13 +68,28 @@ gulp.task('test', function (done) {
       'src/background/helpers.js',
       'test/background/helpers.spec.js'
     ]
-  }), done).start();
-});
+  }), exitCode => {
+    done();
 
-gulp.task('dist', [ 'sass' ], function () {
+    // https://github.com/karma-runner/karma/issues/1035
+    // Note: can't chain tasks after this.
+    process.exit();
+  }).start();
+}
+
+function distTask () {
   return gulp.src(sources.dist)
     .pipe(zip('foxygestures.xpi', {
       compress: false
     }))
     .pipe(gulp.dest('dist'));
-});
+}
+
+exports.sass = sassTask;
+exports.lint = lintTask;
+exports.jsonlint = jsonlintTask;
+exports.test = testTask;
+exports.dist = distTask;
+
+exports.watch = gulp.series(sassTask, watchFiles);
+exports.default = gulp.series(gulp.parallel(lintTask, jsonlintTask, sassTask), watchFiles);
