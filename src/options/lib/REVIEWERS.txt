@@ -1,0 +1,34 @@
+Note to addon reviewers:
+These are the libraries I used in this project, the homepage of each, and the URL where I obtained the code.
+I know the auto-reviewer can recognize the well known libraries, but hopefully this helps if you need to manually
+check anything.
+
+Angular JS
+Homepage: https://angularjs.org/
+Version: 1.7.9
+I use it for: Runs the addon options UI.
+https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js
+
+angular-ui-bootstrap
+Homepage: https://angular-ui.github.io/bootstrap/
+Version: 2.5.0 
+I use it for: CSS framework and form controls
+Note: I used the "Create a Build" on the homepage button with Collapse, Modal, Tooltip, Popover, and Tabs)
+ui-bootstrap-custom-2.5.0.js
+ui-bootstrap-custom-tpls-2.5.0.js
+
+ACE
+Homepage: https://ace.c9.io/#nav=about
+Version: 1.4.7
+I use it for: Code editor in addon user script tab.
+https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js
+https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/theme-chrome.js
+https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/mode-javascript.js
+
+angular-ui-ace
+Homepage: https://github.com/angular-ui/ui-ace
+Version: 0.2.3
+I use it for: directive to use ACE within Angularjs.
+https://github.com/angular-ui/ui-ace/archive/v0.2.3.zip
+
+
