@@ -1,6 +1,6 @@
 # Changelog
 
-### Version 1.2.5
+### Version 1.2.6
  - Version bump so the addon can be submitted to Recommended Extensions program.
 
 ### Version 1.2.4

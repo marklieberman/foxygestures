@@ -14,8 +14,7 @@ Homepage: https://angular-ui.github.io/bootstrap/
 Version: 2.5.0 
 I use it for: CSS framework and form controls
 Note: I used the "Create a Build" on the homepage button with Collapse, Modal, Tooltip, Popover, and Tabs)
-ui-bootstrap-custom-2.5.0.js
-ui-bootstrap-custom-tpls-2.5.0.js
+https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.min.js
 
 ACE
 Homepage: https://ace.c9.io/#nav=about
