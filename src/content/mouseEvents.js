@@ -51,6 +51,18 @@ window.fg.module('mouseEvents', function (exports, fg) {
     CHORD: 5
   };
 
+  // Enum of types of devices that generate input.
+  // See: MouseEvent.mozInputSource
+  const INPUT_SOURCE = exports.INPUT_SOURCE = {
+    UNKNOWN: 0,
+    MOUSE: 1,
+    PEN: 2,
+    ERASER: 3,
+    CURSOR: 4,
+    TOUCH: 5,
+    KEYBOARD: 6
+  };
+
   // A unique identifier for this frame.
   // Used by commands to target a specific nested frame.
   exports.scriptFrameId = fg.helpers.makeScriptFrameId();
@@ -100,6 +112,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
       window.addEventListener('mousedown', onMouseDown, true);
       window.addEventListener('mouseup', onMouseUp, true);
       window.addEventListener('mousemove', onMouseMove, true);
+      window.addEventListener('touchstart', onTouchStart, true);
       window.addEventListener('wheel', onWheel, true);
       window.addEventListener('click', onClick, true);
       window.addEventListener('dblclick', onDblClick, true);
@@ -120,6 +133,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
       window.removeEventListener('mousedown', onMouseDown, true);
       window.removeEventListener('mouseup', onMouseUp, true);
       window.removeEventListener('mousemove', onMouseMove, true);
+      window.removeEventListener('touchstart', onTouchStart, true);
       window.removeEventListener('wheel', onWheel, true);
       window.removeEventListener('click', onClick, true);
       window.removeEventListener('dblclick', onDblClick, true);
@@ -191,6 +205,9 @@ window.fg.module('mouseEvents', function (exports, fg) {
         // Note: applyFrameOffset() is not required as the following messages are posted directly to window.top.
         case 'mg-mousemove':
           onBubbledMouseMove(event.data.data);
+          break;
+        case 'mg-touchstart':
+          onBubbledTouchStart(event.data.data);
           break;
         case 'mg-wheel':
           onBubbledWheel(event.data.data);
@@ -269,6 +286,16 @@ window.fg.module('mouseEvents', function (exports, fg) {
     }
   }
 
+  function onTouchStart (event) {
+    var data = getMouseData(event);
+    if (state.isNested) {
+      // Send directly to top.
+      postTo(window.top, 'mousemove', data);
+    } else {
+      onBubbledTouchStart(data);
+    }
+  }
+
   function onWheel (event) {
     // Ignore untrusted events and events when Alt is pressed.
     if (shouldIgnoreEvent(event)) { return; }
@@ -325,11 +352,19 @@ window.fg.module('mouseEvents', function (exports, fg) {
     }
 
     if (settings.chordGestures) {
-      // Supress context menu if multiple buttons are pressed. This reduces the change of showing the context menu
-      // when restoring tabs with chord gestures. For example, when repeating Undo Close command.
-      if (event.buttons !== BUTTONS_MASK.NONE) {
-        event.preventDefault();
-        event.stopPropagation();
+      // See: #270 - without this device type check, context menu is broken on touch screens.
+      if (event.mozInputSource === INPUT_SOURCE.MOUSE) {
+        // When the gesture button is left or middle on Linux/OSX, context fires on mousedown. Only do the following
+        // check if the contextmenu event is fired on mouseup.
+        if (settings.gestureButton === BUTTON.RIGHT) {
+          // Supress context menu if one or more buttons are pressed. This reduces the chance of showing the context
+          // menu when restoring tabs with chord gestures. For example, when repeating Undo Close command.
+          if (event.buttons !== BUTTONS_MASK.NONE) {
+            console.log(event.buttons, 'chord suppress context menu');
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }
       }
     }
 
@@ -770,6 +805,15 @@ window.fg.module('mouseEvents', function (exports, fg) {
         }
       }
     }
+  }
+
+  // Invoked by the touchstart event.
+  // The event may have bubbled up from nested frames.
+  function onBubbledTouchStart (data) {
+    // Enable the context menu when a touch starts, otherwise long-press context menu will fail to appear.
+    exports.replicateState({
+      contextMenu: true
+    });
   }
 
   // Invoked by the wheel event.
