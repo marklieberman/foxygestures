@@ -15,6 +15,8 @@ window.fg.module('ui', function (exports, fg) {
     ctx: null,            // 2D drawing context from the canvas.
     x: 0,                 // The last mouse position.
     y: 0,
+    trailMoves: [],       // Pending gesture trail movements to draw.
+    animFrameHandle: 0,   // Handles of the requestAnimationFrame callback.
     status: {
       outerElement: null, // Status text outer element.
       innerElement: null, // Status text inner element.
@@ -35,13 +37,16 @@ window.fg.module('ui', function (exports, fg) {
   }, 'sync');
 
   // -------------------------------------------------------------------------------------------------------------------
+  // Gesture trails
 
-  // Locate the element to treat as the body.
+  /**
+   * Locate the element to treat as the body.
+   */
   function findBody () {
     if (!state.body) {
       if (document.body) {
-        // Use the HTML node for framesets. Placing the canvas under the HTML
-        // node is of questionable validity but it works.
+        // Use the HTML node for framesets. Placing the canvas under the HTML node is of questionable validity but it 
+        // works.
         state.body = (document.body.tagName === 'FRAMESET') ?
           document.body.parentNode : document.body;
       } else {
@@ -52,20 +57,14 @@ window.fg.module('ui', function (exports, fg) {
     return true;
   }
 
-  // Store the initial position of the mouse.
-  function beginTrail (mouseDown) {
-    // Set the initial mouse position.
-    state.x = mouseDown.x;
-    state.y = mouseDown.y;
-  }
-
-  // Start or continue painting the gesture trail.
-  function updateTrail (mouseMove) {
+  /**
+   * Get or create the canvas element on which trails are drawn.
+   */
+  function getOrCreateTrailCanvas () {
     if (!findBody()) {
-      return;
+      // DOM is not ready.
+      return null;
     }
-
-    // Create the canvas on the first mouse move event.
     if (!state.canvas) {
       state.canvas = document.createElement('canvas');
 
@@ -90,26 +89,79 @@ window.fg.module('ui', function (exports, fg) {
       state.ctx.strokeStyle = settings.trailColor;
       state.ctx.lineCap = "round";
     }
-
-    // Draw a segment of the mouse gesture line.
-    state.ctx.beginPath();
-    state.ctx.moveTo(state.x, state.y);
-    state.x += mouseMove.dx;
-    state.y += mouseMove.dy;
-    state.ctx.lineTo(state.x, state.y);
-    state.ctx.stroke();
+    return state.canvas;
   }
 
-  // Remove the canvas element used to paint the gesture.
+  /**
+   * Create a trail that begins at the mouse down position.
+   */
+  function beginTrail (mouseDown) {
+    // Set the initial mouse position.
+    state.x = mouseDown.x;
+    state.y = mouseDown.y;
+  }
+
+  /**
+   * Accumulate mouse moves to paint as part of the gesture trail.
+   * Request an animation frame to do the actual paining.
+   */
+  function updateTrail (mouseMove) {
+    state.trailMoves.push(mouseMove);
+
+    // Request an animation frame if none is pending.
+    if (!state.animFrameHandle) {
+      state.animFrameHandle = window.requestAnimationFrame(paintTrail);
+    }
+  }
+
+  /**
+   * Draw the accumulated mouse movements on the gesture canvas.
+   */
+  function paintTrail () {
+    // Clear the animation frame handle.
+    state.animFrameHandle = 0;
+
+    if (getOrCreateTrailCanvas()) {          
+      // Draw the pending segments of the gesture trail.
+      for (let i = 0; i < state.trailMoves.length; i++) {
+        state.ctx.beginPath();
+        state.ctx.moveTo(state.x, state.y);
+        state.x += state.trailMoves[i].dx;
+        state.y += state.trailMoves[i].dy;
+        state.ctx.lineTo(state.x, state.y);
+        state.ctx.stroke();
+      }
+      state.trailMoves.length = 0;
+    }
+  }
+
+  /**
+   * Clear the accumulated mouse moves.
+   * Cancel any pending animation frame callback.
+   */
+  function cancelPaintTrail () {
+    state.trailMoves.length = 0;
+    if (state.animFrameHandle) {
+      window.cancelAnimationFrame(state.animFrameHandle);
+      state.animFrameHandle = 0;
+    }
+  }
+
+  /**
+   * Remove the canvas element used to paint the gesture.
+   */
   function finishTrail () {
-    if (!!state.canvas) {
+    // Remove the gesture canvas from the DOM.
+    cancelPaintTrail();
+    if (state.canvas) {
       state.body.removeChild(state.canvas);
       state.canvas = null;
       state.ctx = null;
     }
   }
 
-  // Status ------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
+  // Status text
 
   // Insert the HTML fragment for a status message.
   function insertStatusMarkup () {
