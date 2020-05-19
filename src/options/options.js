@@ -158,8 +158,13 @@ app.controller('OptionsCtrl', [
     $scope.settings = settings;
     $scope.optionalPermissions = {
       'bookmarks': false,
+      'clipboardRead': false,
       'clipboardWrite': false,
-      'downloads': false
+      'downloads': false,
+      'downloads.open': false,
+      'find': false,
+      'history': false,
+      'notifications': false
     };
     $scope.controls = {
       // Restore the previously active tab.
@@ -236,13 +241,18 @@ app.controller('OptionsCtrl', [
 
     // Update the status of optional permissions.
     $scope.updateOptionalPermissions = () => {
-      return Object.keys($scope.optionalPermissions)
-        .reduce((promise, permission) => {
-          return promise.then(() => browser.permissions.contains({ permissions: [ permission ] })
-            .then(granted => $scope.$apply(() => {
-              $scope.optionalPermissions[permission] = granted;
-            })));
-        }, $q.when());
+      let optionalPermissions = angular.copy($scope.optionalPermissions);
+      let promise = Object.keys(optionalPermissions).reduce((promise, permission) => {
+        return promise.then(() => browser.permissions.contains({ permissions: [ permission ] })
+          .then(granted => $scope.$apply(() => {
+            optionalPermissions[permission] = granted;
+          })));
+      }, $q.when());
+
+      return promise.then(() => {
+        $scope.optionalPermissions = optionalPermissions;
+        return optionalPermissions;
+      });
     };
 
     // Show a modal to request additional permissions.

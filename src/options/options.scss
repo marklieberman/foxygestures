@@ -208,6 +208,21 @@ canvas.gesture-input {
   }
 }
 
+// ----- More preferences -----
+
+.optional-permissions {
+  th:nth-child(1) {
+    width: 100%
+  }
+
+  th:nth-child(2),
+  td:nth-child(2),
+  th:nth-child(3),
+  td:nth-child(3) {
+    text-align: center;
+  }
+}
+
 // ----- Backup tab -----
 
 .btn-file input {

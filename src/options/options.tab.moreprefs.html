@@ -130,43 +130,35 @@
 
         <h4 i18n="'optionsHeadingOptionalPermissions'"></h4>
 
-        <div class="form-group">
-          <p class="help-block" i18n="'optionsRequestOptionalPermissionHelp'"></p>
-          <button class="btn btn-default" type="button"
-                  ng-disabled="optionalPermissions.bookmarks"
-                  ng-click="requestPermission('bookmarks')"
-                  i18n="['labelRequestPermission', 'bookmarks']"></button>
-          <button class="btn btn-default" type="button"
-                  ng-disabled="optionalPermissions.clipboardWrite"
-                  ng-click="requestPermission('clipboardWrite')"
-                  i18n="['labelRequestPermission', 'clipboardWrite']"></button>
-          <button class="btn btn-default" type="button"
-                  ng-disabled="optionalPermissions.downloads"
-                  ng-click="requestPermission('downloads')"
-                  i18n="['labelRequestPermission', 'downloads']"></button>
-        </div>
+        <span i18n="'optionsOptionalPermissionsHelp'"></span>
 
-        <div class="form-group">
-          <p class="help-block" i18n="'optionsRevokeOptionalPermissionHelp'"></p>
-          <button class="btn btn-default" type="button"
-                  ng-disabled="!optionalPermissions.bookmarks"
-                  ng-click="revokePermission('bookmarks')"
-                  i18n="['labelRevokePermission', 'bookmarks']">Revoke "bookmarks"</button>
-          <button class="btn btn-default" type="button"
-                  ng-disabled="!optionalPermissions.clipboardWrite"
-                  ng-click="revokePermission('clipboardWrite')"
-                  i18n="['labelRevokePermission', 'clipboardWrite']">Revoke "clipboardWrite"</button>
-          <button class="btn btn-default" type="button"
-                  ng-disabled="!optionalPermissions.downloads"
-                  ng-click="revokePermission('downloads')"
-                  i18n="['labelRevokePermission', 'downloads']">Revoke "downloads"</button>
-        </div>
+        <table class="table table-striped table-hover optional-permissions">
+          <thead>
+            <th>Permission</th>
+            <th>Granted</th>
+            <th>Action</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(permission, granted) in optionalPermissions">
+              <td>{{permission}}</td>
+              <td>
+                <i class="fa fa-check" ng-show="granted"></i>
+              </td>
+              <td ng-show="granted">
+                <a href="" 
+                   ng-click="revokePermission(permission)"
+                   i18n="'buttonRevoke'"></a>
+              </td>
+              <td ng-hide="granted">
+                <a href=""
+                   ng-click="requestPermission(permission)"
+                   i18n="'buttonRequest'"></a>                
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div><!-- /.col-md-6 -->
     </div><!-- /.row -->
-
-
-
-
 
   </div>
 </div>

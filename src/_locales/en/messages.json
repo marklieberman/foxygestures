@@ -758,6 +758,9 @@
       }
     }
   },
+  "buttonRequest": {
+    "message": "Request"
+  },
   "labelRevokePermission": {
     "description": "Help text to describe the buttons that revoke optional permissions.",
     "message": "Revoke \"$PERMISSION$\"",
@@ -767,6 +770,9 @@
         "example": "bookmarks"
       }
     }
+  },
+  "buttonRevoke": {
+    "message": "Revoke"
   },
   "commandCloseTabActivateLeft": {
     "message": "Close Tab and Activate Left"
@@ -882,5 +888,9 @@
   },
   "commandUnmuteAllTabs": {
     "message": "Unmute All Tabs"
+  },
+  "optionsOptionalPermissionsHelp": {
+    "description": "Text providing link to documentation for optional_permissions",
+    "message": "Request optional permissions to enable the functionality of related commands and user scripts."
   }
 }
