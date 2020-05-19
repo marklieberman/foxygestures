@@ -12,14 +12,13 @@ https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js
 angular-ui-bootstrap
 Homepage: https://angular-ui.github.io/bootstrap/
 Version: 2.5.0 
-I use it for: CSS framework and form controls
-Note: I used the "Create a Build" on the homepage button with Collapse, Modal, Tooltip, Popover, and Tabs)
+I use it for: CSS framework and form controls in options UI
 https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.min.js
 
 ACE
 Homepage: https://ace.c9.io/#nav=about
 Version: 1.4.7
-I use it for: Code editor in addon user script tab.
+I use it for: Code editor in addon options UI user script tab.
 https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js
 https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/theme-chrome.js
 https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/mode-javascript.js
