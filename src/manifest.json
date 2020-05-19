@@ -27,6 +27,7 @@
   "permissions": [
     "browserSettings",
     "cookies",
+    "contextualIdentities",
     "sessions",
     "storage",
     "tabs"
