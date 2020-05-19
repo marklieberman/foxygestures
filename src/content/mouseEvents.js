@@ -352,15 +352,14 @@ window.fg.module('mouseEvents', function (exports, fg) {
     }
 
     if (settings.chordGestures) {
-      // See: #270 - without this device type check, context menu is broken on touch screens.
+      // See: #307 - without this device type check, context menu is broken on touch screens.
       if (event.mozInputSource === INPUT_SOURCE.MOUSE) {
         // When the gesture button is left or middle on Linux/OSX, context fires on mousedown. Only do the following
         // check if the contextmenu event is fired on mouseup.
         if (settings.gestureButton === BUTTON.RIGHT) {
-          // Supress context menu if one or more buttons are pressed. This reduces the chance of showing the context
+          // Suppress context menu if one or more buttons are pressed. This reduces the chance of showing the context
           // menu when restoring tabs with chord gestures. For example, when repeating Undo Close command.
           if (event.buttons !== BUTTONS_MASK.NONE) {
-            console.log(event.buttons, 'chord suppress context menu');
             event.preventDefault();
             event.stopPropagation();
           }
