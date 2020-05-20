@@ -46,6 +46,9 @@
   "commandDuplicateTab": {
     "message": "Duplicate Tab"
   },
+  "commandDuplicateTabInBackground": {
+    "message": "Duplicate Tab in Background"
+  },
   "commandDuplicateTabInNewPrivateWindow": {
     "message": "Duplicate Tab in New Private Window"
   },

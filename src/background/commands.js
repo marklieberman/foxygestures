@@ -121,6 +121,13 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'duplicateTabInBackground',
+      handler: commandDuplicateTabInBackground,
+      label: browser.i18n.getMessage('commandDuplicateTabInBackground'),
+      group: groups.tabs,
+      minVersion: 77
+    },
+    {
       id: 'duplicateTabInNewPrivateWindow',
       handler: commandDuplicateTabInNewPrivateWindow,
       label: browser.i18n.getMessage('commandDuplicateTabInNewPrivateWindow'),
@@ -864,6 +871,13 @@ modules.commands = (function (settings, helpers) {
   function commandDuplicateTab () {
     return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
       return browser.tabs.duplicate(tabs[0].id);
+    });
+  }
+
+  // Duplicate the active tab in the background. (FF77+)
+  function commandDuplicateTabInBackground () {
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      return browser.tabs.duplicate(tabs[0].id, { active: false });
     });
   }
 
