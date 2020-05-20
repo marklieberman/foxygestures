@@ -161,6 +161,10 @@ canvas.gesture-input {
     max-width: 150px;
     margin: 2.5px;
     text-align: center;
+
+    .fa.fa-exclamation-circle {
+      color: #f00;
+    }
   }
 
   .user-script-item {

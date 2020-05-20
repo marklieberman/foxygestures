@@ -37,6 +37,9 @@
                 <i class="fa fa-exclamation-triangle"
                     ng-if="command.permissions"
                     uib-tooltip="{{i18n('tooltipRequiresPermissions', command.permissions.join(', '))}}"></i>
+                <i class="fa fa-exclamation-circle"
+                    ng-if="command.minVersion>browserInfo.version"
+                    uib-tooltip="{{i18n('tooltipRequiresVersion', command.minVersion)}}"></i>
               </span>
             </label>
 

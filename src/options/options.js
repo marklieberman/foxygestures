@@ -156,6 +156,10 @@ app.controller('OptionsCtrl', [
     // ----- Scope variables -----
     $scope.commands = commands;
     $scope.settings = settings;
+    $scope.browserInfo = {
+      // Must be at least: strict_min_version
+      version: 61
+    };
     $scope.optionalPermissions = {
       'bookmarks': false,
       'clipboardRead': false,
@@ -208,6 +212,11 @@ app.controller('OptionsCtrl', [
     });
 
     // ----- Scope init -----
+
+    // Determine the browser major version.
+    browser.runtime.getBrowserInfo().then(browserInfo => {
+      $scope.browserInfo.version = parseInt(browserInfo.version, 10);
+    });
 
     // Initialize controls from settings on load.
     settings.load().then(() => {

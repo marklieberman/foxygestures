@@ -895,5 +895,15 @@
   "optionsOptionalPermissionsHelp": {
     "description": "Text providing link to documentation for optional_permissions",
     "message": "Request optional permissions to enable the functionality of related commands and user scripts."
+  },
+  "tooltipRequiresVersion": {
+    "description": "Tooltip for commands that require a minimum version of Firefox.",
+    "message": "Requires browser version $VERSION$ or later.",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "77"
+      }
+    }
   }
 }
