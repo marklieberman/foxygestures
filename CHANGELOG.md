@@ -1,5 +1,11 @@
 # Changelog
 
+### Version 1.2.7
+ - Added command: Duplicate Tab in Background. (Requires FF 77+)
+ - Fixed context menu broken in some configurations.
+ - Added more optional permissions to manifest and UI to request them for user scripts.
+ - Minor performance improvement to drawing gesture trails.
+
 ### Version 1.2.6
  - Version bump so the addon can be submitted to Recommended Extensions program.
 
