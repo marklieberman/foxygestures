@@ -190,10 +190,22 @@ window.fg.module('helpers', function (exports) {
     return null;
   };
 
-  // grab only the user selected text - typically used for searching or with the clipboard.
-  exports.selectedText = () => {
-    // TODO generalize to include text selected in textarea and input elements
-    let text = document.getSelection().toString();
-    return text;
+  // grab the user selected text or text from input fields
+  // this is expected to be used typically for searching or with the clipboard.
+  exports.selectedText = (element) => {
+    // include text selected in textarea and input elements
+    if (element instanceof window.HTMLInputElement || element instanceof window.HTMLTextAreaElement) {
+      // substring only works with types textarea, text, password, search, tel, url
+      let text = element.value.substring(element.selectionStart, element.selectionEnd);
+      // for other input types like email and number,
+      // or if no substring is selected in selectable type (ex. search, textarea, etc.),
+      // use entire field value
+      if (!text) {
+        text = element.value;
+      }
+      return text;
+    } else {
+      return document.getSelection().toString();
+    }
   };
 });
