@@ -214,6 +214,12 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'newTabInBackground',
+      handler: commandNewTabInBackground,
+      label: browser.i18n.getMessage('commandNewTabInBackground'),
+      group: groups.tabs
+    },
+    {
       id: 'newWindow',
       handler: commandNewWindow,
       label: browser.i18n.getMessage('commandNewWindow'),
@@ -955,10 +961,33 @@ modules.commands = (function (settings, helpers) {
   function commandNewTab (data) {
     // In Firefox the New Tab button does not preserve the container.
     // Firefox's default is for new tabs to be active and inserted at the end of the tab bar.
-    let tabOptions = {};
-    tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
-    tabOptions.active = true;
-    return browser.tabs.create(tabOptions);
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      let tabOptions = {};
+      tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
+      tabOptions.active = true;
+      tabOptions.openerTabId = tabs[0].id;
+      // override default behavior and insert new tab next to active tab
+      if (settings.insertRelatedTab) {
+        tabOptions.index = tabs[0].index + 1;
+      }
+      return browser.tabs.create(tabOptions);
+    });
+  }
+
+  function commandNewTabInBackground (data) {
+    // In Firefox the New Tab button does not preserve the container.
+    // Firefox's default is for new tabs to be active and inserted at the end of the tab bar.
+    return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+      let tabOptions = {};
+      tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
+      tabOptions.active = false;
+      tabOptions.openerTabId = tabs[0].id;
+      // override default behavior and insert new tab next to active tab
+      if (settings.insertRelatedTab) {
+        tabOptions.index = tabs[0].index + 1;
+      }
+      return browser.tabs.create(tabOptions);
+    });
   }
 
   // Create a new empty window.

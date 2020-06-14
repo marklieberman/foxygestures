@@ -73,6 +73,9 @@
   "commandNewTab": {
     "message": "New Tab"
   },
+  "commandNewTabInBackground": {
+    "message": "New Tab in Background"
+  },
   "commandNewWindow": {
     "message": "New Window"
   },
