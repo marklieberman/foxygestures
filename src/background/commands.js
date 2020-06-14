@@ -416,6 +416,22 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'searchTextInNewForegroundTab',
+      handler: commandSearchTextInNewForegroundTab,
+      label: browser.i18n.getMessage('commandSearchTextInNewForegroundTab'),
+      tooltip: browser.i18n.getMessage('commandSearchTextInNewForegroundTabTooltip'),
+      group: groups.other,
+      permissions: [ 'search' ]
+    },
+    {
+      id: 'searchTextInNewBackgroundTab',
+      handler: commandSearchTextInNewBackgroundTab,
+      label: browser.i18n.getMessage('commandSearchTextInNewBackgroundTab'),
+      tooltip: browser.i18n.getMessage('commandSearchTextInNewBackgroundTabTooltip'),
+      group: groups.other,
+      permissions: [ 'search' ]
+    },
+    {
       id: 'showOnlyThisFrame',
       handler: commandShowOnlyThisFrame,
       label: browser.i18n.getMessage('commandShowOnlyThisFrame'),
@@ -1218,6 +1234,32 @@ modules.commands = (function (settings, helpers) {
       return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
         return browser.tabs.update(tabs[0].id, { url: data.context.frameUrl });
       });
+    }
+  }
+
+  // Search selected text.
+  function commandSearchTextInNewForegroundTab (data) {
+    if (data.element.selectedText) {
+      var searchOptions = {};
+      searchOptions.query = data.element.selectedText;
+      commandNewTab()
+      .then((tab) => {
+        searchOptions.tabId = tab.id;
+        return browser.search.search(searchOptions);
+      })
+    }
+  }
+
+  // Search selected text in background tab.
+  function commandSearchTextInNewBackgroundTab (data) {
+    if (data.element.selectedText) {
+      var searchOptions = {};
+      searchOptions.query = data.element.selectedText;
+      commandNewTabInBackground()
+      .then((tab) => {
+        searchOptions.tabId = tab.id;
+        return browser.search.search(searchOptions);
+      })
     }
   }
 

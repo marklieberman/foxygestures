@@ -190,4 +190,10 @@ window.fg.module('helpers', function (exports) {
     return null;
   };
 
+  // grab only the user selected text - typically used for searching or with the clipboard.
+  exports.selectedText = () => {
+    // TODO generalize to include text selected in textarea and input elements
+    let text = document.getSelection().toString();
+    return text;
+  };
 });
