@@ -168,7 +168,8 @@ app.controller('OptionsCtrl', [
       'downloads.open': false,
       'find': false,
       'history': false,
-      'notifications': false
+      'notifications': false,
+      'search': false
     };
     $scope.controls = {
       // Restore the previously active tab.

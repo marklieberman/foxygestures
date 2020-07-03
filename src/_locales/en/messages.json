@@ -73,6 +73,9 @@
   "commandNewTab": {
     "message": "New Tab"
   },
+  "commandNewTabInBackground": {
+    "message": "New Tab in Background"
+  },
   "commandNewWindow": {
     "message": "New Window"
   },
@@ -147,6 +150,18 @@
   },
   "commandScrollUp": {
     "message": "Scroll Up"
+  },
+  "commandSearchTextInNewForegroundTab": {
+    "message": "Search Selected Text in New Foreground Tab"
+  },
+  "commandSearchTextInNewForegroundTabTooltip": {
+    "message": "Use Firefox's Default Search Engine"
+  },
+  "commandSearchTextInNewBackgroundTab": {
+    "message": "Search Selected Text in New Background Tab"
+  },
+  "commandSearchTextInNewBackgroundTabTooltip": {
+    "message": "Use Firefox's Default Search Engine"
   },
   "commandShowOnlyThisFrame": {
     "message": "Show Only This Frame"

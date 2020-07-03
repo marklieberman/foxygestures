@@ -565,6 +565,12 @@ window.fg.module('mouseEvents', function (exports, fg) {
         data.element.linkHref = linkElement.href;
         data.element.linkText = fg.helpers.gatherTextUnder(linkElement);
       }
+
+      // Collect selected text if present.
+      let selectedText = fg.helpers.selectedText(event.target);
+      if (selectedText) {
+        data.element.selectedText = selectedText;
+      }
     }
 
     return data;
