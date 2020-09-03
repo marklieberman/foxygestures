@@ -28,7 +28,7 @@
     "karma": "^4.4.1",
     "karma-firefox-launcher": "^1.2.0",
     "karma-jasmine": "^2.0.1",
-    "node-sass": "^4.13.0"
+    "node-sass": "^4.13.1"
   },
   "dependencies": {}
 }
