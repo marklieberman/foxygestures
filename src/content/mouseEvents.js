@@ -93,7 +93,7 @@ window.fg.module('mouseEvents', function (exports, fg) {
     wheelGestures: false,
     chordGestures: false,
     deadTimeMillis: 300
-  }, 'sync');
+  }, 'local');
 
   if (state.isNested) {
     // Notify the parent script instance that a nested frame has loaded.

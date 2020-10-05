@@ -49,19 +49,19 @@
 
   // Get the mapping for a mouse gesture.
   function findMouseMappingForGesture (gesture) {
-    return browser.storage.sync.get({ 'mouseMappings': [] }).then(results =>
+    return browser.storage.local.get({ 'mouseMappings': [] }).then(results =>
       Optional.of(results.mouseMappings.find(mapping => mapping.gesture === gesture)));
   }
 
   // Get the mapping for a wheel gesture.
   function findWheelMappingForGesture (gesture) {
-    return browser.storage.sync.get({ 'wheelMappings': {} }).then(results =>
+    return browser.storage.local.get({ 'wheelMappings': {} }).then(results =>
       Optional.of(results.wheelMappings[gesture]));
   }
 
   // Get the mapping for a chord gesture.
   function findChordMappingForGesture (gesture) {
-    return browser.storage.sync.get({ 'chordMappings': [] }).then(results =>
+    return browser.storage.local.get({ 'chordMappings': [] }).then(results =>
       Optional.of(results.chordMappings.find(chordMapping =>
         !!chordMapping.mapping && compareChords(gesture, chordMapping.chord)))
         .map(value => value.mapping));
@@ -229,7 +229,7 @@
       return Promise.resolve(true);
     } else {
       // Check the URL pattern blacklist.
-      return browser.storage.sync.get({
+      return browser.storage.local.get({
         blacklistUrlPatterns: [],
         whitelistMode: false
       }).then(results => {

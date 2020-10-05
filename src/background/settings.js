@@ -90,7 +90,7 @@ modules.settings = (function () {
   const settings = {};
 
   // Read settings from storage.
-  var promise = browser.storage.sync.get(DEFAULT_SETTINGS).then(results => {
+  var promise = browser.storage.local.get(DEFAULT_SETTINGS).then(results => {
     Object.keys(results).forEach(key => settings[key] = results[key]);
     return settings;
   });
@@ -99,9 +99,11 @@ modules.settings = (function () {
 
   // Listen for changes to settings.
   browser.storage.onChanged.addListener((changes, area) => {
-    Object.keys(settings)
-      .filter(key => changes[key] !== undefined)
-      .forEach(key => settings[key] = changes[key].newValue);
+    if (area === 'local') {
+      Object.keys(settings)
+        .filter(key => changes[key] !== undefined)
+        .forEach(key => settings[key] = changes[key].newValue);
+    }
   });
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -118,7 +120,7 @@ modules.settings = (function () {
   // Reset settings for the extension to default.
   Object.defineProperty(settings, 'reset', {
     enumerable: false,
-    value: () => browser.storage.sync.set(DEFAULT_SETTINGS)
+    value: () => browser.storage.local.set(DEFAULT_SETTINGS)
   });
 
   // Get the default value for template settings.

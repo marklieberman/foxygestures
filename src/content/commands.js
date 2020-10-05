@@ -28,7 +28,7 @@ window.fg.module('commands', function (exports, fg) {
     scrollDuration: 1000,
     scrollAmount: 100,
     useRelPrevNext: true
-  }, 'sync');
+  }, 'local');
 
   // Promise to ensure that repeated scroll commands are executed in order.
   // Note: this only works within a frame as the promise does not exist if the command bubbles.

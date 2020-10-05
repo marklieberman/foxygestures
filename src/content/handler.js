@@ -47,7 +47,7 @@ window.fg.extend('mouseEvents', function (exports, fg) {
     gestureDetector: {
       style: 'cardinal'
     }
-  }, 'sync');
+  }, 'local');
 
   // Initialize and enable gestures in this tab if not blacklisted.
   initializeGestures(0);

@@ -108,9 +108,9 @@ app.factory('settings', [
     // Save settings to browser storage. Returns a promise that is resolved when settings are saved.
     Object.defineProperty(service, 'save', {
       enumerable: false,
-      value: () => browser.storage.sync.set(service)
+      value: () => browser.storage.local.set(service)
         .catch(err => {
-          console.log('error saving sync settings', err);
+          console.log('error saving local settings', err);
         })
     });
 

@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.2.8
+ - Moved storage backend from sync to local due to quota limits introduced with FF 79.
+ 
 ### Version 1.2.7
  - Added command: Duplicate Tab in Background. (Requires FF 77+)
  - Fixed context menu broken in some configurations.

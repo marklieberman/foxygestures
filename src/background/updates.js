@@ -49,6 +49,20 @@
         }
       });
     }
+
+    // Migrate storage.sync to storage.local after version 1.2.7.
+    if ((version.major === 1) && (version.minor <= 2) && (version.maint <= 7)) {
+      browser.storage.sync.get().then(syncStorage => {        
+        // Copy all settings into local storage.
+        browser.storage.local.set(syncStorage).then(() => {
+          // Clear the sync storage.
+          console.log('migrated sync storage to local', syncStorage);
+
+          // TODO Not clearing the sync storage just in case of issues with the upgrade.
+          // The sync storage can be cleared in the next version of the add-on.
+        });
+      });
+    }
   }
 
 }());
