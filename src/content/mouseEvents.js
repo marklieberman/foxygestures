@@ -417,10 +417,17 @@ window.fg.module('mouseEvents', function (exports, fg) {
 
   // True if the event does not need to be handled because no enabled gesture type can handle it, otherwise false.
   function ignoreButtonNotUsedByGesture (event) {
-    return (
+    if (event.button == BUTTON.RIGHT) {
+      // See #329 - must handle the right button to enable the context menu.
+      return false;
+    }
+
+    if (!settings.chordGestures) {
       // Ignore the non-gesture button if chord gestures are disabled.
-      !settings.chordGestures && (event.button !== settings.gestureButton)
-    );
+      return (event.button !== settings.gestureButton);      
+    }
+
+    return false;
   }
 
   // Post a message to the given window with the given topic.

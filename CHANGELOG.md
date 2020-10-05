@@ -2,6 +2,7 @@
 
 ### Version 1.2.8
  - Moved storage backend from sync to local due to quota limits introduced with FF 79.
+ - Fixed context menu not appearing on first right-click if chord gestures disabled and gesture button is not right.
  
 ### Version 1.2.7
  - Added command: Duplicate Tab in Background. (Requires FF 77+)
