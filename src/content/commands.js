@@ -306,7 +306,11 @@ window.fg.module('commands', function (exports, fg) {
       if (originalUrl === window.location.href) {
         // URL hasn't changed and script was not killed so lose the current tab.
         return executeInBackground(data => {
-          return commandCloseTab(data); // jshint ignore:line
+          return browser.windows.getAll().then(windows => {
+            // Do not close the browser; keep the tab if it is the last one.
+            let keepLastTab = (windows.length === 1);
+            return commandCloseTab(data, keepLastTab); // jshint ignore:line
+          });
         }, [ data ]); 
       }
     }, closeTabTimeoutMs);

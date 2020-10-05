@@ -645,8 +645,13 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Close the current tab and activate the left, right, recent, or Firefox's choice of tab.
-  function closeTabTransition (data, direction) {
+  function closeTabTransition (data, options) {
     return browser.tabs.query({ currentWindow: true, hidden: false }).then(tabs => {
+      if (options.keepLastTab && (tabs.length === 1)) {
+        // Do not close the last tab in the window.
+        return { repeat: true };
+      }
+
       let active = tabs.find(tab => tab.active);
       if (active.pinned) {
         // Pinned tabs cannot be closed by a gesture.
@@ -657,7 +662,7 @@ modules.commands = (function (settings, helpers) {
         return browser.tabs.remove(active.id);
       }
 
-      switch (direction) {
+      switch (options.direction) {
         case 'right':
           // Activate the right tab before closing.
           return activateTabThenClose(data, tabs, 'right', active);
@@ -870,18 +875,25 @@ modules.commands = (function (settings, helpers) {
   }
 
   // Close the active tab.
-  function commandCloseTab (data) {
-    return closeTabTransition(data, modules.settings.activeTabAfterClose);
+  function commandCloseTab (data, keepLastTab) {
+    return closeTabTransition(data, {
+      direction: modules.settings.activeTabAfterClose,
+      keepLastTab
+    });
   }
 
   // Close the current tab and activate the tab to the left.
   function commandCloseTabActivateLeft (data) {
-    return closeTabTransition(data, 'left');
+    return closeTabTransition(data, {
+      direction: 'left'
+    });
   }
 
   // Close the current tab and activate the tab to the left.
   function commandCloseTabActivateRight (data) {
-    return closeTabTransition(data, 'right');
+    return closeTabTransition(data, {
+      direction: 'right'
+    });
   }
 
   // Close the current window,
