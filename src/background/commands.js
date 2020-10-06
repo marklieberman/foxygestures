@@ -1228,6 +1228,7 @@ modules.commands = (function (settings, helpers) {
         });
       }
 
+      // Collect information such as URL and filename.
       promise = promise.then(data => {
         if (data.element.mediaSource) {
           // Convert data URLs to blob as a workaround for:
@@ -1237,10 +1238,42 @@ modules.commands = (function (settings, helpers) {
             url = URL.createObjectURL(helpers.dataURItoBlob(url));
           }
 
-          // Start the download.
+          // Try to parse a filename from the URL.
+          let saveData = helpers.suggestFilename(data.element.mediaSource, data.element.mediaType);
+          saveData.url = url;
+          if (saveData.name && saveData.ext) {
+            // Got the filename from the URL.
+            return saveData;
+          } else {
+            // Missing the name or extension. 
+            // Try and fetch the headers from the content script which is same-origin.
+            return browser.tabs.sendMessage(data.sender.tab.id, {
+              topic: 'mg-getContentDisposition',
+              data: {
+                url: data.element.mediaSource
+              }
+            }).then(headers => {
+              // If the content script failed to obtain the headers, the problem may have been that the priviledged
+              // script was unable to set the Origin header for a cross-origin request. We can try again here, and 
+              // there is a possibility it will work depending on the server's CORS response.
+              return headers.error ? helpers.getContentDisposition(data.element.mediaSource) : headers;
+            }).then(headers => {
+              // Fill the missing filename parts from the headers when possible.
+              return helpers.suggestFilenameFromHeaders(headers, saveData);
+            });
+          }
+        } else {
+          // Nothing to save.
+          return null;
+        }
+      });
+
+      // Start the download.
+      promise = promise.then(saveData => {
+        if (saveData) {
           return browser.downloads.download({
-            url,
-            filename: helpers.suggestFilename(data.element.mediaSource, data.element.mediaType),
+            url: saveData.url,
+            filename: (saveData.name + saveData.ext) || null,
             saveAs
           });
         }

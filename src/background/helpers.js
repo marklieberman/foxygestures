@@ -95,14 +95,17 @@ modules.helpers = (function (module) {
   // Attempt to determine the filename from a media URL. If the media source does not contain a file extension but the
   // mime type is known, select the extension automatically.
   module.suggestFilename = (mediaSource, mediaType = null) => {
-    // Data URIs do not have a file name so try generate a name like 'data.ext' using mime type.
+    // Data URIs do not have a file name so try generate a name like 'data.ext' using mime type.    
     if (mediaSource.startsWith('data:')) {
       // Extract the mime type if present.
       let encodingStart = mediaSource.indexOf(';');
       let dataStart = mediaSource.indexOf(',');
       let mimeEnd = (encodingStart > 0 && (encodingStart < dataStart)) ? encodingStart : dataStart;
       let mime = mediaSource.substring(5, mimeEnd);
-      return (mime === '') ? 'data.txt' : 'data' + (mimeToExtensionMap[mime] || '.bin');
+      return {
+        name: 'data',
+        ext: (mime === '') ? '.txt' : (mimeToExtensionMap[mime] || '.bin')
+      };
     }
 
     try {
@@ -120,18 +123,74 @@ modules.helpers = (function (module) {
         if (!!~lastDot)  {
           let filename = basename.substring(0, lastDot);
           let extension = basename.substring(lastDot);
-
-          // Trim any trailing text from the extension.
-          return filename + /\.\w+/.exec(extension);
-        } else {
-          // Try to guess the extension from the type.
-          return basename + (mimeToExtensionMap[mediaType] || '');
+          return {
+            name: filename,
+            // Trim any trailing text from the extension.
+            ext: String(/\.\w+/.exec(extension))
+          };
+        } else {          
+          return {
+            name: basename,
+            // Try to guess the extension from the type.
+            ext: (mimeToExtensionMap[mediaType] || '')
+          };
         }
       }
     } catch (error) {}
 
     // Couldn't determine the filename; let the browser guess.
-    return null;
+    return {
+      name: '',
+      ext: ''
+    };
+  };
+
+  // Try to determine the filename from headers like Content-Type and Content-Disposition.
+  module.suggestFilenameFromHeaders = (headers, partialInfo) => {
+    partialInfo = partialInfo || {};
+    partialInfo.ext = partialInfo.ext || '';
+    if (headers.contentType) {
+      // Found the content type.
+      partialInfo.ext = mimeToExtensionMap[headers.contentType] || '';
+    }
+
+    partialInfo.name = partialInfo.name || '';
+    if (headers.contentDisposition) {
+      // Found the content disposition.
+      let match = /filename="([^"]+)"/i.exec(headers.contentDisposition);
+      if (match && match[1]) {
+         // Split the filename into name and extension.
+         let lastDot = match[1].lastIndexOf('.');
+         if (!!~lastDot)  {
+           partialInfo.name = match[1].substring(0, lastDot);
+           partialInfo.ext = match[1].substring(lastDot);
+         } else {
+           partialInfo.name = match[1];
+         }
+      }
+    }
+    
+    return partialInfo;
+  };
+
+  // Fetch the Content-Type and Content-Disposition header values for a URL. This is likely to fail depending on the
+  // CORS configuration of the server.
+  module.getContentDisposition = (url) => {
+    return fetch(url, {
+      method: 'HEAD',
+    }).then(res => {
+      return {
+        error: false,
+        contentType: res.headers.get('Content-Type'),
+        contentDisposition: res.headers.get('Content-Disposition')
+      };
+    }).catch(err => {
+      return {
+        error: true,
+        contentType: null,
+        contentDisposition: null
+      };
+    });
   };
 
   // Get a string that describes a chord combination.

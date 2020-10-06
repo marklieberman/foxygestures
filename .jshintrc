@@ -12,6 +12,7 @@
 
     "Blob": true,
     "URL": true,
+    "fetch": true,
 
     "modules": true,
     "Optional": true,

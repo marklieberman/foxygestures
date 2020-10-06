@@ -92,6 +92,8 @@ window.fg.extend('mouseEvents', function (exports, fg) {
         return exports.onGetCanvasImage(message.data);
       case 'mg-getSelectedLinks':
         return exports.onGetSelectedLinks(message.data);
+      case 'mg-getContentDisposition':
+        return exports.getContentDisposition(message.data);
     }
     return false;
   });
@@ -112,6 +114,31 @@ window.fg.extend('mouseEvents', function (exports, fg) {
       }
     }
   });
+
+  // Functions ---------------------------------------------------------------------------------------------------------
+
+  // Sends the Content-Type and Content-Disposition header values to the background script. Does a fetch HEAD from the
+  // content script to preserve the same origin. Unfortunately, cross-origin always fails due to the error: CORS header 
+  // 'Origin' cannot be added.
+  // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSOriginHeaderNotAdded
+  exports.getContentDisposition = function (data) {
+    return fetch(data.url, {
+      method: 'HEAD',
+      mode: 'same-origin'
+    }).then(res => {
+      return {
+        error: false,
+        contentType: res.headers.get('Content-Type'),
+        contentDisposition: res.headers.get('Content-Disposition')
+      };
+    }).catch(err => {
+      return {
+        error: true,
+        contentType: null,
+        contentDisposition: null
+      };
+    });
+  };
 
   // Mouse gestures ----------------------------------------------------------------------------------------------------
 
