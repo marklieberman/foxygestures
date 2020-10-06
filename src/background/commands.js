@@ -492,6 +492,12 @@ modules.commands = (function (settings, helpers) {
       group: groups.tabs
     },
     {
+      id: 'viewImage',
+      handler: commandViewImage,
+      label: browser.i18n.getMessage('commandViewImage'),
+      group: groups.other
+    },
+    {
       id: 'viewFrameSource',
       handler: commandViewFrameSource,
       label: browser.i18n.getMessage('commandViewFrameSource'),
@@ -1281,6 +1287,22 @@ modules.commands = (function (settings, helpers) {
         searchOptions.tabId = tab.id;
         return browser.search.search(searchOptions);
       });
+    }
+  }
+
+  // View an image.
+  function commandViewImage (data) {
+    if (data.element.mediaSource) {
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+          let tabOptions = {};
+          tabOptions.url = data.element.mediaSource;
+          tabOptions.active = true;
+          tabOptions.openerTabId = tabs[0].id;
+          if (settings.insertRelatedTab) {
+            tabOptions.index = tabs[0].index + 1;
+          }
+          return browser.tabs.create(tabOptions);
+      });    
     }
   }
 
