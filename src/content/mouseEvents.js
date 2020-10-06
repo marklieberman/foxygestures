@@ -96,8 +96,15 @@ window.fg.module('mouseEvents', function (exports, fg) {
   }, 'local');
 
   if (state.isNested) {
-    // Notify the parent script instance that a nested frame has loaded.
-    postTo(window.parent, 'loadFrame', { id: exports.scriptFrameId });
+    // Check if the URL is blacklisted 
+    browser.runtime.sendMessage({
+      topic: 'mg-isTabBlacklisted'      
+    }).then(blacklisted => {
+      if (!blacklisted) {
+        // Notify the parent script instance that a nested frame has loaded.
+        postTo(window.parent, 'loadFrame', { id: exports.scriptFrameId });
+      }
+    });
   }
 
   // Event listeners ---------------------------------------------------------------------------------------------------

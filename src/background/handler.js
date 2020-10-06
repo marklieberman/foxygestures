@@ -120,6 +120,8 @@
       // Get the initial state for a tab.
       case 'mg-getInitialState':
         return getInitialState(sender.tab.id, data);
+      case 'mg-isTabBlacklisted':
+        return isBlacklistedTabOrUrl(sender.tab.id, sender.tab.url);
 
       // Gesture progress and completion handlers.
       case 'mg-gestureProgress':
