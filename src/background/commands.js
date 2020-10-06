@@ -1294,15 +1294,10 @@ modules.commands = (function (settings, helpers) {
   function commandViewImage (data) {
     if (data.element.mediaSource) {
       return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
-          let tabOptions = {};
-          tabOptions.url = data.element.mediaSource;
-          tabOptions.active = true;
-          tabOptions.openerTabId = tabs[0].id;
-          if (settings.insertRelatedTab) {
-            tabOptions.index = tabs[0].index + 1;
-          }
-          return browser.tabs.create(tabOptions);
-      });    
+        browser.tabs.update(tabs[0].id, {
+          url: data.element.mediaSource
+        });    
+      });
     }
   }
 
