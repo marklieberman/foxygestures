@@ -7,9 +7,10 @@ window.fg.module('commands', function (exports, fg) {
 
   // Hash of handler functions for supported commands.
   var commandHandlers = {
+    'goOrigin': commandGoOrigin,
     'historyBack': commandHistoryBack,
     'historyBackOrCloseTab': commandHistoryBackOrCloseTab,
-    'historyForward': commandHistoryForward,
+    'historyForward': commandHistoryForward,    
     'pageUp': commandPageUp,
     'pageDown': commandPageDown,
     'parentDirectory': commandParentDirectory,
@@ -287,6 +288,11 @@ window.fg.module('commands', function (exports, fg) {
   }
 
   // Command implementations -------------------------------------------------------------------------------------------
+
+  // Navigate to the origin of the current URL.
+  function commandGoOrigin (data) {
+    window.location.href = window.location.origin;
+  }
 
   // Navigate back in history.
   function commandHistoryBack (data) {

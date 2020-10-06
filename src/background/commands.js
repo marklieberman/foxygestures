@@ -147,6 +147,17 @@ modules.commands = (function (settings, helpers) {
       group: groups.navigation
     },
     {
+      id: 'goOrigin',
+      handler: data => {
+        commands.executeInContent('goOrigin', data, false);
+        // Allow the wheel or chord gesture to repeat.
+        return { repeat: true };
+      },
+      label: browser.i18n.getMessage('commandGoOrigin'),
+      tooltip: browser.i18n.getMessage('commandGoOriginTooltip'),
+      group: groups.navigation
+    },
+    {
       id: 'historyBack',
       handler: data => {
         commands.executeInContent('historyBack', data, false);
@@ -1254,11 +1265,10 @@ modules.commands = (function (settings, helpers) {
     if (data.element.selectedText) {
       var searchOptions = {};
       searchOptions.query = data.element.selectedText;
-      commandNewTab()
-      .then((tab) => {
+      commandNewTab().then((tab) => {
         searchOptions.tabId = tab.id;
         return browser.search.search(searchOptions);
-      })
+      });
     }
   }
 
@@ -1267,11 +1277,10 @@ modules.commands = (function (settings, helpers) {
     if (data.element.selectedText) {
       var searchOptions = {};
       searchOptions.query = data.element.selectedText;
-      commandNewTabInBackground()
-      .then((tab) => {
+      commandNewTabInBackground().then((tab) => {
         searchOptions.tabId = tab.id;
         return browser.search.search(searchOptions);
-      })
+      });
     }
   }
 

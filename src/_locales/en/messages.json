@@ -920,5 +920,11 @@
         "example": "77"
       }
     }
+  },
+  "commandGoOrigin": {
+    "message": "Go to Origin"    
+  },
+  "commandGoOriginTooltip": {
+    "message": "Navigate to the origin of the URL, which is similar to the top level or root of the domain."
   }
 }
