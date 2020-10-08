@@ -4,6 +4,10 @@
  - Moved storage backend from sync to local due to quota limits introduced with FF 79.
  - Fixed context menu not appearing on first right-click if chord gestures disabled and gesture button is not right.
  - Fixed some postMessage traffic still occurred when URL was blacklisted and it broke some sites.
+ - Added command: View Image
+ - Added command: Go to Origin
+ - Save Media commands now try to fetch Content-Disposition header when filename cannot be determiend from the URL.
+ - Command Go Back or Close Tab will no longer close the last tab and exit the browser.
  
 ### Version 1.2.7
  - Added command: Duplicate Tab in Background. (Requires FF 77+)
