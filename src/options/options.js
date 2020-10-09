@@ -314,6 +314,10 @@ app.controller('ModalAskPermissionCtrl', [
       'downloads': {
         summary: browser.i18n.getMessage('optionalPermissionDownloadsSummary'),
         link: browser.i18n.getMessage('optionalPermissionDownloadsLink')
+      },
+      'search': {
+        summary: browser.i18n.getMessage('optionalPermissionSearchSummary'),
+        link: browser.i18n.getMessage('optionalPermissionSearchLink')
       }
     };
 

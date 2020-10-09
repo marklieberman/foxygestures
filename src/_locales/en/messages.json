@@ -929,5 +929,12 @@
   },
   "commandViewImage": {
     "message": "View Image"
+  },
+  "optionalPermissionSearchSummary": {
+    "description": "I copied this from the first paragraph of the MDN documentation.",
+    "message": "Retrieves search engines and executes a search with a specific search engine."
+  },
+  "optionalPermissionSearchLink": {
+    "message": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/search"
   }
 }
