@@ -1009,12 +1009,7 @@ modules.commands = (function (settings, helpers) {
     return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
       let tabOptions = {};
       tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
-      tabOptions.active = true;
-      tabOptions.openerTabId = tabs[0].id;
-      // override default behavior and insert new tab next to active tab
-      if (settings.insertRelatedTab) {
-        tabOptions.index = tabs[0].index + 1;
-      }
+      tabOptions.active = true;      
       return browser.tabs.create(tabOptions);
     });
   }
@@ -1025,12 +1020,7 @@ modules.commands = (function (settings, helpers) {
     return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
       let tabOptions = {};
       tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
-      tabOptions.active = false;
-      tabOptions.openerTabId = tabs[0].id;
-      // override default behavior and insert new tab next to active tab
-      if (settings.insertRelatedTab) {
-        tabOptions.index = tabs[0].index + 1;
-      }
+      tabOptions.active = false;      
       return browser.tabs.create(tabOptions);
     });
   }
@@ -1302,11 +1292,21 @@ modules.commands = (function (settings, helpers) {
   // Search selected text.
   function commandSearchTextInNewForegroundTab (data) {
     if (data.element.selectedText) {
-      var searchOptions = {};
-      searchOptions.query = data.element.selectedText;
-      commandNewTab().then((tab) => {
-        searchOptions.tabId = tab.id;
-        return browser.search.search(searchOptions);
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+        let tabOptions = {};
+        tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
+        tabOptions.active = true;
+        // Preserve the container when opening a new tab from a link/frame.
+        tabOptions.openerTabId = tabs[0].id;
+        if (settings.insertRelatedTab) {
+          tabOptions.index = tabs[0].index + 1;
+        }
+        return browser.tabs.create(tabOptions).then(tab => {
+          return browser.search.search({
+            tabId: tab.id,
+            query: data.element.selectedText
+          });
+        });
       });
     }
   }
@@ -1314,11 +1314,21 @@ modules.commands = (function (settings, helpers) {
   // Search selected text in background tab.
   function commandSearchTextInNewBackgroundTab (data) {
     if (data.element.selectedText) {
-      var searchOptions = {};
-      searchOptions.query = data.element.selectedText;
-      commandNewTabInBackground().then((tab) => {
-        searchOptions.tabId = tab.id;
-        return browser.search.search(searchOptions);
+      return browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
+        let tabOptions = {};
+        tabOptions.url = notAboutNewTabUrl(settings.newTabUrl);
+        tabOptions.active = false;
+        // Preserve the container when opening a new tab from a link/frame.
+        tabOptions.openerTabId = tabs[0].id;
+        if (settings.insertRelatedTab) {
+          tabOptions.index = tabs[0].index + 1;
+        }
+        return browser.tabs.create(tabOptions).then(tab => {
+          return browser.search.search({
+            tabId: tab.id,
+            query: data.element.selectedText
+          });
+        });
       });
     }
   }
