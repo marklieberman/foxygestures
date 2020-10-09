@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.2.9
+ - Reverted changes to New Tab command implementation
+
 ### Version 1.2.8
  - Moved storage backend from sync to local due to quota limits introduced with FF 79.
  - Fixed context menu not appearing on first right-click if chord gestures disabled and gesture button is not right.
