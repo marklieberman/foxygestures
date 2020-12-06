@@ -115,17 +115,21 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Install native event listeners in this frame and all nested frames.
   exports.installEventListeners = function () {
     if (!state.listenersInstalled) {
+      let options = { 
+        capture: true, 
+        passive: false 
+      };
       window.addEventListener('unload', onUnload);
-      window.addEventListener('mousedown', onMouseDown, true);
-      window.addEventListener('mouseup', onMouseUp, true);
+      window.addEventListener('mousedown', onMouseDown, options);
+      window.addEventListener('mouseup', onMouseUp, options);
       window.addEventListener('mousemove', onMouseMove, true);
       window.addEventListener('touchstart', onTouchStart, true);
-      window.addEventListener('wheel', onWheel, true);
-      window.addEventListener('click', onClick, true);
-      window.addEventListener('dblclick', onDblClick, true);
-      window.addEventListener('contextmenu', onContextMenu, true);
-      window.addEventListener('selectstart', onSelectStart);
-      window.addEventListener('dragstart', onDragStart);
+      window.addEventListener('wheel', onWheel, options);
+      window.addEventListener('click', onClick, options);
+      window.addEventListener('dblclick', onDblClick, options);
+      window.addEventListener('contextmenu', onContextMenu, options);
+      window.addEventListener('selectstart', onSelectStart, options);
+      window.addEventListener('dragstart', onDragStart, options);
     }
     state.listenersInstalled = true;
 
@@ -136,17 +140,21 @@ window.fg.module('mouseEvents', function (exports, fg) {
   // Remove native event listeners in this frame and all nested frames.
   exports.removeEventListeners = function () {
     if (state.listenersInstalled) {
+      let options = { 
+        capture: true, 
+        passive: false 
+      };
       window.removeEventListener('unload', onUnload);
-      window.removeEventListener('mousedown', onMouseDown, true);
-      window.removeEventListener('mouseup', onMouseUp, true);
+      window.removeEventListener('mousedown', onMouseDown, options);
+      window.removeEventListener('mouseup', onMouseUp, options);
       window.removeEventListener('mousemove', onMouseMove, true);
       window.removeEventListener('touchstart', onTouchStart, true);
-      window.removeEventListener('wheel', onWheel, true);
-      window.removeEventListener('click', onClick, true);
-      window.removeEventListener('dblclick', onDblClick, true);
-      window.removeEventListener('contextmenu', onContextMenu, true);
-      window.removeEventListener('selectstart', onSelectStart);
-      window.removeEventListener('dragstart', onDragStart);
+      window.removeEventListener('wheel', onWheel, options);
+      window.removeEventListener('click', onClick, options);
+      window.removeEventListener('dblclick', onDblClick, options);
+      window.removeEventListener('contextmenu', onContextMenu, options);
+      window.removeEventListener('selectstart', onSelectStart, options);
+      window.removeEventListener('dragstart', onDragStart, options);
     }
     state.listenersInstalled = false;
 
