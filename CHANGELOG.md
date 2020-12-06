@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.2.10
+ - Request passive: false mouse event handlers due to change in Firefox defaults.
+
 ### Version 1.2.9
  - Reverted changes to New Tab command implementation
 
