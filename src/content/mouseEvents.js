@@ -166,10 +166,14 @@ window.fg.module('mouseEvents', function (exports, fg) {
     if (event.data) {
       switch (event.data.topic) {
         case 'mg-installEventListeners':
-          exports.installEventListeners();
+          if (event.source.window === window.parent) {
+            exports.installEventListeners();
+          }
           break;
         case 'mg-removeEventListeners':
-          exports.removeEventListeners();
+          if (event.source.window === window.parent) {
+            exports.removeEventListeners();
+          }
           break;
         case 'mg-stateUpdate':
           // State replication messages should only go down the hierarchy.
