@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.2.11
+ - Fix a potential postMessage loop when installing event handlers.
+
 ### Version 1.2.10
  - Request passive: false mouse event handlers due to change in Firefox defaults.
 
