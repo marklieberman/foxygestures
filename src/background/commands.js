@@ -1469,8 +1469,8 @@ modules.commands = (function (settings, helpers) {
   function commandZoomOut () {
     return browser.tabs.getZoom()
       .then(amount => {
-        // Clamp amount between 0.3 and 3.
-        amount = Math.max(0.3, Math.min(3, amount - settings.zoomStep));
+        // Clamp amount between 0.3 and 5.
+        amount = Math.max(0.3, Math.min(5, amount - settings.zoomStep));
         return browser.tabs.setZoom(amount);
       })
       // Allow the wheel or chord gesture to repeat.
