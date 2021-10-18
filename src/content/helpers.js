@@ -150,10 +150,10 @@ window.fg.module('helpers', function (exports) {
     } else
     if (element instanceof window.HTMLVideoElement ||
         element instanceof window.HTMLAudioElement) {
-      if (element.src) {
+      if (element.currentSrc || element.src) {
         // Source is on the media element.
         return {
-          source: String(element.src),
+          source: String(element.currentSrc || element.src),
           type: element.getAttribute('type')
         };
       } else {
