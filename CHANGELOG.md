@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 1.2.12
+ - Check currentSrc of audio/video media elements.
+ - Increase maximum zoom to 5x.
+
 ### Version 1.2.11
  - Fix a potential postMessage loop when installing event handlers.
 
